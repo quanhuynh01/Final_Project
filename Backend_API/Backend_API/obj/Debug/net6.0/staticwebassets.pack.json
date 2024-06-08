@@ -1,0 +1,89 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\CellPhoneS.png",
+      "PackagePath": "staticwebassets\\images\\CusSup\\CellPhoneS.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\adf.jpg",
+      "PackagePath": "staticwebassets\\images\\CusSup\\adf.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Apple.png",
+      "PackagePath": "staticwebassets\\images\\brands\\Apple.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Asus.png",
+      "PackagePath": "staticwebassets\\images\\brands\\Asus.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Dell.png",
+      "PackagePath": "staticwebassets\\images\\brands\\Dell.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.jpg",
+      "PackagePath": "staticwebassets\\images\\brands\\HP.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.png",
+      "PackagePath": "staticwebassets\\images\\brands\\HP.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.jpg",
+      "PackagePath": "staticwebassets\\images\\brands\\asdf.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.png",
+      "PackagePath": "staticwebassets\\images\\brands\\asdf.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\dsfa.jpg",
+      "PackagePath": "staticwebassets\\images\\brands\\dsfa.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdds.jpg",
+      "PackagePath": "staticwebassets\\images\\brands\\sdds.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.jpg",
+      "PackagePath": "staticwebassets\\images\\brands\\sdf.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.png",
+      "PackagePath": "staticwebassets\\images\\brands\\sdf.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop .png",
+      "PackagePath": "staticwebassets\\images\\categories\\Laptop .png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop AB.png",
+      "PackagePath": "staticwebassets\\images\\categories\\Laptop AB.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop nha.png",
+      "PackagePath": "staticwebassets\\images\\categories\\Laptop nha.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop.png",
+      "PackagePath": "staticwebassets\\images\\categories\\Laptop.png"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.Backend_API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.Backend_API.props",
+      "PackagePath": "build\\Backend_API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.Backend_API.props",
+      "PackagePath": "buildMultiTargeting\\Backend_API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.Backend_API.props",
+      "PackagePath": "buildTransitive\\Backend_API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
