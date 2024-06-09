@@ -3,6 +3,7 @@ import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import axios from "axios"; 
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
  
 
 const Products = () => {
@@ -39,7 +40,7 @@ const Products = () => {
                     </div>
                 </div>
                 <div className="content mt-3  ">
-                    <Button className="btn btn-outline-success">Thêm sản phẩm</Button>
+                    <Link to={"create"} className="btn btn-outline-success">Thêm sản phẩm</Link>
                 </div>
                 <div className="content mt-3  ">
                     <table className="table">
