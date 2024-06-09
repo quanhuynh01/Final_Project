@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NJ4C7DhGoYi6SX8QIajnt17fmhXbxIs84SOdxDS/2jQabyuXMIUkE1Vgncx8baxNKcu9Jf/XZi9S5fZc7fGlEg==",
+  "dgSpecHash": "I8Rt3ErvnQ0yXI6VXFhQRKFkMAwEs+ye3ycRuJEjh719JHvtXilmozgPQ+Y7bCvI7lFR/5SKWUzB40WcTHg0wg==",
   "success": true,
-  "projectFilePath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\Backend_API.csproj",
+  "projectFilePath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vietq\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

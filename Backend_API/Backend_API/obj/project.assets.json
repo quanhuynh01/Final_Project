@@ -11772,11 +11772,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\Backend_API.csproj",
+      "projectUniqueName": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
       "projectName": "Backend_API",
-      "projectPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\Backend_API.csproj",
+      "projectPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
       "packagesPath": "C:\\Users\\vietq\\.nuget\\packages\\",
-      "outputPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\ministore\\Backend_API\\Backend_API\\obj\\",
+      "outputPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

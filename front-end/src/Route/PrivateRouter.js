@@ -10,6 +10,7 @@ import AttributeValue from '../Admin/Component/Attribute/AttribiuteValue';
 import CategoriesEdit from '../Admin/Component/Categories/CategoriesEdit';
 import AttributeEdit from '../Admin/Component/Attribute/AttributeEdit';
 import CustomerSupplier from '../Admin/Component/CustomerSupplier/CustomerSupplier';
+import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
  
  
 
@@ -21,6 +22,7 @@ const PrivateRouter = () => {
                     <Route index element={<LayoutAdmin />} />
                     <Route path="products">
                         <Route index element={<Products />}></Route>
+                        <Route path="create" element={<ProductsCreate />} />
                     </Route>
                     <Route path="categories">
                         <Route index element={<Categories />}></Route>
@@ -38,6 +40,7 @@ const PrivateRouter = () => {
                     <Route path="customer-supplier">
                         <Route index element={<CustomerSupplier />}></Route>   
                     </Route>
+                   
                 </Route>
 
                 {/* login admin*/}
