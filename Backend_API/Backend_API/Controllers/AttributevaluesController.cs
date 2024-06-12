@@ -109,7 +109,7 @@ namespace Backend_API.Controllers
                                             .ToListAsync();
             if (attributeValues == null || attributeValues.Count == 0)
             {
-                return NotFound();
+                return StatusCode(400);
             }
 
             return Ok(attributeValues);
