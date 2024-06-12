@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
+using NuGet.Protocol;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace Backend_API.Controllers
 {
@@ -14,24 +16,26 @@ namespace Backend_API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly MiniStoredentity_Context _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(MiniStoredentity_Context context)
+        public ProductsController(MiniStoredentity_Context context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.Include(b=>b.Brand).ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = _context.Products.Include(b=>b.Brand).Where(p=>p.Id== id).FirstOrDefault();
 
             if (product == null)
             {
@@ -75,12 +79,102 @@ namespace Backend_API.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
-        {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+        public async Task<ActionResult<Product>> PostProduct([FromForm] Product product, [FromForm] List<IFormFile> AvatarFiles
+            ,[FromForm] List<int> CateId)
+        {   
+            try
+            {
+                var p = new Product();
+                p.ProductName = product.ProductName;
+                p.SKU = product.SKU;
+                p.Warranty = product.Warranty;
+                p.WarrantyType = product.WarrantyType;
+                p.SalePrice = product.SalePrice;
+                p.Price = product.Price;
+                p.Active = product.Active;
+                p.BestSeller = product.BestSeller;
+                p.BrandId = product.BrandId;
+                p.DateCreate = DateTime.Now;
+                p.Stock = product.Stock;
+                if (p != null)
+                { 
+                    _context.Products.Add(p);
+                    _context.SaveChanges();
+                    if(p!=null)
+                    {
+                        if(AvatarFiles!=null && AvatarFiles.Count >0)
+                        {
+                            var dem = 0;
+                            foreach (var file in AvatarFiles)
+                            {   
+                                if(dem ==0)//ảnh thứ 1 làm ảnh đại diện 
+                                {
+                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}"; 
+                                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
+                                    if (!Directory.Exists(imagePath))
+                                    {
+                                        Directory.CreateDirectory(imagePath);
+                                    }
+                                    var uploadPath = Path.Combine(imagePath, fileName);
+                                    using (var stream = new FileStream(uploadPath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                    }
+                                    var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
+                                    p.Avatar = "/" + relativePath.Replace("\\", "/");
+                                    _context.Products.Update(p);
+                                    _context.SaveChanges() ;
+                                }
+                                if(dem>0)
+                                {
+                                    ProductThumb pt = new ProductThumb();
+                                    pt.ProductId = p.Id;
+                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
+                                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
+                                    if (!Directory.Exists(imagePath))
+                                    {
+                                        Directory.CreateDirectory(imagePath);
+                                    }
+                                    var uploadPath = Path.Combine(imagePath, fileName);
+                                    using (var stream = new FileStream(uploadPath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                    }
+                                    var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
+                                    pt.Image = "/" + relativePath.Replace("\\", "/");
+                                    _context.ProductThumbs.Add(pt);
+                                    _context.SaveChanges();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+                                }
+                                dem ++; 
+                            }
+                            
+                        }
+
+                        if (CateId.Count > 0)
+                        {
+                            foreach (var item in CateId)
+                            {
+                                ProductCategory pc = new ProductCategory();
+                                pc.ProductId = p.Id;
+                                pc.CategoryId = item;
+                                _context.ProductCategories.Add(pc);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                    return Ok();
+                }
+                else
+                {
+                    return NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                 
+            } 
+            return RedirectToAction("GetProducts    ");
         }
 
         // DELETE: api/Products/5
