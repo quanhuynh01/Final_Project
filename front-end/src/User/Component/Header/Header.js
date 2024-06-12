@@ -122,7 +122,7 @@ const Header = () => {
         </div>
       </div>
     </div> */}
- <Navbar expand="lg" className="bg-body-tertiary fixed-top">
+ <Navbar expand="lg" className="bg-body-tertiary "> {/*fixed-top*/}
       <Container fluid  style={{backgroundColor:'#ffffff'}} >
         <Navbar.Brand href="#"><img style={{width:'100px', height:'100px',borderRadius:"50%"}} src='https://i.imgur.com/nkF5E0S.png' alt='logo' /></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll"/>
