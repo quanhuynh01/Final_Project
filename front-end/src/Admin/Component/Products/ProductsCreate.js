@@ -7,17 +7,17 @@ import { useNavigate } from "react-router";
 import Select from 'react-select';
 import $ from 'jquery'
 
-const ProductsCreate = () => { 
+const ProductsCreate = () => {
     const navigate = useNavigate();
     const [Brand, setBrand] = useState([]);
-    const [Categories, setCategories] = useState([]); 
+    const [Categories, setCategories] = useState([]);
     const [Catepost, setCatepost] = useState([]);
     const [Attribute, setAttribute] = useState([]);
     const [Attributevalues, setAttributevalues] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
-        axios.get( `https://localhost:7201/api/Attributes`).then(res =>setAttribute(res.data));
+        axios.get(`https://localhost:7201/api/Attributes`).then(res => setAttribute(res.data));
     }, []);
 
     const [Products, setProducts] = useState({ avatarFiles: [], Active: false, BestSeller: false });
@@ -54,32 +54,45 @@ const ProductsCreate = () => {
     const handleMultiSelectChange = (selectedOptions) => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
         //console.log(selectedValues);
-        setCatepost(selectedValues); 
+        setCatepost(selectedValues);
     }
     //xử lý chọn nhiều thuộc tính
     const handleMultiSelectChangeAttribute = (selectedOptions) => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        //console.log(selectedValues);
-        setCatepost(selectedValues); 
+        //conso le.log(selectedValues);
+        setCatepost(selectedValues);
     }
     //xử lý nếu chọn thuộc tính thì hiển thị giá trị thuộc tính
     const handleAttribute = (item) => {
-        console.log(item);
-        if (item) {
-            axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${item.id}`)
-            .then( (res)=>{ 
-                if (res.data != null) {
-                    setAttributevalues(res.data)
-                }
-                else{
-                    console.log(res.status ==400);
-                    alert('Chưa có dữ liệu cho thuộc tính này');
-                    //setAttributevalues({});
-                }
-                
-            })
-             
+        //console.log(item);
+        var id = item.id;
+        console.log(id);
+        if(id){
+            axios.post(`https://localhost:7201/api/Products/addAttribute/${id}`)
+            .then(res =>console.log(res));
         }
+        // if (item) {
+        //     axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${item.id}`)
+        //         .then((res) => {
+        //             if (res.data != null) {
+        //                 if (res.data.success === true) {
+        //                     // console.log(res);
+        //                     setAttributevalues(res.data.data)
+        //                 }
+        //                 else {
+        //                     alert('Chưa có dữ liệu cho thuộc tính này');
+        //                 }
+        //                 console.log(res.data.success);
+
+        //             }
+        //             else {
+        //                 console.log(res);
+        //                 setAttributevalues({});
+        //             }
+
+        //         })
+
+        // }
         $('.attributeValue').removeClass('d-none');
         $('.attributeValue').addClass('d-block');
 
@@ -114,9 +127,11 @@ const ProductsCreate = () => {
 
             axios.post(`https://localhost:7201/api/Products`, formData)
                 .then(res => {
+                    
                     if (res.status === 200) {
                         alert('Thêm sản phẩm thành công');
-                        navigate('/admin/products');
+                       // console.log(res.data);
+                        navigate(`/admin/products/edit/${res.data.id}`);
                     }
                     else {
                         console.log('Lỗi server');
@@ -127,7 +142,7 @@ const ProductsCreate = () => {
         }
     }
 
-    console.log(Attributevalues);
+    //console.log(Attributevalues);
 
 
 
@@ -189,7 +204,7 @@ const ProductsCreate = () => {
 
                                 />
                             </div>
-                        </Form.Group> 
+                        </Form.Group>
                         <Form.Group className="mb-3 row p-3" >
                             <div className="col-6">
                                 <Form.Label>Giá bán</Form.Label>
@@ -222,7 +237,7 @@ const ProductsCreate = () => {
                             <div className="col-6">
                                 <Form.Label>Hãng sản xuất</Form.Label>
                                 <Form.Select name="BrandId" onChange={handleSelected} className="form-control" value={Products.BrandId}>
-                                    <option  disabled>Chọn hãng sản xuất</option>
+                                    <option disabled>Chọn hãng sản xuất</option>
                                     {
                                         Brand.map((item, index) => (
                                             <option key={index} value={item.id}>{item.brandName}</option>
@@ -245,19 +260,43 @@ const ProductsCreate = () => {
 
                             </div>
 
-                        </Form.Group> 
+                        </Form.Group>
                         <hr></hr>
                         <Form.Group className="mb-3 row p-3" >
                             <div className="col-12">
-                                <FormLabel>Chọn danh sách thuộc tính cho sản phẩm</FormLabel> 
-                                {
-                                    Attribute.map((item, index)=>{
-                                        return (<div key={index}>  
-                                                <Button onClick={()=>handleAttribute(item)} data-id={item.id} className="btn-attribute">{item.nameAttribute}</Button>
-                                        </div>)
-                                    })
-                                } 
-                                <h1 className="attributeValue d-none">Danh sách giá trị</h1>
+                                <FormLabel>Chọn danh sách thuộc tính cho sản phẩm</FormLabel>
+                                <div className="d-flex">
+                                    {
+                                        Attribute.map((item, index) => {
+                                            return (<div key={index}>
+                                                <Button onClick={() => handleAttribute(item)} data-id={item.id} className="btn-attribute">{item.nameAttribute}</Button>
+                                                
+                                            </div>
+                                            )
+                                            
+                                        })
+                                       
+                                    }
+                                  
+                                </div>
+
+                                {/* <div className="attributeValue">
+                                    {
+                                        Attributevalues != null ? (
+                                            Attributevalues.map((item, index) => {
+                                                return (
+                                                    <div key={index}>
+                                                        <input type="checkbox" id={`checkbox-${item.id}`} value={item.id} />
+                                                        <label htmlFor={`checkbox-${item.id}`}>{item.nameValue}</label>
+                                                    </div>
+                                                )
+                                            })
+                                        ) : (
+                                            <div></div>
+                                        )
+                                    }
+                                </div> */}
+
                             </div>
                         </Form.Group>
                         <Button onClick={handleSubmit} className="col-1 btn btn-success" type="button">
