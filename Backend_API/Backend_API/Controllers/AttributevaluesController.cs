@@ -101,19 +101,19 @@ namespace Backend_API.Controllers
             return NoContent();
         }
 
-        [HttpGet("lsAttributeValue/{idAttr}")]
-        public async Task<IActionResult> GetAttributeValuesByAttributeId(int idAttr)
-        {
-            var attributeValues = await _context.Attributevalues
-                                            .Where(av => av.AttributeId == idAttr)
-                                            .ToListAsync();
-            if (attributeValues == null || attributeValues.Count == 0)
+            [HttpGet("lsAttributeValue/{idAttr}")]
+            public async Task<IActionResult> GetAttributeValuesByAttributeId(int idAttr)
             {
-                return StatusCode(400);
-            }
+                var attributeValues = await _context.Attributevalues
+                                                .Where(av => av.AttributeId == idAttr)
+                                                .ToListAsync();
+                if (attributeValues == null || attributeValues.Count == 0)
+                {
+                    return Ok(new {success = false});
+                }
 
-            return Ok(attributeValues);
-        }
+                return Ok(new { success = true ,data = attributeValues });
+            }
 
 
 

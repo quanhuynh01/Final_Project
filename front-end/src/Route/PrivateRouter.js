@@ -11,6 +11,7 @@ import CategoriesEdit from '../Admin/Component/Categories/CategoriesEdit';
 import AttributeEdit from '../Admin/Component/Attribute/AttributeEdit';
 import CustomerSupplier from '../Admin/Component/CustomerSupplier/CustomerSupplier';
 import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
+import ProductsEdit from '../Admin/Component/Products/ProductsEdit';
  
  
 
@@ -23,6 +24,7 @@ const PrivateRouter = () => {
                     <Route path="products">
                         <Route index element={<Products />}></Route>
                         <Route path="create" element={<ProductsCreate />} />
+                        <Route path="edit/:id" element={<ProductsEdit />} />
                     </Route>
                     <Route path="categories">
                         <Route index element={<Categories />}></Route>

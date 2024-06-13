@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\productthumbscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\productthumbscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,32 +35,43 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AttributevaluesController.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributevaluesController.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
-              "RelativeToolTip": "Backend_API\\Controllers\\AttributevaluesController.cs",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAmwG8AAAAnAAAA",
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\ProductsController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\ProductsController.cs",
+              "ViewState": "AQIAALEAAAAAAAAAAIAwwJUAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T02:03:14.763Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ProductThumbsController.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductThumbsController.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Controllers\\ProductThumbsController.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductThumbsController.cs",
-              "RelativeToolTip": "Backend_API\\Controllers\\ProductThumbsController.cs",
-              "ViewState": "AQIAAFoAAAAAAAAAAAAmwG4AAAAOAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-11T01:41:02.043Z",
+              "WhenOpened": "2024-06-12T03:30:50.042Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "AttributesController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributesController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\AttributesController.cs",
+              "ViewState": "AQIAAFgAAAAAAAAAAAAcwE4AAABLAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T04:06:24.907Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AttributevaluesController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributevaluesController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\AttributevaluesController.cs",
+              "ViewState": "AQIAAGMAAAAAAAAAAAAmwHIAAABHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T02:03:14.763Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "BrandsController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\BrandsController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\BrandsController.cs",
@@ -68,13 +83,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Product.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Product.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\Product.cs",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Product.cs",
               "RelativeToolTip": "Backend_API\\Model\\Product.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAqwAoAAAAAAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAjwBwAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-10T03:48:05.898Z"
             }
