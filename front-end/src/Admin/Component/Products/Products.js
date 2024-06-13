@@ -69,17 +69,15 @@ const Products = () => {
                                     <td><img  style={{width:"100px" ,height:"100px"}} src={`https://localhost:7201${item.avatar}`} alt=""/></td>
                                     <td>{item.brand.brandName}</td> 
                                     <td>{item.price}</td> 
-                                    {/* <td>
+                                    <td>
                                         <div>
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-warning btn-delete"
-                                                data-id={item.id}
+                                            <a   href={`products/edit/${item.id}`}
+                                                className="btn btn-outline-warning btn-delete" 
                                             >
                                                 <i className="fa fa-edit"></i> Chỉnh sửa
-                                            </button>
+                                            </a>
                                         </div>
-                                    </td> */}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
