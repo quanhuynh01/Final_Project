@@ -112,6 +112,9 @@ namespace Backend_API.Controllers
             return Ok(productThumb);
         }
 
+
+
+
         private bool ProductThumbExists(int id)
         {
             return _context.ProductThumbs.Any(e => e.Id == id);

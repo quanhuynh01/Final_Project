@@ -147,10 +147,8 @@ namespace Backend_API.Controllers
 
                                 }
                                 dem ++; 
-                            }
-                            
-                        }
-
+                            } 
+                        } 
                         if (CateId.Count > 0)
                         {
                             foreach (var item in CateId)
@@ -163,7 +161,7 @@ namespace Backend_API.Controllers
                             }
                         }
                     }
-                    return Ok();
+                    return Ok(new { data = product ,id = p.Id });
                 }
                 else
                 {
@@ -173,8 +171,8 @@ namespace Backend_API.Controllers
             catch (Exception ex)
             {
                  
-            } 
-            return RedirectToAction("GetProducts    ");
+            }
+            return  Ok(); 
         }
 
         // DELETE: api/Products/5
@@ -192,6 +190,15 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
+
+        //[HttpPost("addAttribute/{idAttribute}")]
+        //public async Task<IActionResult> PostProductAttribute(int id)
+        //{
+              
+        //    return NoContent();
+        //}
+
+
 
         private bool ProductExists(int id)
         {
