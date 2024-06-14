@@ -1,51 +1,9 @@
-.navbar {
-  /* background-color: #ffffff;  */
-    border-radius: 0;
-    border: none;
-    display: block;
-     margin:0 !important; 
-    padding: 0;
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
  
-}
-.nav-link{
-  padding: 5px;
-  
-}
-.nav-link >h5{
-  color: rgb(0, 0, 0);
-}
-#navbarScrollingDropdown{
-  display: flex; 
-    align-items: center;
-}
-.navbar-nav-scroll{
-  padding-left: 11px;
-}
-.navbar-nav .dropdown-menu {
-  float: none;
-}
-
-
-
-
-
-
-
-
-
-
-@media (min-width: 992px) {
-  .navbar-expand-lg .navbar-collapse {
-      display: -ms-flexbox !important;
-      display: flex !important;
-      justify-content: space-between;
-      -ms-flex-preferred-size: auto;
-      flex-basis: auto;
-  }
-}
-
-@media (max-width: 600px) {
-  .search-group{ 
-      display: none !important; 
-  }
+} 
+.nav-link {
+  margin-right: 1rem;
 }
