@@ -10,8 +10,8 @@ import SlideShow from "../Component/SlideShow/SlideShow";
 const LayoutUser = () => {
     return ( <>
     <Header/>
-    <SlideShow/>
-    <Home/>
+    {/* <SlideShow/>
+    <Home/> */}
     {/* <Navbar/>
   
      */}

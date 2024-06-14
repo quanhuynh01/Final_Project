@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import $ from 'jquery'
@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Cart from '../Cart/Cart';
 
 
 const Header = () => {
@@ -17,7 +18,7 @@ const Header = () => {
   const [Name, setName] = useState();
 
   useEffect(() => {
-   
+
     const tokenFromStorage = localStorage.getItem('token');
     setToken(tokenFromStorage); // Cập nhật token từ localStorage
     setTokenUpdated(true); // Đã cập nhật token
@@ -34,19 +35,15 @@ const Header = () => {
     }
     $('.click-show').on('click', function () {
       $('.menu-logout').toggleClass('d-none');
-  });
-
-
-  
+    });
   }, [token, tokenUpdated]); //
- 
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
   };
-
   return (<>
-    {/* <div className="container-fluid  ">
+    <div className="container-fluid  ">
       <div className="row bg-warning py-1 px-xl-5">
         <div className="col-lg-6 d-none d-lg-block">
           <div className="d-inline-flex align-items-center h-100">
@@ -121,50 +118,9 @@ const Header = () => {
           <h5 className="m-0">098 485 5261</h5>
         </div>
       </div>
-    </div> */}
- <Navbar expand="lg" className="bg-body-tertiary "> {/*fixed-top*/}
-      <Container fluid  style={{backgroundColor:'#ffffff'}} >
-        <Navbar.Brand href="#"><img style={{width:'100px', height:'100px',borderRadius:"50%"}} src='https://i.imgur.com/nkF5E0S.png' alt='logo' /></Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll"/>
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: '100px'}}
-            navbarScroll
-          >
-            <Nav.Link href="#action1"><h5>Trang chủ</h5></Nav.Link>
-      
-      <NavDropdown title={<h5>Danh mục</h5>} id="navbarScrollingDropdown">
-        <NavDropdown.Item href="#action3"><h5>a</h5></NavDropdown.Item>
-        <NavDropdown.Item href="#action4">
-          <h5>Another action</h5>
-        </NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item href="#action5">
-          <h5>Something else here</h5>
-        </NavDropdown.Item>
-      </NavDropdown>
-      <Nav.Link href="#action2"><h5>Sản phẩm</h5></Nav.Link>
-      <Nav.Link href="#action2"><h5>Dịch vụ </h5></Nav.Link>
-      <Nav.Link href="#action2"><h5>Tin tức</h5></Nav.Link>
-      <Nav.Link href="#action2"><h5>Giới thiệu</h5></Nav.Link>
-          </Nav>
-          <Form className="d-flex search-group">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="success"><i className='fa fa-search'></i> Search</Button>
-            <Button className='btn btn-primary'>Đăng nhập/Đăng ký</Button>
-          </Form>
-        </Navbar.Collapse>
-       
-      </Container>
-    </Navbar>
-     
+    </div>
  
+
   </>);
 }
 
