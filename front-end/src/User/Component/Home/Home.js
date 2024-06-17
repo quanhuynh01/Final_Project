@@ -4,31 +4,53 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Card, Tab, Tabs } from 'react-bootstrap';
 import Swal from 'sweetalert2'
+import { jwtDecode } from 'jwt-decode';
 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [Categories, setCategories] = useState([]);
+  const [User, setUser] = useState(null);
+
   useEffect(() => {
     axios.get('https://localhost:7201/api/Products')
       .then(res => setProducts(res.data.slice(0, 10)));//slice(0, 15) lấy ra 15 sản phẩm đầu
     axios.get(`https://localhost:7201/api/Categories`)
       .then(res => setCategories(res.data));
   }, []);
-  const addToCart = () => {
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Theem vào giỏ hàng thành công",
-      timer: 1000
-    });
+  //khởi chạy khi render để lấy id User
+  useEffect(() => {
+    let token = localStorage.getItem('token');
+    if (token != null) {
+      const decode = jwtDecode(token);
+      const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      setUser(userId);
+    }
+  }, []);
+
+  //thêm vào giỏ hàng
+  const addToCart = (Product) => {  
+    //xử lý nếu đã có sản phẩm thì update số lượng 
+    let cart = JSON.parse(localStorage.getItem('cart')) || []; //Tạo cart luôn là 1 mảng hợp lệ để lưu vào localStorage 
+    if (Product) { 
+      cart.push(Product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+   
+    // const formdata = new FormData();
+    // Object.entries(item).forEach(([key, value]) => {
+    //   formdata.append(key, value);
+    // });
+    // formdata.append("idUser", User);
+    // axios.post(`https://localhost:7201/api/Products/addToCart`, formdata).then(res => console.log(res));
   };
-  // function convertToVND(price) {
-  //   // Giả sử đơn giá hiện tại là USD, và tỷ giá chuyển đổi là 23,000 VND cho 1 USD
-  //   const exchangeRate = 23000;
-  //   const priceInVND = price * exchangeRate;
-  //   return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-  // }
+
+  //chuyển đổi tiền
+  function convertToVND(price) { 
+    const exchangeRate = 23000;
+    const priceInVND = price * exchangeRate;
+    return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  }
 
 
 
@@ -93,26 +115,26 @@ const Home = () => {
     </main>
     {/* Danh mục sản phẩm */}
     <div className='mt-4 mb-4'>
-  <h2 className='text-center'>Danh mục sản phẩm</h2>
-  <div className='d-flex justify-content-center mt-3'>
-    {
-      Categories.filter(s => s.show === true).map((item, index) => (
-        <Link key={item.id} to={`danh-muc/${item.id}`}>
-          <div className='cate-item mr-2'>
-            <div className='' style={{ alignItems: "center" }} >
-              <div className='img-cate d-flex justify-content-center p-1'>
-                <img style={{ height: "70px", width: "70px" }} src={`https://localhost:7201/${item.iconCate}`} alt='' />
+      <h2 className='text-center'>Danh mục sản phẩm</h2>
+      <div className='d-flex justify-content-center mt-3'>
+        {
+          Categories.filter(s => s.show === true).map((item, index) => (
+            <Link key={index} to={`danh-muc/${item.id}`}>
+              <div className='cate-item mr-2'>
+                <div className='' style={{ alignItems: "center" }} >
+                  <div className='img-cate d-flex justify-content-center p-1'>
+                    <img style={{ height: "70px", width: "70px" }} src={`https://localhost:7201/${item.iconCate}`} alt='' />
+                  </div>
+                  <div className='name-cate  d-flex justify-content-center p-1'>
+                    <h5>{item.nameCategory}</h5>
+                  </div>
+                </div>
               </div>
-              <div className='name-cate  d-flex justify-content-center p-1'>
-                <h5>{item.nameCategory}</h5>
-              </div>
-            </div>
-          </div>
-        </Link>
-      ))
-    }
-  </div>
-</div>
+            </Link>
+          ))
+        }
+      </div>
+    </div>
 
     {/* Tab sản phẩm */}
     <Tabs
@@ -120,33 +142,35 @@ const Home = () => {
       id="uncontrolled-tab-example"
       className="mb-3"
     >
-<Tab eventKey="bestSeller" title={<h4>Sản phẩm bán chạy</h4>}>
-  <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
-    {products.filter(p => p.bestSeller === true).map((item) => (
-      <Link key={item.id} to={`chi-tiet-san-pham/${item.id}`}>
-        <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
-          <Card.Img variant="top" src={`https://localhost:7201${item.avatar}`} alt='' />
-          <Card.Body>
-            <div className='d-flex' style={{ justifyContent: "space-between" }}>
-              <Card.Text>Mã SP:{item.sku}</Card.Text>
-              <Card.Text className={item.stock > 0 ? 'text-success' : 'text-danger'}>
-                {item.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
-              </Card.Text>
-            </div>
-            <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
-              {item.productName}
-            </Card.Title>
-            <Card.Text>Giá: {item.price + "$"}  </Card.Text>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={() => addToCart()} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-            </div>
-          </Card.Body>
-          <p className='best-seller'>Bán chạy</p>
-        </Card>
-      </Link>
-    ))}
-  </div>
-</Tab>
+      <Tab eventKey="bestSeller" title={<h4>Sản phẩm bán chạy</h4>}>
+        <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
+          {products.filter(p => p.bestSeller === true).map((item) => (
+
+            <Card key={item.id} className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
+              <Card.Img variant="top" src={`https://localhost:7201${item.avatar}`} alt='' />
+              <Card.Body style={{ position: "relative" }}>
+                <Link key={item.id} to={`chi-tiet-san-pham/${item.id}`}>
+                  <div className='d-flex' style={{ justifyContent: "space-between" }}>
+                    <Card.Text>Mã SP:{item.sku}</Card.Text>
+                    <Card.Text className={item.stock > 0 ? 'text-success' : 'text-danger'}>
+                      {item.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
+                    </Card.Text>
+                  </div>
+                  <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
+                    {item.productName}
+                  </Card.Title>
+                  <Card.Text>Giá: {convertToVND(item.price)}</Card.Text>
+                </Link>
+              </Card.Body>
+              <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
+                <Button onClick={() => addToCart(item)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+              </div>
+              <p className='best-seller'>Bán chạy</p>
+            </Card>
+
+          ))}
+        </div>
+      </Tab>
 
 
       {/* <Tab eventKey="New" title={<h4>Sản phẩm mới</h4>}>
