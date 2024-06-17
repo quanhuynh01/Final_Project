@@ -51,8 +51,7 @@ const Attribute = () => {
         e.preventDefault();
         const formData = new FormData();
         Object.entries(AttributeCreate).forEach(([key, value]) => { 
-            formData.append(key, value);
-
+            formData.append(key, value); 
         });
         axios.post(`https://localhost:7201/api/Attributes`, formData, {
             headers: {

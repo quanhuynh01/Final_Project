@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
 using NuGet.Protocol;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System.Text.Json;
 
 namespace Backend_API.Controllers
 {
@@ -194,10 +195,14 @@ namespace Backend_API.Controllers
         //[HttpPost("addAttribute/{idAttribute}")]
         //public async Task<IActionResult> PostProductAttribute(int id)
         //{
-              
+
         //    return NoContent();
         //}
-
+        [HttpPost("addToCart")]
+        public async Task<IActionResult> addToCart([FromForm] string IdUser , [FromForm] Product Product)
+        { 
+            return NoContent();
+        }
 
 
         private bool ProductExists(int id)

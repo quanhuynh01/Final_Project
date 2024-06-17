@@ -16,13 +16,18 @@ const Header = () => {
   const [token, setToken] = useState(null); // Khởi tạo token với giá trị null
   const [tokenUpdated, setTokenUpdated] = useState(false); // Khởi tạo state để theo dõi việc cập nhật token
   const [Name, setName] = useState();
+  const [Cart, setCart] = useState([]);
 
-  useEffect(() => {
-
+  useEffect(() => { 
     const tokenFromStorage = localStorage.getItem('token');
     setToken(tokenFromStorage); // Cập nhật token từ localStorage
     setTokenUpdated(true); // Đã cập nhật token
-  }, []); // useEffect chỉ chạy một lần sau khi component được mount
+    
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(cartItems);
+
+
+  }, []); // useEffect chỉ chạy một lần sau khi component được render
 
   useEffect(() => {
     if (tokenUpdated) {
@@ -41,6 +46,9 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
+  };
+  const countItemsInCart = () => {
+    return Cart.length;
   };
   return (<>
     <div className="container-fluid  ">
@@ -114,8 +122,8 @@ const Header = () => {
           </form>
         </div>
         <div className="col-lg-4 col-6 text-right">
-          <p className="m-0">Contact Our</p>
-          <h5 className="m-0">098 485 5261</h5>
+          <h5 className="m-0" style={{position:"relative"}}> <i className='fa fa-shopping-cart'></i></h5>
+          <b style={{position:"absolute" ,right:"35px",bottom:"0"}} className='text-danger'>{countItemsInCart()}</b>
         </div>
       </div>
     </div>
