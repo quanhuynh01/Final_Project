@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Po8TYqo8eKOAV9TAZ2ESVlT8QDhofgFgkhdnuBuOT9s=",
+  "Hash": "nkEwdf/cbDAn7CkfS98IqsvJOZs/i5N0+oVXfxPhv0o=",
   "Source": "Backend_API",
   "BasePath": "_content/Backend_API",
   "Mode": "Default",
@@ -414,6 +414,44 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\CusSup\\CellPhoneS.png"
+    },
+    {
+      "Identity": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\0.png",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/2/0.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\2\\0.png"
+    },
+    {
+      "Identity": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\1.png",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/2/1.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\2\\1.png"
     }
   ]
 }
