@@ -3,6 +3,7 @@ import LayoutUser from "../User/LayoutUser/LayoutUser";
 import Login from "../User/Component/Login/Login"; 
 import ProductsDetail from "../User/Component/Products/ProductsDetail";
 import ProductsList from "../User/Component/Products/ProductsList";
+import Cart from "../User/Component/Cart/Cart";
 
 const PublishRouter = () => {
     return (<>
@@ -18,6 +19,9 @@ const PublishRouter = () => {
                     <Route index element={<ProductsList />} /> 
                 </Route>
                 <Route path="/chi-tiet-san-pham/:id" element={<ProductsDetail />} />
+                <Route path="/cart" element={<Cart />}>
+                    <Route index element={<Cart />} />
+                </Route>
             </Routes>
         </BrowserRouter>
 
