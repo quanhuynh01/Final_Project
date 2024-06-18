@@ -204,6 +204,37 @@ namespace Backend_API.Controllers
             return NoContent();
         }
 
+        //lấy sản phẩm theo danh mục
+        [HttpGet("/danh-muc/{id}")]
+        public async Task<IActionResult> GetProductsByCateId(int id)
+        {
+            var data = _context.ProductCategories.Include(p=>p.Product).Include(c=>c.Category).Where(p => p.CategoryId == id);
+            var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault() ;
+            if (data !=null)
+            {
+                return Ok( new { data, nameCategories = NameCate.NameCategory });
+            }
+            else
+            {
+                return Ok(new { message = "Không có dữ liệu" });
+            } 
+        }
+        
+        //tìm kiếm sản phẩm
+        [HttpGet("/Search/{text}")]
+        public async Task<IActionResult> searchProducts(string text)
+        {
+            var data = await _context.Products.Where(p => p.ProductName.Contains(text))  .ToListAsync();
+            if (data != null)
+            {
+                return Ok(data);
+            }
+            else
+            {
+                return Ok(new { message = "Không có dữ liệu" });
+            }
+        }
+
 
         private bool ProductExists(int id)
         {
