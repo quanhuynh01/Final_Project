@@ -80,21 +80,24 @@ namespace API_Server.Controllers
 		{
 			var userExists = await _userManager.FindByNameAsync(model.Username);
 			if (userExists != null)
-				return StatusCode(StatusCodes.Status500InternalServerError);
-
+            {
+                return Ok(new { success = false ,status=0 });//status = 0 tên người dùng tồn tại
+            }     
 			User user = new User()
 			{
 				Email = model.Email,
 				SecurityStamp = Guid.NewGuid().ToString(),
 				UserName = model.Username,
-                FullName = model.Fullname
+                FullName = model.Fullname,
+                PhoneNumber= model.Phone 
 			};
 
 			var result = await _userManager.CreateAsync(user, model.Password);
 			if (!result.Succeeded)
-				return StatusCode(StatusCodes.Status500InternalServerError);
-
-			return Ok();
+            {
+                return Ok(new { success = false, status = 1 });//status = 1 mật khẩu không đúng định dạng
+            }      
+			return Ok(new { success = true });
 		}
 
 		[HttpPost]
