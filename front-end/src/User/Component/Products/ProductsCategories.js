@@ -1,91 +1,123 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router"; 
+import { useParams } from "react-router";
 import Header from "../Header/Header";
-import { Breadcrumb, Button, Card } from "react-bootstrap";
+import { Breadcrumb, Button, Card, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
-const ProductsCategories = ()=>{ 
-    const {id}= useParams();
-    const [Products, setProducts] = useState([]); 
-    const [cart, setCart] = useState([]); 
+import Footer from "../Footer/Footer";
+
+const ProductsCategories = () => {
+    const { id } = useParams();
+    const [Products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [NameCate, setNameCate] = useState(null);
+    const [selectedBrands, setSelectedBrands] = useState([]); // State để lưu trữ hãng được chọn
+    const [FilteredProducts, setFilteredProducts] = useState([]); // Lưu trữ sản phẩm được lọc
+
     useEffect(() => {
         axios.get(`https://localhost:7201/danh-muc/${id}`)
-            .then( res=> {
+            .then(res => {
                 setProducts(res.data.data);
                 setNameCate(res.data.nameCategories);
             });
-    }, []);  
-    
-    // const [selectedCategory, setCategory] = useState(null);
-    // const [isShowModal, setShowModal] = useState(false);
-    // const [selectedProduct, setProduct] = useState(null); 
-    // const [isShowCart, setShowCart] = useState(false); 
-    // const onClickCategoryHandler = (cat_id) => {
-    //   setCategory(cat_id);
-    // }; 
+        axios.get(`https://localhost:7201/api/Brands`)
+            .then(res => setBrands(res.data));
+        axios.get(`https://localhost:7201/api/Categories`)
+            .then(res => setCategories(res.data));
+    }, [id]);
 
-    const onAddtoCartHandler = (product) => {
-        console.log(product);
-      if (cart.indexOf(product) !== -1) return null;
-      const arr = [...cart];
-      product.amount = 1;
-      arr.push(product);
-      setCart([...arr]);
-    };
-  
-    useEffect(() => {
-      console.log(cart);
-    });
-  
-    //   console.log(selectedCategory);
-    // let filteredProducts = [...Products];
-    // if (selectedCategory != null) {
-    //   filteredProducts = Products.filter(
-    //     (product) => product.category_id == selectedCategory
-    //   );
-    // }
-
-    //chuyển đổi tiền
-    function convertToVND(price) {  
+    // Convert price to VND
+    function convertToVND(price) {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-    } 
-    return (<> 
-    <Header soluong={cart.length} />
-        <Breadcrumb > 
-            <Breadcrumb.Item className="ml-5" href="/">Trang chủ</Breadcrumb.Item>
-            <Breadcrumb.Item active>{NameCate}</Breadcrumb.Item> 
-        </Breadcrumb>
-        <div className="container">
-            {
-                Products.map((item, index) => {
-                    return (<div key={index}>
-                        <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
-                            <Card.Img variant="top" src={`https://localhost:7201${item.product.avatar}`} alt='' />
-                            <Card.Body style={{ position: "relative" }}>
-                                <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.id}`}>
-                                    <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                        <Card.Text>Mã SP:{item.product.sku}</Card.Text>
-                                        <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>
-                                            {item.product.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
-                                        </Card.Text>
-                                    </div>
-                                    <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
-                                        {item.product.productName}
-                                    </Card.Title>
-                                    <Card.Text>Giá: {convertToVND(item.product.price)}</Card.Text>
-                                </Link>
-                            </Card.Body>
-                            <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                                <Button  onClick={() => onAddtoCartHandler(item.product)}  variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-                            </div>
+    }
 
-                        </Card>
-                    </div>)
-                })
-            }
-        </div>
-    </>)
-}
+    // Xử lý khi chọn hoặc bỏ chọn hãng
+    const handleBrandChange = (e) => {
+        const brandId = parseInt(e.target.value); // Lấy id hãng từ sự kiện
+        if (e.target.checked) {
+            setSelectedBrands([...selectedBrands, brandId]); // Thêm hãng vào danh sách được chọn
+        } else {
+            const updatedBrands = selectedBrands.filter(id => id !== brandId); // Xóa hãng khỏi danh sách được chọn
+            setSelectedBrands(updatedBrands);
+        }
+    };
+
+    // Lọc sản phẩm theo hãng
+    useEffect(() => {
+        if (selectedBrands.length > 0) {
+            const filteredProducts = Products.filter(item => selectedBrands.includes(item.product.brandId));
+            setFilteredProducts(filteredProducts);
+        } else {
+            setFilteredProducts(Products); // Nếu không có hãng nào được chọn, hiển thị tất cả sản phẩm
+        }
+    }, [selectedBrands, Products]);
+
+    // Thêm sản phẩm vào giỏ hàng
+    const onAddtoCartHandler = (product) => {
+        console.log(product);
+        if (cart.indexOf(product) !== -1) return null;
+        const arr = [...cart];
+        product.amount = 1;
+        arr.push(product);
+        setCart([...arr]);
+    };
+
+    return (
+        <>
+            <Header soluong={cart.length} />
+            <Breadcrumb>
+                <Breadcrumb.Item className="ml-5" href="/">Trang chủ</Breadcrumb.Item>
+                <Breadcrumb.Item active>{NameCate}</Breadcrumb.Item>
+            </Breadcrumb>
+            <div className="d-flex" style={{width:"90%",margin:"auto"}}>
+                <div className="left card p-4" style={{ width: "25%",marginTop:"10px" }}>
+                    <h5>Sản phẩm theo hãng</h5>
+                    <Form>
+                        {brands.map((b, index) => (
+                            <Form.Check
+                                key={index}
+                                type="checkbox"
+                                label={b.brandName}
+                                value={b.id}
+                                onChange={handleBrandChange}
+                                checked={selectedBrands.includes(b.id)} // Đánh dấu hãng đã được chọn
+                            />
+                        ))}
+                    </Form>
+                </div>
+                <div className="right d-flex" style={{ width: "75%" }}>
+                    {FilteredProducts.map((item, index) => (
+                        <div key={index}>
+                            <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
+                                <Card.Img variant="top" src={`https://localhost:7201${item.product.avatar}`} alt='' />
+                                <Card.Body style={{ position: "relative" }}>
+                                    <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.id}`}>
+                                        <div className='d-flex' style={{ justifyContent: "space-between" }}>
+                                            <Card.Text>Mã SP:{item.product.sku}</Card.Text>
+                                            <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>
+                                                {item.product.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
+                                            </Card.Text>
+                                        </div>
+                                        <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
+                                            {item.product.productName}
+                                        </Card.Title>
+                                        <Card.Text>Giá: {convertToVND(item.product.price)}</Card.Text>
+                                    </Link>
+                                </Card.Body>
+                                <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
+                                    <Button onClick={() => onAddtoCartHandler(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+                                </div>
+                            </Card>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <Footer/>
+        </>
+    );
+};
+
 export default ProductsCategories;
