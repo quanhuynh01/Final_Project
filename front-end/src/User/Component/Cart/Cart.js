@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Breadcrumb, Button, Form, Table } from "react-bootstrap";
 import Header from "../Header/Header";
+import { Link } from "react-router-dom";
 
 
 const Cart = () => {
@@ -10,24 +11,22 @@ const Cart = () => {
         const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
         setCart(cartItems);
     }, []);
-
     // Hàm để đếm số lượng các sản phẩm có cùng id
-    const countDuplicates = (productId) => {
-        return cart.reduce((count, current) => {
-            return current.id === productId ? count + 1 : count;
-        }, 0);
-    };
+    // const countDuplicates = (productId) => {
+    //     return cart.reduce((count, current) => {
+    //         return current.id === productId ? count + 1 : count;
+    //     }, 0);
+    // }; 
 
-    // Xử lý để chỉ hiển thị mỗi sản phẩm một lần dựa trên id
-    const uniqueCart = cart.reduce((acc, current) => {
-        const x = acc.find(item => item.id === current.id);
-        if (!x) {
-            return acc.concat([current]);
-        } else {
-            return acc;
-        }
-    }, []);
-
+    // // Xử lý để chỉ hiển thị mỗi sản phẩm một lần dựa trên id
+    // const uniqueCart = cart.reduce((acc, current) => {
+    //     const x = acc.find(item => item.id === current.id);
+    //     if (!x) {
+    //         return acc.concat([current]);
+    //     } else {
+    //         return acc;
+    //     }
+    // }, []); 
 
 
     // Hàm xử lý khi nhấn nút Xóa sản phẩm khỏi giỏ hàng
@@ -74,7 +73,7 @@ const Cart = () => {
                         </div>
                     </div>
                 </Form.Group>
-               
+
             </div>
             <div className=" col-6">
                 <h2 className="mb-4 mt-5 text-center">Thông tin giỏ hàng</h2>
@@ -84,39 +83,32 @@ const Cart = () => {
                     <Table striped bordered hover variant="light">
                         <thead>
                             <tr><th>Mã sản phẩm</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Hình ảnh</th>
-                                <th>Số lượng</th>
-                                <th>Tổng giá </th>
-                                <th></th>
+                                <th>Tên sản phẩm</th> 
                             </tr>
                         </thead>
                         <tbody>
-                            {uniqueCart.map((item, index) => (
+                            {cart.map((item, index) => (
                                 <tr key={index}><td>{item.sku}</td>
-                                    <td>
-                                        <div> {item.productName}</div>
-                                        <div>Giá: {convertToVND(item.salePrice)}</div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <img src={`https://localhost:7201/${item.avatar}`} alt="Avatar" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input
-                                            className="w-100 form-control"
-                                            readOnly
-                                            value={countDuplicates(item.id)}
-                                        />
-                                    </td>
-                                    <td>{convertToVND(item.salePrice * countDuplicates(item.id))}</td>
+                                   
+                                        <td>
+                                            <Link to={`/chi-tiet-san-pham/${item.id}`}>
+                                            <div className="d-flex">
+                                                <img style={{ width: "75px", height: "70px" }} src={`https://localhost:7201${item.avatar}`} alt="Avatar" />
+                                                <p className="ml-2">{item.productName}, Mã SP:{item.sku}</p>
+                                            </div>
+                                          
+                                            <div> <p>Giá: {convertToVND(item.salePrice)}</p></div>
+                                            </Link>
+                                        </td>
 
-                                    <td>
-                                        <button className="btn btn-danger" onClick={() => removeFromCart(item.id)}>
-                                            <i className="fa fa-trash"></i> Xóa
-                                        </button>
-                                    </td>
+                                        <td>{convertToVND(item.salePrice)}</td>
+
+                                        <td>
+                                            <button className="btn btn-danger" onClick={() => removeFromCart(item.id)}>
+                                                <i className="fa fa-trash"></i> Xóa
+                                            </button>
+                                        </td>
+                                   
                                 </tr>
                             ))}
                         </tbody>
@@ -127,7 +119,6 @@ const Cart = () => {
                 <Button type="submit">Đặt hàng</Button>
             </div>
         </div>
-  
     </>
     );
 };
