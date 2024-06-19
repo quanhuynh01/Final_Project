@@ -10,24 +10,27 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Cart from '../Cart/Cart';
+import axios from 'axios';
 
 
-const Header = () => {
+const Header = ({ soluong }) => {
+
   const [token, setToken] = useState(null); // Khởi tạo token với giá trị null
   const [tokenUpdated, setTokenUpdated] = useState(false); // Khởi tạo state để theo dõi việc cập nhật token
   const [Name, setName] = useState();
+  const [searchResult, setsearchResult] = useState([]);
+  
+  const [Quantity, setQuantity] = useState(null);
   const [Cart, setCart] = useState([]);
-
+  
   useEffect(() => { 
     const tokenFromStorage = localStorage.getItem('token');
     setToken(tokenFromStorage); // Cập nhật token từ localStorage
-    setTokenUpdated(true); // Đã cập nhật token
-    
+    setTokenUpdated(true); // Đã cập nhật token 
     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(cartItems);
-
-
-  }, []); // useEffect chỉ chạy một lần sau khi component được render
+    setCart(cartItems); 
+     
+  }, []); 
 
   useEffect(() => {
     if (tokenUpdated) {
@@ -41,15 +44,23 @@ const Header = () => {
     $('.click-show').on('click', function () {
       $('.menu-logout').toggleClass('d-none');
     });
+    ///tìm kiếm sản phẩm
+    $('.text-search').on('input',function(){
+      let text = $(this).val();
+      if (text.length >0) {
+        axios.get(`https://localhost:7201/Search/${text}`).then(res =>setsearchResult(res.data));
+      }
+         
+    }); 
+
+
   }, [token, tokenUpdated]); //
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
-  };
-  const countItemsInCart = () => {
-    return Cart.length;
-  };
+  }; 
+ 
   return (<>
     <div className="container-fluid  ">
       <div className="row bg-warning py-1 px-xl-5">
@@ -112,7 +123,7 @@ const Header = () => {
               <option value={3}>PC</option>
             </select>
             <div className="input-group w-100 col-9">
-              <input type="text" className="form-control" placeholder="Search for products" />
+              <input type="text" className="form-control text-search" placeholder="Search for products" />
               <div className="input-group-append">
                 <span className="input-group-text bg-transparent text-warning">
                   <i className="fa fa-search" />
@@ -121,14 +132,14 @@ const Header = () => {
             </div>
           </form>
         </div>
-        <div className="col-lg-4 col-6 text-right">
-          <h5 className="m-0" style={{position:"relative"}}> <i className='fa fa-shopping-cart'></i></h5>
-          <b style={{position:"absolute" ,right:"35px",bottom:"0"}} className='text-danger'>{countItemsInCart()}</b>
+        <div className="col-lg-4 col-6 text-right" >
+          <Link to={`http://localhost:3000/cart`}>
+          <h5 className="m-0" style={{position:"relative",color:"black"}}> <i className='fa fa-shopping-cart'></i></h5>
+          <b style={{position:"absolute" ,right:"35px",bottom:"0"}} className='text-danger'><b>{soluong}</b></b>
+          </Link> 
         </div>
       </div>
-    </div>
- 
-
+    </div> 
   </>);
 }
 
