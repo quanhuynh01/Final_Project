@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import './Login.css'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
+import { Link } from "react-router-dom";
 
 const Login = () => {
  
@@ -68,8 +69,8 @@ const Login = () => {
 
   }
  
-  return (<div className="sufee-login d-flex align-content-center flex-wrap">   
-    <div className="container">
+  return (
+  <> 
       <div className="login-content">
         <div className="login-logo">
           <a href="index.html">
@@ -111,13 +112,13 @@ const Login = () => {
               </div>
             </div>
             <div className="register-link m-t-15 text-center">
-              <p>Don't have account ? <a href="#"> Sign Up Here</a></p>
+              <p>Don't have account ? <Link to={`/register`}> Sign Up Here</Link></p>
             </div>
           </form>
         </div>
       </div>
-    </div>
-  </div>
+ 
+  </>
   );
 }
 
