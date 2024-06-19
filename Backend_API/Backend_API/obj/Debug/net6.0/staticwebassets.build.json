@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "z3SRQ2WvURW5YfAKip8VzK0h3OE5CtEr31qsrWUXJAI=",
+  "Hash": "FEXAaV6jIE6wfMcHgoILqP48cuQgR4/dfmpyyDw8rXM=",
   "Source": "Backend_API",
   "BasePath": "_content/Backend_API",
   "Mode": "Default",
@@ -457,6 +457,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\Product\\3\\2.png"
+    },
+    {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\4\\0.jpeg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/4/0.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\4\\0.jpeg"
+    },
+    {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\4\\1.jpeg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/4/1.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\4\\1.jpeg"
+    },
+    {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\4\\2.jpeg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/4/2.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\4\\2.jpeg"
     }
   ]
 }
