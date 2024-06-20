@@ -16,6 +16,7 @@ namespace Backend_API.Model
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Attribute> Attributes { get; set; }
         public DbSet<Attributevalue> Attributevalues { get; set; } 
+        public DbSet<MailConfig> MailConfigs { get; set; } 
         //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
         public DbSet<Backend_API.Model.CustomerSupplier> CustomerSupplier { get; set; }
 
