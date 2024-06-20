@@ -44,6 +44,14 @@ const SidebarAdmin = () => {
                                 <li><i className="menu-icon fa fa-th" /><Link to={`${adminPath}/customer-supplier`}>Nhà cung cấp</Link></li> 
                             </ul>
                         </li>
+                        <li className="menu-item-has-children dropdown">
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-table" />Cấu hình hệ thống</a>
+                            <ul className="sub-menu children dropdown-menu">
+                                <li><i className="fa  fa-envelope" /><Link to={`${adminPath}/email-config`}>Cấu hình Email</Link></li>
+                            </ul>
+                        </li>
+
+
                         <h3 className="menu-title">Icons</h3>{/* /.menu-title */}
                         <li className="menu-item-has-children dropdown">
                             <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-tasks" />Icons</a>

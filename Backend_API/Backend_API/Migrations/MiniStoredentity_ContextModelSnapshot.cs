@@ -146,6 +146,37 @@ namespace Backend_API.Migrations
                     b.ToTable("CustomerSupplier");
                 });
 
+            modelBuilder.Entity("Backend_API.Model.MailConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EmailSend")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailSmtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PassSmtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Post")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Server")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MailConfigs");
+                });
+
             modelBuilder.Entity("Backend_API.Model.PayMethod", b =>
                 {
                     b.Property<int>("Id")
