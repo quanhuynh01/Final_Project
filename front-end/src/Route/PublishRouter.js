@@ -7,6 +7,7 @@ import Cart from "../User/Component/Cart/Cart";
 import ProductsCategories from "../User/Component/Products/ProductsCategories";
 import Register from "../User/Component/Login/Register";
 import Account from "../User/Component/Account/Account";
+import AccountForgot from "../User/Component/Login/AccountForgot";
 
 const PublishRouter = () => {
     return (<>
@@ -26,6 +27,9 @@ const PublishRouter = () => {
                 </Route>
                 <Route path="/tai-khoan" element={<Account />}>
                     <Route index element={<Account />} /> 
+                </Route>
+                <Route path="/quen-mat-khau" element={<AccountForgot />}>
+                    <Route index element={<AccountForgot />} /> 
                 </Route>
                 <Route path="/chi-tiet-san-pham/:id" element={<ProductsDetail />} />
                 <Route path="/danh-muc/:id" element={<ProductsCategories />} />
