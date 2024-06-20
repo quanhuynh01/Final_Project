@@ -119,6 +119,24 @@ namespace Backend_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MailConfigs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Server = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailSend = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Post = table.Column<int>(type: "int", nullable: true),
+                    EmailSmtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PassSmtp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MailConfigs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PayMethods",
                 columns: table => new
                 {
@@ -273,9 +291,11 @@ namespace Backend_API.Migrations
                     Alias = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BestSeller = table.Column<bool>(type: "bit", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Warranty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WarrantyType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BrandId = table.Column<int>(type: "int", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -290,27 +310,29 @@ namespace Backend_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoriesBrands",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryId = table.Column<int>(type: "int", nullable: true),
-                    BrandId = table.Column<int>(type: "int", nullable: true)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoriesBrands", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CategoriesBrands_Brands_BrandId",
-                        column: x => x.BrandId,
-                        principalTable: "Brands",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CategoriesBrands_Categories_CategoryId",
+                        name: "FK_ProductCategories_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductCategories_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -379,14 +401,14 @@ namespace Backend_API.Migrations
                 column: "AttributeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoriesBrands_BrandId",
-                table: "CategoriesBrands",
-                column: "BrandId");
+                name: "IX_ProductCategories_CategoryId",
+                table: "ProductCategories",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoriesBrands_CategoryId",
-                table: "CategoriesBrands",
-                column: "CategoryId");
+                name: "IX_ProductCategories_ProductId",
+                table: "ProductCategories",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -420,13 +442,16 @@ namespace Backend_API.Migrations
                 name: "Attributevalues");
 
             migrationBuilder.DropTable(
-                name: "CategoriesBrands");
-
-            migrationBuilder.DropTable(
                 name: "CustomerSupplier");
 
             migrationBuilder.DropTable(
+                name: "MailConfigs");
+
+            migrationBuilder.DropTable(
                 name: "PayMethods");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "ProductThumbs");
