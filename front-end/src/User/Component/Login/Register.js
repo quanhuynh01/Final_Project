@@ -4,7 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Register = () => {
-    
+    const [isLoading, setIsLoading] = useState(false);
     const [User, setUser] = useState({
         Username: '',
         Phone: '',
@@ -21,6 +21,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         if (User.passwordone !== User.password) {
             setError("Mật khẩu không trùng khớp !");
             return;
@@ -30,7 +31,22 @@ const Register = () => {
             alert('Nhập đầy đủ thông tin');
             return;
         }
-
+        // Hiển thị SweetAlert khi bắt đầu xử lý
+        let timerInterval;
+        Swal.fire({
+            title: "Đăng ký tài khoản!",
+            html: "Đang xử lý ...",
+            timer: 2100,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading(); 
+            } 
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("I was closed by the timer");
+            }
+        });
         try {
             const res = await axios.post(`https://localhost:7201/api/Users/register`, User); 
             if (res.data.status === 0) {
@@ -43,7 +59,7 @@ const Register = () => {
                     icon: "success",
                     title: "Tạo tài khoản thành công",
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1100
                   });
                 // Chờ 1.5 giây trước khi chuyển hướng
                 setTimeout(() => {
@@ -55,6 +71,8 @@ const Register = () => {
         } catch (error) {
             console.error("There was an error!", error);
             setError("Có lỗi xảy ra trong quá trình đăng ký.");
+        }finally {
+            setIsLoading(false); // Ẩn biểu tượng "loading" sau khi xử lý
         }
     }; 
 
@@ -66,7 +84,7 @@ const Register = () => {
                 <form className="card p-4" onSubmit={handleSubmit}>
                     <div className="form-group input-group">
                         <div className="input-group-prepend">
-                            <span className="input-group-text"> <i className="fa fa-user" /> </span>
+                            <span className="input-group-text"> <i className="	fa fa-address-card" /> </span>
                         </div>
                         <input name="Fullname" required onChange={handleChange} className="form-control" placeholder="Full Name" type="text" />
                     </div>
@@ -104,8 +122,10 @@ const Register = () => {
                             <span className="input-group-text"> <i className="fa fa-lock" /> </span>
                         </div>
                         <input name="password" required onChange={handleChange} className="form-control" placeholder="Repeat password" type="password" />
-                    </div>
+                    </div> 
+                    {
 
+                    }
                     {Error && (
                         <div className="error mt-1 mb-3 text-center text-danger">
                             <i className="fa fa-exclamation-triangle"></i> {Error}
