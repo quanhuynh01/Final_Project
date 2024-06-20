@@ -12,6 +12,7 @@ import AttributeEdit from '../Admin/Component/Attribute/AttributeEdit';
 import CustomerSupplier from '../Admin/Component/CustomerSupplier/CustomerSupplier';
 import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
 import ProductsEdit from '../Admin/Component/Products/ProductsEdit';
+import Email from '../Admin/Component/Email/Email';
  
  
 
@@ -41,6 +42,9 @@ const PrivateRouter = () => {
                     </Route>
                     <Route path="customer-supplier">
                         <Route index element={<CustomerSupplier />}></Route>   
+                    </Route>
+                    <Route path="email-config">
+                        <Route index element={<Email />}></Route>   
                     </Route>
                    
                 </Route>

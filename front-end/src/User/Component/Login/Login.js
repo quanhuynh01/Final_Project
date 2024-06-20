@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import Swal from 'sweetalert2'
-import './Login.css'
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
+import './Login.css' 
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -19,8 +17,8 @@ const Login = () => {
       alert('123');
   }
 
-  const HandelSubmit = (e) => {
-    console.log(Login);
+  const HandelSubmit = (e) => { 
+    
     if (Login == null) {
       alert('Nhập đầy đủ thông tin');
     }
@@ -92,7 +90,7 @@ const Login = () => {
                 <input type="checkbox" /> Remember Me
               </label>
               <label className="pull-right">
-                <a href="#">Forgotten Password?</a>
+                <Link to={"/quen-mat-khau"}>Forgotten Password?</Link>
               </label>
             </div>
             <button type="button" className="btn btn-success btn-flat m-b-30 m-t-30" onClick={HandelSubmit}>Sign in</button>
@@ -100,14 +98,14 @@ const Login = () => {
               <div className="social-button">
                 <button type="button"  className="btn social facebook btn-flat btn-addon mb-3"><i className="ti-facebook" />Sign in with facebook</button>
 
-                <GoogleLogin
+                {/* <GoogleLogin
                   onSuccess={credentialResponse => {
                     console.log(credentialResponse);
                   }}
                   onError={() => {
                     console.log('Login Failed');
                   }}
-/>
+/> */}
                 <button type="button" onClick={HandelSubmitGoogle} className="btn btn-warning social google btn-flat btn-addon mt-2"><i className="ti-google" />Sign in with Google</button>
               </div>
             </div>
