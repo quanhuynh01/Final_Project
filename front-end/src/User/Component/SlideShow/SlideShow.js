@@ -73,7 +73,7 @@ const SlideShow = () => {
     </div>
   </div>
 </div>  */}
- <Carousel fade>
+ <Carousel slide>
       <Carousel.Item>
         <img
           style={{height:'850px'}}

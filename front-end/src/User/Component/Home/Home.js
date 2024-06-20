@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, Tab, Tabs } from 'react-bootstrap';
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode';
-
+import Share from '../Share/Share';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -115,26 +115,26 @@ const Home = () => {
     </main>
     {/* Danh mục sản phẩm */}
     <div className='mt-4 mb-4'>
-      <h2 className='text-center'>Danh mục sản phẩm</h2>
-      <div className='d-flex justify-content-center mt-3'>
-        {
-          Categories.filter(s => s.show === true).map((item, index) => (
-            <Link key={index} to={`danh-muc/${item.id}`}>
-              <div className='cate-item mr-2'>
-                <div className='' style={{ alignItems: "center" }} >
-                  <div className='img-cate d-flex justify-content-center p-1'>
-                    <img style={{ height: "70px", width: "70px" }} src={`https://localhost:7201/${item.iconCate}`} alt='' />
-                  </div>
-                  <div className='name-cate  d-flex justify-content-center p-1'>
-                    <h5>{item.nameCategory}</h5>
+        <h2 className='text-center'>Danh mục sản phẩm</h2>
+        <div className='d-flex justify-content-center mt-3 category-container'>
+          {
+            Categories.filter(s => s.show === true).map((item, index) => (
+              <Link key={index} to={`danh-muc/${item.id}`}>
+                <div className='cate-item mr-2'>
+                  <div className='' style={{ alignItems: "center" }} >
+                    <div className='img-cate d-flex justify-content-center p-1'>
+                      <img className="category-image" style={{ height: "70px", width: "70px" }} src={`https://localhost:7201/${item.iconCate}`} alt='' />
+                    </div>
+                    <div className='name-cate  d-flex justify-content-center p-1'>
+                      <h5>{item.nameCategory}</h5>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))
-        }
+              </Link>
+            ))
+          }
+        </div>
       </div>
-    </div>
 
     {/* Tab sản phẩm */}
     <Tabs
@@ -171,8 +171,7 @@ const Home = () => {
           ))}
         </div>
       </Tab>
-
-
+            
       {/* <Tab eventKey="New" title={<h4>Sản phẩm mới</h4>}>
         <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
           {[...Array(10)].map((_, i) => (
@@ -220,8 +219,9 @@ const Home = () => {
       <div>
         <h2 className='text-center mb-5'>Đối tác của chúng tôi</h2>
       </div>
-
     </section>
+    <Share />
+
   </>);
 }
 

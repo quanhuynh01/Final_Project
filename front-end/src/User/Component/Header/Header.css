@@ -7,3 +7,32 @@
 .nav-link {
   margin-right: 1rem;
 }
+
+.menu-logout {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.menu-logout ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-logout li {
+  margin-bottom: 5px;
+}
+
+.menu-logout.d-none {
+  display: none;
+}
+
+.watch {
+  margin-left: auto;
+  margin-right: 0;
+}

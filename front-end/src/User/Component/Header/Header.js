@@ -10,13 +10,17 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Cart from '../Cart/Cart';
-
+import Watch from '../Watch/Watch';
+import { Modal } from '../Modal/Modal'
 
 const Header = () => {
   const [token, setToken] = useState(null); // Khởi tạo token với giá trị null
   const [tokenUpdated, setTokenUpdated] = useState(false); // Khởi tạo state để theo dõi việc cập nhật token
   const [Name, setName] = useState();
   const [Cart, setCart] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleOpen = () => setIsOpen(!isOpen);
 
   useEffect(() => { 
     const tokenFromStorage = localStorage.getItem('token');
@@ -50,8 +54,8 @@ const Header = () => {
   const countItemsInCart = () => {
     return Cart.length;
   };
-  return (<>
-    <div className="container-fluid  ">
+  return (
+    <div className="container-fluid">
       <div className="row bg-warning py-1 px-xl-5">
         <div className="col-lg-6 d-none d-lg-block">
           <div className="d-inline-flex align-items-center h-100">
@@ -63,24 +67,39 @@ const Header = () => {
         </div>
         <div className="col-lg-6 text-center text-lg-right">
           <div className="d-inline-flex align-items-center">
-            <div className="btn-group" >
+            <div className="btn-group">
               {Name != null ? (
                 <div className="dropdown-container">
-                  <span className='click-show btn '>Xin chào <b>{Name}</b></span>
-
+                  <span className='click-show btn'>Xin chào <b>{Name}</b></span>
                   <div className="menu-logout d-none">
                     <ul>
                       <li> <Link className='btn btn-primary' to={'/accounts'}><i className='fa fa-user mr-2'></i> Tài khoản</Link> </li>
                       <li><button onClick={handleLogout} className='btn btn-primary' to={'/accounts'}><i className='fa fa-power-off'></i> Đăng xuất</button> </li>
                     </ul>
-                     
                   </div>
-
                 </div>
               ) : (
                 <>
                   <Link title='Đăng nhập' to={'/login'} className="btn btn-sm btn-light mr-2">Đăng nhập</Link>
-                  <button type="button" className="btn btn-sm btn-light">Đăng ký</button>
+                  <button onClick={toggleOpen}>Open Modal</button>
+                  <Modal isOpen = {isOpen} toggleOpen = {toggleOpen}>
+                  <h2>Form Đăng Ký</h2>
+                    <form>
+                      <div className="form-group">
+                        <label htmlFor="username">Tên đăng nhập:</label>
+                        <input type="text" id="username" className="form-control" />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="email">Email:</label>
+                        <input type="email" id="email" className="form-control" />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="password">Mật khẩu:</label>
+                        <input type="password" id="password" className="form-control" />
+                      </div>
+                      <button type="submit" className="btn btn-primary">Đăng ký</button>
+                    </form> 
+                  </Modal>
                 </>
               )}
             </div>
@@ -104,7 +123,7 @@ const Header = () => {
             <span className="h1 text-uppercase text-dark bg-warning px-2 ml-n1">Store</span>
           </a>
         </div>
-        <div className="col-lg-4 col-6 text-left " >
+        <div className="col-lg-4 col-6 text-left">
           <form className='d-flex' action="/">
             <select className='form-control col-3'>
               <option value={1}>Tất cả</option>
@@ -121,15 +140,18 @@ const Header = () => {
             </div>
           </form>
         </div>
-        <div className="col-lg-4 col-6 text-right">
-          <h5 className="m-0" style={{position:"relative"}}> <i className='fa fa-shopping-cart'></i></h5>
-          <b style={{position:"absolute" ,right:"35px",bottom:"0"}} className='text-danger'>{countItemsInCart()}</b>
+        <div className="col-lg-4 col-6 text-right d-flex align-items-center justify-content-end">
+          <div className="d-flex align-items-center">
+            <Link to="/cart" className="btn px-0 ml-2">
+              <i className="fa fa-shopping-cart"></i>
+              <span className="badge text-danger">{countItemsInCart()}</span>
+            </Link>
+            <Watch />
+          </div>
         </div>
       </div>
     </div>
- 
-
-  </>);
+  );
 }
 
 export default Header;

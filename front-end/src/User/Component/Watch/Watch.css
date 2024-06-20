@@ -1,0 +1,22 @@
+.clock {
+    text-align: center;
+    /* margin: 20px; */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#date, #time {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 
+                 0 0 20px rgba(0, 191, 255, 0.6), 
+                 0 0 30px rgba(0, 191, 255, 0.4), 
+                 0 0 40px rgba(0, 191, 255, 0.2);
+}
+
+#date {
+    font-size: 18px; /* Điều chỉnh kích thước font cho phần ngày tháng năm */
+  }
+  
+  #time {
+    font-size: 30px; /* Giữ nguyên kích thước font cho phần giờ */
+  }

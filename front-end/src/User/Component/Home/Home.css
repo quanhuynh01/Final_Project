@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+
 .item-img {
     transition: transform 0.3s ease; /* Thiết lập hiệu ứng chậm */
 }
@@ -19,14 +21,17 @@
   li{
     list-style: none;
   }
+
   .li-item{
     padding: 10px;
   }
+
   .nav-tabs{
     margin-top: 20px;
     display: flex;
     justify-content: center;
   }
+
   .tab-content{
     display: flex;
     justify-content: center;
@@ -43,6 +48,7 @@
 .card {
   position: relative;
 }
+
 .best-seller{
   padding: 3px;
   color: #fff;
@@ -50,6 +56,7 @@
   background-color: red;
   position: absolute;
 }
+
 .products-new{
   padding: 3px;
   color: #fff;
@@ -81,4 +88,30 @@
   
   background-color: white;
   border: 1px gray solid;
+}
+
+/* CSS mới thêm */
+.category-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cate-item {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+  transition: transform 0.3s ease;
+}
+
+.cate-item:hover .category-image {
+  transform: scale(1.1); /* Tạo hiệu ứng phóng to */
+}
+
+.category-image {
+  transition: transform 0.3s ease; /* Chuyển đổi mượt mà */
+}
+
+.name-cate {
+  margin-top: 10px;
+  text-align: center;
 }

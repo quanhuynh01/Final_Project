@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\front-end",
+    "\\front-end\\src",
+    "\\front-end\\src\\Admin",
+    "\\front-end\\src\\Admin\\Component",
+    "\\front-end\\src\\Route",
+    "\\front-end\\src\\User",
+    "\\front-end\\src\\User\\Component",
+    "\\front-end\\src\\User\\Component\\Cart",
+    "\\front-end\\src\\User\\LayoutUser"
+  ],
+  "SelectedNode": "\\front-end\\src\\Admin\\LayoutAdmin",
+  "PreviewInSolutionExplorer": false
+}
