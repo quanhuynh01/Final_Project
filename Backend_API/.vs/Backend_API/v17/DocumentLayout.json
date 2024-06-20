@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -13,18 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\attributevaluescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\brandscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,11 +34,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\appsettings.json",
               "RelativeDocumentMoniker": "Backend_API\\appsettings.json",
@@ -46,12 +46,11 @@
               "RelativeToolTip": "Backend_API\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-06-13T12:38:18.134Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-13T12:38:18.134Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "ProductsController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductsController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\ProductsController.cs",
@@ -59,48 +58,48 @@
               "RelativeToolTip": "Backend_API\\Controllers\\ProductsController.cs",
               "ViewState": "AQIAALEAAAAAAAAAAIAwwJUAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T03:30:50.042Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-12T03:30:50.042Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "AttributesController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributesController.cs",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
               "RelativeToolTip": "Backend_API\\Controllers\\AttributesController.cs",
-              "ViewState": "AQIAAFgAAAAAAAAAAAAcwE4AAABLAAAA",
+              "ViewState": "AQIAACAAAAAAAAAAAAA9wE4AAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-12T04:06:24.907Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "AttributevaluesController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributevaluesController.cs",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributevaluesController.cs",
               "RelativeToolTip": "Backend_API\\Controllers\\AttributevaluesController.cs",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAmwHIAAABHAAAA",
+              "ViewState": "AQIAAF0AAAAAAAAAAAAmwGkAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-12T02:03:14.763Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "BrandsController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\BrandsController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\BrandsController.cs",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\BrandsController.cs",
               "RelativeToolTip": "Backend_API\\Controllers\\BrandsController.cs",
-              "ViewState": "AQIAADgAAAAAAAAAAAAIwE4AAABUAAAA",
+              "ViewState": "AQIAAA4AAAAAAAAAAAApwBwAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T12:19:36.066Z"
+              "WhenOpened": "2024-06-10T12:19:36.066Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Product.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Product.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\Product.cs",
