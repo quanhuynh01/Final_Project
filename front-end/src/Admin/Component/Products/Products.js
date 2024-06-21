@@ -24,7 +24,7 @@ const Products = () => {
     return (
         <>
             <SidebarAdmin />
-            <div id="right-panel" className="right-panel">
+            <div id="right-panel" className="right-panel" style={{width:"86%"}}>
                 {/* Header*/}
                 <HeaderAdmin />
                 {/* Header*/}

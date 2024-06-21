@@ -356,6 +356,31 @@ namespace Backend_API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "WistLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WistLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WistLists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WistLists_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -419,6 +444,16 @@ namespace Backend_API.Migrations
                 name: "IX_ProductThumbs_ProductId",
                 table: "ProductThumbs",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WistLists_ProductId",
+                table: "WistLists",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WistLists_UserId",
+                table: "WistLists",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -457,16 +492,19 @@ namespace Backend_API.Migrations
                 name: "ProductThumbs");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "WistLists");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Attributes");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Products");

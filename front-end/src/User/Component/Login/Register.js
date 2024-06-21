@@ -32,7 +32,7 @@ const Register = () => {
             return;
         }
         // Hiển thị SweetAlert khi bắt đầu xử lý
-        let timerInterval;
+         
         Swal.fire({
             title: "Đăng ký tài khoản!",
             html: "Đang xử lý ...",

@@ -4,6 +4,7 @@ using Backend_API.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_API.Migrations
 {
     [DbContext(typeof(MiniStoredentity_Context))]
-    partial class MiniStoredentity_ContextModelSnapshot : ModelSnapshot
+    [Migration("20240621033559_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,29 +256,6 @@ namespace Backend_API.Migrations
                     b.HasIndex("BrandId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.ProductAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductAttributes");
                 });
 
             modelBuilder.Entity("Backend_API.Model.ProductCategory", b =>
@@ -582,25 +561,6 @@ namespace Backend_API.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.ProductAttribute", b =>
-                {
-                    b.HasOne("Backend_API.Model.Attribute", "Attribute")
-                        .WithMany()
-                        .HasForeignKey("AttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend_API.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attribute");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Backend_API.Model.ProductCategory", b =>
