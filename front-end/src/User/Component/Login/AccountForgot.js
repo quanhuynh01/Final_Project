@@ -11,26 +11,30 @@ const AccountForgot =()=>{
     e.preventDefault();
     if(Username !=="")
     {
+      Swal.fire({
+        title: "Khôi phục tài khoản",
+        html: "Đang xử lý ...",
+        timer: 2500,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading(); 
+        } 
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log("I was closed by the timer");
+        }
+    });
         axios.post(`https://localhost:7201/api/Users/ForgotPass/${Username}`).then(res=>{
             console.log(res);
             if (res.data.status === 200) {
-                Swal.fire({
-                    title: "Khôi phục tài khoản thành công, vui lòng kiểm tra Email để nhận mật khẩu",
-                    showClass: {
-                      popup: `
-                        animate__animated
-                        animate__fadeInUp
-                        animate__faster
-                      `
-                    },
-                    hideClass: {
-                      popup: `
-                        animate__animated
-                        animate__fadeOutDown
-                        animate__faster
-                      `
-                    }
-                  });
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Khôi phục tài khoản thành công vui lòng kiểm tra email để nhận mật khẩu !",
+                showConfirmButton: false,
+                timer: 1500
+              });
                 navigate("/login");
             }
             else{
