@@ -209,30 +209,65 @@ namespace API_Server.Controllers
             }
             return Ok();
         }
-        [HttpPost("ForgotPass/{username}")] 
-        public async Task<IActionResult> ForgotPass(string username)
-        { 
-            var user = await _userManager.FindByNameAsync(username); 
-            if(user!=null)
-            {
-                var newPass = "123456";//render ra 1 password mới
-                user.PasswordHash = newPass;
-                _context.Users.Update(user);
-                _context.SaveChanges();
-                if (await SendMailPass(newPass, user.FullName, user.Email))
-                {
-                    return Ok(new { status = 200 });
-                }
-                else
-                {
-                    return Ok(new { status = 400 }); // Gửi email thất bại
-                } 
-            }
-            return Ok(new { status = 400 });
+
+        //Generate Pass
+        private string GenerateNewPassword()
+        {
+            // Tạo một mật khẩu mới tuân theo chính sách: ít nhất 8 ký tự, có 1 chữ hoa, 1 ký tự đặc biệt và 1 chữ số
+            string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string lowerCase = "abcdefghijklmnopqrstuvwxyz";
+            string digits = "0123456789";
+            string specialChars = "!@#$%^&*()";
+
+            Random random = new Random();
+
+            string newPassword = new string(Enumerable.Repeat(upperCase, 1)
+                .Concat(Enumerable.Repeat(lowerCase, 5))
+                .Concat(Enumerable.Repeat(digits, 1))
+                .Concat(Enumerable.Repeat(specialChars, 1))
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            // Shuffle the password to ensure randomness
+            newPassword = new string(newPassword.OrderBy(c => random.Next()).ToArray());
+
+            return newPassword;
         }
-         
+
+        [HttpPost("ForgotPass/{username}")]
+        public async Task<IActionResult> ForgotPass(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return Ok(new { status = 400, message = "User not found." });
+            }
+
+            // Tạo mật khẩu mới
+            var newPass = GenerateNewPassword(); // Sử dụng phương thức để tạo mật khẩu mới
+
+            // Tạo mã thông báo đặt lại mật khẩu
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Đặt lại mật khẩu bằng mã thông báo
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, resetToken, newPass);
+            if (!resetPasswordResult.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Error resetting password." });
+            }
+
+            // Gửi email cho người dùng với mật khẩu mới
+            if (await SendMailPass(newPass, user.FullName, user.Email,username))
+            {
+                return Ok(new { status = 200, message = "Password reset successfully. Check your email for the new password." });
+            }
+            else
+            {
+                return Ok(new { status = 400, message = "Password reset successful but failed to send email." });
+            }
+        }
+
         //gửi mail kèm theo password mới cho người dùng
-        private async Task<bool> SendMailPass(string pass, string fullname, string emailUser)
+        private async Task<bool> SendMailPass(string pass, string fullname, string emailUser,string username)
         {
 
             var systemW = _context.MailConfigs.FirstOrDefault();
@@ -245,10 +280,13 @@ namespace API_Server.Controllers
                 smtp.Authenticate(systemW.EmailSmtp, systemW.PassSmtp);
                 try
                 {
-                    var text = "Password tài khoản của" + fullname + " là: " + pass;
+                    var text = "<div class=\"textarea-pseudo\"><br> Hi <b>"+fullname+"</b>, " +
+                        "<p>You recently requested to reset the password for your "+username+" \r\n  account. " +
+                        "The password is: <b>"+pass+"</b></p><p>If you did not request a password reset, please ignore " +
+                        "this email or reply to let us know. \r\n  </p><p>Thanks, the DQ STORE team </p><p></p></div>";
                     email.Bcc.Add(MailboxAddress.Parse(systemW.EmailSend));
                     email.To.Add(MailboxAddress.Parse(emailUser));
-                    email.Subject = /*systemW.Name + " " + "cảm ơn"*/ "Quên mật khẩu ";
+                    email.Subject = /*systemW.Name + " " + "cảm ơn"*/ "Forgot Password";
                     email.Body = new TextPart(TextFormat.Html) { Text = text };
                     smtp.Send(email);
                     smtp.Disconnect(true);
