@@ -6,14 +6,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Select from 'react-select';
 import $ from 'jquery'
+import Swal from "sweetalert2";
 
 const ProductsCreate = () => {
     const navigate = useNavigate();
     const [Brand, setBrand] = useState([]);
-    const [Categories, setCategories] = useState([]);
-    const [Catepost, setCatepost] = useState([]);
-    const [Attribute, setAttribute] = useState([]);
-    const [Attributevalues, setAttributevalues] = useState([]);
+    const [Categories, setCategories] = useState([]);//hiển thị danh mục
+    const [Catepost, setCatepost] = useState([]);//sản phẩm theo danh mục
+    const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm
+    const [Attributepost, setAttributepost] = useState([]);//View thuộc tính của sản phẩm
+
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
@@ -45,59 +47,25 @@ const ProductsCreate = () => {
         value: item.id,
         label: item.nameCategory
     }));
-    const AttributeOptions = Attribute.map(item => ({
-        value: item.id,
-        label: item.nameAttribute
-    }));
-
+    const AttributeOptions = Attribute.map(item => (
+        {
+            value: item.id,
+            label: item.nameAttribute
+        }
+    ));
+    
     //xử lý chọn nhiều danh mục
     const handleMultiSelectChange = (selectedOptions) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        //console.log(selectedValues);
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []; 
         setCatepost(selectedValues);
     }
-    //xử lý chọn nhiều thuộc tính
-    const handleMultiSelectChangeAttribute = (selectedOptions) => {
+    
+    //xử lý chọn thuộc tính
+    const handleAttribute = (selectedOptions) => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        //conso le.log(selectedValues);
-        setCatepost(selectedValues);
+        setAttributepost(selectedValues);
     }
-    //xử lý nếu chọn thuộc tính thì hiển thị giá trị thuộc tính
-    const handleAttribute = (item) => {
-        //console.log(item);
-        var id = item.id;
-        console.log(id);
-        if(id){
-            axios.post(`https://localhost:7201/api/Products/addAttribute/${id}`)
-            .then(res =>console.log(res));
-        }
-        // if (item) {
-        //     axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${item.id}`)
-        //         .then((res) => {
-        //             if (res.data != null) {
-        //                 if (res.data.success === true) {
-        //                     // console.log(res);
-        //                     setAttributevalues(res.data.data)
-        //                 }
-        //                 else {
-        //                     alert('Chưa có dữ liệu cho thuộc tính này');
-        //                 }
-        //                 console.log(res.data.success);
-
-        //             }
-        //             else {
-        //                 console.log(res);
-        //                 setAttributevalues({});
-        //             }
-
-        //         })
-
-        // }
-        $('.attributeValue').removeClass('d-none');
-        $('.attributeValue').addClass('d-block');
-
-    }
-
+    console.log(Attributepost);
 
     useEffect(() => {
     }, [Products])
@@ -115,22 +83,39 @@ const ProductsCreate = () => {
         // Thêm tất cả các tệp hình ảnh vào FormData
         Products.AvatarFile.forEach((file) => {
             formData.append("AvatarFiles", file);
-        });
-
-
+        }); 
         Catepost.forEach((id) => {
             formData.append("CateId[]", id);
-        });
-
-        if (Products.BrandId !== undefined) {
-            console.log("form data:", formData);
-
+        }); 
+        Attributepost.forEach((id) => {
+            formData.append("AttrId[]", id);
+        });  
+        if (Products.BrandId !== undefined) { 
+            Swal.fire({
+                title: "Thêm sản phẩm",
+                html: "Đang xử lý ...",
+                timer:1000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading(); 
+                } 
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("I was closed by the timer");
+                }
+            });
             axios.post(`https://localhost:7201/api/Products`, formData)
                 .then(res => {
-                    
+
                     if (res.status === 200) {
-                        alert('Thêm sản phẩm thành công');
-                       // console.log(res.data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm sản phẩm thành công",
+                            showConfirmButton: false,
+                            timer: 1000
+                          });
                         navigate(`/admin/products/edit/${res.data.id}`);
                     }
                     else {
@@ -263,40 +248,19 @@ const ProductsCreate = () => {
                         </Form.Group>
                         <hr></hr>
                         <Form.Group className="mb-3 row p-3" >
-                            <div className="col-12">
+                            <div className="col-6">
                                 <FormLabel>Chọn danh sách thuộc tính cho sản phẩm</FormLabel>
-                                <div className="d-flex">
-                                    {
-                                        Attribute.map((item, index) => {
-                                            return (<div key={index}>
-                                                <Button onClick={() => handleAttribute(item)} data-id={item.id} className="btn-attribute">{item.nameAttribute}</Button>
-                                                
-                                            </div>
-                                            )
-                                            
-                                        })
-                                       
-                                    }
-                                  
-                                </div>
-
-                                {/* <div className="attributeValue">
-                                    {
-                                        Attributevalues != null ? (
-                                            Attributevalues.map((item, index) => {
-                                                return (
-                                                    <div key={index}>
-                                                        <input type="checkbox" id={`checkbox-${item.id}`} value={item.id} />
-                                                        <label htmlFor={`checkbox-${item.id}`}>{item.nameValue}</label>
-                                                    </div>
-                                                )
-                                            })
-                                        ) : (
-                                            <div></div>
-                                        )
-                                    }
-                                </div> */}
-
+                                <div >
+                                    <Select
+                                        isMulti
+                                        name="AttrId"
+                                        options={AttributeOptions}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                        onChange={handleAttribute}
+                                        placeholder="Chọn thuộc tính..." 
+                                    /> 
+                                </div> 
                             </div>
                         </Form.Group>
                         <Button onClick={handleSubmit} className="col-1 btn btn-success" type="button">

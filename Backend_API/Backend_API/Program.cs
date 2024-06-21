@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MiniStoredentity_Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MiniStoredentity_Context") ?? throw new InvalidOperationException("Connection string 'MiniStoredentity_Context' not found.")));
@@ -49,6 +49,7 @@ builder.Services.AddCors(option =>
         .AllowAnyMethod(); 
     });
 });
+//config Redis  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
