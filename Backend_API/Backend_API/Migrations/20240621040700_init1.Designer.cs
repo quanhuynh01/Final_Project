@@ -4,6 +4,7 @@ using Backend_API.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_API.Migrations
 {
     [DbContext(typeof(MiniStoredentity_Context))]
-    partial class MiniStoredentity_ContextModelSnapshot : ModelSnapshot
+    [Migration("20240621040700_init1")]
+    partial class init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,28 +146,6 @@ namespace Backend_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CustomerSupplier");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.Log", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("DateAction")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DescriptionAction")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameAction")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("Backend_API.Model.MailConfig", b =>
@@ -378,9 +358,6 @@ namespace Backend_API.Migrations
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastLogin")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
