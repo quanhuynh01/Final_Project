@@ -35,15 +35,17 @@ namespace Backend_API.Controllers
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
-        {
-            var product = _context.Products.Include(b=>b.Brand).Where(p=>p.Id== id).FirstOrDefault();
-
+        { 
+            var product = _context.ProductAttributes.Include(p => p.Product)
+                                            .ThenInclude(b => b.Brand)
+                                            .Where(p => p.ProductId == id)
+                                            .FirstOrDefault();
+            var listAttibute = _context.ProductAttributes.Where(a=>a.ProductId == id).Include(a=>a.Attribute).ToList();
             if (product == null)
             {
                 return NotFound();
-            }
-
-            return product;
+            } 
+            return Ok(new {data= product,lstAttribute = listAttibute});
         }
 
         // PUT: api/Products/5
@@ -81,7 +83,7 @@ namespace Backend_API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromForm] Product product, [FromForm] List<IFormFile> AvatarFiles
-            ,[FromForm] List<int> CateId)
+            ,[FromForm] List<int> CateId, [FromForm] List<int> AttrId)
         {   
             try
             {
@@ -161,6 +163,17 @@ namespace Backend_API.Controllers
                                 _context.SaveChanges();
                             }
                         }
+                        if(AttrId.Count >0 )
+                        {
+                            foreach (var item in AttrId)
+                            {
+                                ProductAttribute pa = new ProductAttribute();
+                                pa.ProductId = p.Id;
+                                pa.AttributeId = item;
+                                _context.ProductAttributes.Add(pa);
+                                _context.SaveChanges();
+                            }
+                        }    
                     }
                     return Ok(new { data = product ,id = p.Id });
                 }
