@@ -16,7 +16,9 @@ const Account = () => {
         userName: "",
         fullName:"",
         phoneNumber:"",
-        email: ""
+        email: "",
+        lastLogin:"",
+        address:"" 
     });
 
     useEffect(() => {
@@ -33,9 +35,11 @@ const Account = () => {
                             fullName:res.data.fullName || "",
                             phoneNumber:res.data.phoneNumber || "",
                             userName: res.data.userName || "",
-                            email: res.data.email || ""
+                            email: res.data.email || "",
+                            lastLogin: res.data.lastLogin || "",
+                            address: res.data.address || "",
                         });
-                        console.log(res.data);
+                    console.log(res.data.address);
                     })
                     .catch(error => console.error("Error fetching user data:", error));
             }
@@ -53,7 +57,7 @@ const Account = () => {
     };
     const handleSubmit=(e)=>{
         e.preventDefault();
-        axios.post(`https://localhost:7201/api/Users/editUser/${Id}?fullName=${User.fullName}&userName=${User.userName}&email=${User.email}`).then(res => {
+        axios.post(`https://localhost:7201/api/Users/editUser/${Id}?fullName=${User.fullName}&userName=${User.userName}&email=${User.email}&&address=${User.address}`).then(res => {
             if (res.status === 200) {
                 setUser(res.data);
                 Swal.fire({
@@ -70,7 +74,7 @@ const Account = () => {
         })
         .catch(error => console.error("Error fetching user data:", error));
     }
-    console.log(Id);
+    //console.log(User);
     return (
         <>
             <Header />
@@ -121,7 +125,7 @@ const Account = () => {
                                                     name="fullName"
                                                     value={User.fullName}
                                                     onChange={handleInputChange}
-                                                    type="email"
+                                                    type="text"
                                                     placeholder="Tài khoản"
                                                 />
                                             </Form.Group>
@@ -131,7 +135,7 @@ const Account = () => {
                                                     name="phoneNumber"
                                                     value={User.phoneNumber}
                                                     onChange={handleInputChange}
-                                                    type="email"
+                                                    type="number"
                                                     placeholder="Số điện thoại"
                                                 />
                                             </Form.Group>
@@ -141,7 +145,7 @@ const Account = () => {
                                                     name="userName"
                                                     value={User.userName}
                                                     onChange={handleInputChange}
-                                                    type="email"
+                                                    type="text"
                                                     placeholder="Tài khoản"
                                                 />
                                             </Form.Group>
@@ -153,15 +157,33 @@ const Account = () => {
                                                     onChange={handleInputChange}
                                                     type="email"
                                                     placeholder="Email"
-                                                />
+                                                /> 
                                             </Form.Group> 
-                                            <Button onClick={handleSubmit} variant="success" type="button">
+                                            <Form.Group className="mb-3 col-6" >
+                                                <Form.Label>Địa chỉ</Form.Label>
+                                                <Form.Control
+                                                    name="address"
+                                                    value={User.address}
+                                                    onChange={handleInputChange}
+                                                    type="text"
+                                                    placeholder="Địa chỉ"
+                                                /> 
+                                            </Form.Group> 
+                                            <Form.Group className="mb-3 col-6" >
+                                                <Form.Label>Lần đăng nhập cuối cùng</Form.Label>
+                                                <Form.Control
+                                                    readOnly
+                                                    name="text"
+                                                    value={User.lastLogin} 
+                                                />
+                                            </Form.Group>  
+                                        </Form> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                            <Button onClick={handleSubmit} variant="success" type="button">
                                                 <i className="fa fa-check"></i> Chỉnh sửa
                                             </Button>
-                                        </Form>
-                                    </div>
-                                </div>
-                            </div>
                             <div id="orders-tab" className="tab-pane">
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021">

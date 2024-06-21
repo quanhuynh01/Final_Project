@@ -14,6 +14,7 @@ using MimeKit;
 using MailKit.Security;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
+using System.Security;
 namespace API_Server.Controllers
 {
     [Route("api/[controller]")]
@@ -46,6 +47,9 @@ namespace API_Server.Controllers
             var user = await _userManager.FindByNameAsync(account.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, account.Password))
             {
+                user.LastLogin = DateTime.Now;
+                _context.Update(user);
+                _context.SaveChanges();
                 var userRoles = await _userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
@@ -108,14 +112,25 @@ namespace API_Server.Controllers
 
         [HttpPost]
         [Route("editUser/{id}")]
-        public async Task<IActionResult> editUser(string id, string fullName, string userName, string email)
+        public async Task<IActionResult> editUser(string id, string fullName, string userName, string email,string address)
         {
             var dataUser = _context.Users.Find(id);
-            dataUser.FullName = fullName;
-            dataUser.UserName = userName;
-            dataUser.Email = email;
-            _context.Users.Update(dataUser);
-            _context.SaveChanges();
+            if (dataUser != null)
+            {
+                dataUser.FullName = fullName;
+                dataUser.UserName = userName;
+                dataUser.Email = email;
+                dataUser.Address = address;
+                _context.Users.Update(dataUser);
+                _context.SaveChanges();
+                Log logFile = new Log();
+                logFile.NameAction = "Nguời dùng " + dataUser.Id + "(" + dataUser.FullName + ")" +"Thay đổi thông tin tài khoản";
+                logFile.DescriptionAction = "";
+                logFile.DateAction = DateTime.Now;
+                _context.Logs.Add(logFile);
+                _context.SaveChanges();
+            }
+
             return Ok(dataUser);
         }
 
@@ -189,11 +204,26 @@ namespace API_Server.Controllers
                 smtp.Authenticate(systemW.EmailSmtp, systemW.PassSmtp);
                 try
                 {
-                    var text = "Cảm ơn " + Fullname + " đã đăng ký tài khoản chúng tôi";
+                    var Content = " <table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" width=\"600\" style=\"border-collapse:collapse\">\r\n" +
+                        " <tbody>\r\n<tr>\r\n<td style=\"padding:40px 0 10px 0\">\r\n<table>\r\n<tbody>\r\n<tr>\r\n  <td>\r\n " +
+                        " <img src=\"https://i.imgur.com/gNn5wKD.png\" alt=\"Creating Email Magic\" width=\"300\" height=\"auto\" style=\"display:inline-block\" " +
+                        "class=\"CToWUd a6T\" data-bit=\"iit\" tabindex=\"0\"><div class=\"a6S\" dir=\"ltr\" style=\"opacity: 0.01; left: 714.984px; " +
+                        "top: 307px;\"><span data-is-tooltip-wrapper=\"true\" class=\"a5q\" jsaction=\"JIbuQc:.CLIENT\">" +
+                        "<button class=\"VYBDae-JX-I VYBDae-JX-I-ql-ay5-ays CgzRE\" jscontroller=\"PIVayb\" jsaction=\"click:h5M12e; clickmod:h5M12e;pointerdown:FEiYhc;pointerup:mF5Elf;pointerenter:EX0mI;pointerleave:vpvbp;pointercancel:xyn4sd;contextmenu:xexox;focus:h06R8; blur:zjh6rb;mlnRJb:fLiPzd;\" data-idom-class=\"CgzRE\" jsname=\"hRZeKc\" aria-label=\"Tải xuống tệp đính kèm \" data-tooltip-enabled=\"true\" data-tooltip-id=\"tt-c22\"" +
+                        " data-tooltip-classes=\"AZPksf\" id=\"\" jslog=\"91252; u014N:cOuCgd,Kr2w4b,xr6bB; 4:WyIjbXNnLWY6MTc5OTAwMDY4MTE4ODYxMjI0MyJd; 43:WyJpbWFnZS9qcGVnIl0.\"><span class=\"OiePBf-zPjgPe VYBDae-JX-UHGRz\"></span><span class=\"bHC-Q\" data-unbounded=\"false\" jscontroller=\"LBaJxb\" jsname=\"m9ZlFb\" soy-skip=\"\" ssk=\"6:RWVI5c\"></span><span class=\"VYBDae-JX-ank-Rtc0Jf\" jsname=\"S5tZuc\" aria-hidden=\"true\"><span class=\"bzc-ank\"" +
+                        " aria-hidden=\"true\"><svg viewBox=\"0 -960 960 960\" height=\"20\" width=\"20\" focusable=\"false\" class=\" aoH\"><path d=\"M480-336L288-528l51-51L444-474V-816h72v342L621-579l51,51L480-336ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72H696v-72h72v72q0,29.7-21.16,50.85T695.96-192H263.72Z\"></path></svg></span></span><div class=\"VYBDae-JX-ano\"></div></button><div class=\"ne2Ple-oshW8e-J9\" id=\"tt-c22\" role=\"tooltip\" aria-hidden=\"true\">Tải xuống</div></span>" +
+                        "</div></td>\r\n\r\n                        </tr>\r\n                        <tr>\r\n                            <td>\r\n                                <h3>Bạn đã đăng ký tài khoản tại DQ STORE!</h3>\r\n                                <p>Xin chào "+Fullname+", cảm ơn bạn đã tin tưởng DQ STORE chúc bạn có một trải nghiệm mua sắp đỉnh cao tại đây.</p>\r\n  </td></tr></tbody></table></td></tr></tbody><tbody><tr><td><br>\r\n  </td>\r\n</tr>\r\n  \r\n " +
+                        "  <tr>\r\n <td bgcolor=\"#ffc107\" style=\"padding:30px 30px 30px 30px\">\r\n <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\r\n <tbody>\r\n  <tr>\r\n                        <td>\r\n                            <p>\r\n                                <font color=\"#ffffff\">\r\n                                    © DQ STORE<br>Địa chỉ: HIHI<br>Email:" +
+                        "<a href=\"http://hello@novazone.com.vn\" target=\"_blank\" " +
+                        "data-saferedirecturl=\"https://www.google.com/url?q=http://hello@novazone.com.vn&amp;source=gmail&amp;ust=1718963898920000&amp;usg=AOvVaw3yuDyLDWbJjqKL-y5904Mn\"> </a>&nbsp;quanhuynh855@gmail.com." +
+                        " Điện thoại:0984855261</font></p>\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </td>\r\n    </tr>\r\n</tbody>\r\n</table>";
+
+
+                    //var text = "Cảm ơn " + Fullname + " đã đăng ký tài khoản chúng tôi";
                     email.Bcc.Add(MailboxAddress.Parse(systemW.EmailSend));
                     email.To.Add(MailboxAddress.Parse(emailUser));
                     email.Subject = /*systemW.Name + " " + "cảm ơn"*/ "Thư cảm ơn";
-                    email.Body = new TextPart(TextFormat.Html) { Text = text };
+                    email.Body = new TextPart(TextFormat.Html) { Text = Content };
                     smtp.Send(email);
                     smtp.Disconnect(true);
                 }
@@ -215,11 +245,12 @@ namespace API_Server.Controllers
             var user = await _userManager.FindByNameAsync(username); 
             if(user!=null)
             {
-                var newPass = "123456";//render ra 1 password mới
-                user.PasswordHash = newPass;
+                user.PasswordHash = Guid.NewGuid().ToString();//render ra 1 password mới
+                var result = await _userManager.CreateAsync(user, user.PasswordHash);
+                //user.SecurityStamp = Guid.NewGuid().ToString();
                 _context.Users.Update(user);
                 _context.SaveChanges();
-                if (await SendMailPass(newPass, user.FullName, user.Email))
+                if (await SendMailPass(user.PasswordHash, user.FullName, user.Email))
                 {
                     return Ok(new { status = 200 });
                 }
