@@ -4,20 +4,26 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './ProductsDetail.css'
-import { Button, Tab, Tabs } from "react-bootstrap";
+import { Button, Tab, Table, Tabs } from "react-bootstrap";
 const ProductsDetail = () => {
     const { id } = useParams();
     const [productDetail, setproductDetail] = useState({ brand: { brandName: "" } });
     const [Image, setImage] = useState([]);
+    const [Attribute, setAttribute] = useState([]);
     const [currentImage, setCurrentImage] = useState(`https://localhost:7201${productDetail.avatar}`);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
-            setproductDetail(res.data);
-            setCurrentImage(res.data.avatar);
+            if (res.status == 200) {
+                console.log(res.data.data);
+                setAttribute(res.data.data.attribute);
+                setproductDetail(res.data.data.product);
+                setCurrentImage(res.data.data.avatar);
+            }
+
         })
         axios.get(`https://localhost:7201/api/ProductThumbs/hinhsp/${id}`).then(res => setImage(res.data));
     }, []);
-    //console.log(productDetail);
+
     //xử lý click active hình ảnh
     const handleImageClick = (imageUrl) => {
         // console.log(imageUrl.image);
@@ -30,6 +36,7 @@ const ProductsDetail = () => {
         const priceInVND = price * exchangeRate;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
+   // console.log(Attribute);
     return (<>
         <Header />
         <div className="">
@@ -96,7 +103,23 @@ const ProductsDetail = () => {
 
                 </Tab>
                 <Tab eventKey="profile" title="Thông số kỹ thuật">
-                    Thông số kỹ thuật
+                    {/* <Table striped bordered hover  > 
+                        <tbody> 
+                            {
+                                Attribute.map((item,index)=>{
+                                    return(<div key={index}>
+
+                                    </div>)
+                                })
+                            }
+                            <tr>
+                                <td>1</td> 
+                            </tr> 
+                            <tr>
+                                <td>1</td> 
+                            </tr> 
+                        </tbody>
+                    </Table> */}
                 </Tab>
 
             </Tabs>
