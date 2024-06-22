@@ -15,5 +15,6 @@
         public string EmailSmtp { get; set; }
 
         public string PassSmtp { get; set; }
+        //1	smtp.gmail.com	0306211073@caothang.edu.vn	Quân	587	0306211073@caothang.edu.vn	oibo xege ngnc qnum
     }
 }
