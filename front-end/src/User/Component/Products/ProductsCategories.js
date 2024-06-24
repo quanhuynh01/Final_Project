@@ -15,6 +15,7 @@ const ProductsCategories = () => {
     const [NameCate, setNameCate] = useState(null);
     const [selectedBrands, setSelectedBrands] = useState([]); // State để lưu trữ hãng được chọn
     const [FilteredProducts, setFilteredProducts] = useState([]); // Lưu trữ sản phẩm được lọc
+    const [Attribute, setAttribute] = useState([]); // Lưu trữ sản phẩm được lọc
 
     useEffect(() => {
         axios.get(`https://localhost:7201/danh-muc/${id}`)
@@ -24,6 +25,8 @@ const ProductsCategories = () => {
             });
         axios.get(`https://localhost:7201/api/Brands`)
             .then(res => setBrands(res.data));
+        axios.get(`https://localhost:7201/api/Attributes`)
+            .then(res => setAttribute(res.data));
         axios.get(`https://localhost:7201/api/Categories`)
             .then(res => setCategories(res.data));
     }, [id]);
@@ -54,27 +57,37 @@ const ProductsCategories = () => {
             setFilteredProducts(Products); // Nếu không có hãng nào được chọn, hiển thị tất cả sản phẩm
         }
     }, [selectedBrands, Products]);
-
-    // Thêm sản phẩm vào giỏ hàng
-    const onAddtoCartHandler = (product) => {
-        console.log(product);
-        if (cart.indexOf(product) !== -1) return null;
-        const arr = [...cart];
-        product.amount = 1;
-        arr.push(product);
-        setCart([...arr]);
-    };
+ 
+    const addToCart = (item) => { 
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];   
+        const existingItem = cartItems.find(product => product.sku === item.sku);
+    
+        if (existingItem) {
+            // Nếu sản phẩm đã tồn tại, bạn có thể cập nhật số lượng hoặc thông tin khác của sản phẩm tại đây
+            // Ví dụ: cập nhật số lượng
+            existingItem.quantity += 1;
+        } else {
+            // Nếu sản phẩm chưa có trong giỏ hàng, thêm vào mảng cartItems
+            cartItems.push({ ...item, quantity: 1 }); // Thêm trường quantity vào để đếm số lượng sản phẩm trong giỏ hàng
+        }
+    
+        // Lưu lại danh sách sản phẩm vào localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+        console.log( existingItem);
+    }
+    
 
     return (
         <>
-            <Header soluong={cart.length} />
+            <Header />
             <Breadcrumb>
                 <Breadcrumb.Item className="ml-5" href="/">Trang chủ</Breadcrumb.Item>
                 <Breadcrumb.Item active>{NameCate}</Breadcrumb.Item>
             </Breadcrumb>
-            <div className="d-flex" style={{width:"90%",margin:"auto"}}>
-                <div className="left card p-4" style={{ width: "25%",marginTop:"10px" }}>
-                    <h5>Sản phẩm theo hãng</h5>
+            <div className="d-flex" style={{ width: "90%", margin: "auto" }}>
+                <div className="left card p-4" style={{ width: "25%", marginTop: "10px" }}>
+                    <h5>Theo hãng</h5>
                     <Form>
                         {brands.map((b, index) => (
                             <Form.Check
@@ -84,6 +97,17 @@ const ProductsCategories = () => {
                                 value={b.id}
                                 onChange={handleBrandChange}
                                 checked={selectedBrands.includes(b.id)} // Đánh dấu hãng đã được chọn
+                            />
+                        ))}
+                    </Form>
+                    <h5>Theo thuộc tính</h5>
+                    <Form>
+                        {Attribute.map((a, index) => (
+                            <Form.Check
+                                key={index}
+                                type="checkbox"
+                                label={a.value}
+                                value={a.id}
                             />
                         ))}
                     </Form>
@@ -108,14 +132,14 @@ const ProductsCategories = () => {
                                     </Link>
                                 </Card.Body>
                                 <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                                    <Button onClick={() => onAddtoCartHandler(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+                                    <Button onClick={()=>addToCart(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
                                 </div>
                             </Card>
                         </div>
                     ))}
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </>
     );
 };
