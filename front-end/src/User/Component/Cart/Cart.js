@@ -8,25 +8,25 @@ const Cart = () => {
     const [cart, setCart] = useState([]);
     // Lấy giỏ hàng từ localStorage khi component được render
     useEffect(() => {
-        const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
         setCart(cartItems);
     }, []);
     // Hàm để đếm số lượng các sản phẩm có cùng id
-    // const countDuplicates = (productId) => {
-    //     return cart.reduce((count, current) => {
-    //         return current.id === productId ? count + 1 : count;
-    //     }, 0);
-    // }; 
+    const countDuplicates = (productId) => {
+        return cart.reduce((count, current) => {
+            return current.id === productId ? count + 1 : count;
+        }, 0);
+    }; 
 
-    // // Xử lý để chỉ hiển thị mỗi sản phẩm một lần dựa trên id
-    // const uniqueCart = cart.reduce((acc, current) => {
-    //     const x = acc.find(item => item.id === current.id);
-    //     if (!x) {
-    //         return acc.concat([current]);
-    //     } else {
-    //         return acc;
-    //     }
-    // }, []); 
+    // Xử lý để chỉ hiển thị mỗi sản phẩm một lần dựa trên id
+    const uniqueCart = cart.reduce((acc, current) => {
+        const x = acc.find(item => item.id === current.id);
+        if (!x) {
+            return acc.concat([current]);
+        } else {
+            return acc;
+        }
+    }, []); 
 
 
     // Hàm xử lý khi nhấn nút Xóa sản phẩm khỏi giỏ hàng

@@ -134,6 +134,7 @@ const Attribute = () => {
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Tên thuộc tính</th> 
+                                                <th scope="col">Giá trị</th> 
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -142,8 +143,9 @@ const Attribute = () => {
                                                 <tr key={index}>
                                                     <td>{index + 1}</td>
                                                     <td>{item.nameAttribute}</td>
-                                                    <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
-                                                    <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a></td>
+                                                    <td>{item.value}</td>
+                                                   {/* <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
+                                                     <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a></td> */}
                                                     <td> <a type="button"  className="btn btn-outline-warning" href= {`attributes/chinh-sua-thuoc-tinh/${item.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</a>
                                                     <button onClick={()=>handleDelete(item.id) } className="btn btn-outline-danger ml-2"><i className="fa fa-trash"></i> Xoá</button> </td>
                                                 </tr>
@@ -171,6 +173,10 @@ const Attribute = () => {
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Tên thuộc tính</Form.Label>
                         <Form.Control name="NameAttribute" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập tên thuộc tính" />
+                    </Form.Group> 
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Giá trị thuộc tính</Form.Label>
+                        <Form.Control name="Value" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập giá trị thuộc tính" />
                     </Form.Group> 
                 </Form>
             </Modal.Body>

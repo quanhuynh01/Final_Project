@@ -13,11 +13,10 @@ const ProductsDetail = () => {
     const [currentImage, setCurrentImage] = useState(`https://localhost:7201${productDetail.avatar}`);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
-            if (res.status == 200) {
-                console.log(res.data.data);
-                setAttribute(res.data.data.attribute);
+            if (res.status == 200) {  
+                setAttribute(res.data.lstAttribute);
                 setproductDetail(res.data.data.product);
-                setCurrentImage(res.data.data.avatar);
+                setCurrentImage(res.data.data.product.avatar);
             }
 
         })
@@ -36,7 +35,7 @@ const ProductsDetail = () => {
         const priceInVND = price * exchangeRate;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
-   // console.log(Attribute);
+   console.log(Attribute);
     return (<>
         <Header />
         <div className="">
@@ -99,27 +98,23 @@ const ProductsDetail = () => {
                             <a href="javascript:void(0)" id="expandDescription">XEM THÊM <i className="fas fa-angle-double-down" aria-hidden="true" /></a>
                             <a href="javascript:void(0)" id="collapseDescription" style={{ display: 'none' }}>THU GỌN <i className="fas fa-angle-double-up" aria-hidden="true" /></a>
                         </div>
-                    </div> */}
-
+                    </div> */} 
                 </Tab>
                 <Tab eventKey="profile" title="Thông số kỹ thuật">
-                    {/* <Table striped bordered hover  > 
-                        <tbody> 
+                    <Table striped bordered hover  > 
+                        <tbody>
                             {
-                                Attribute.map((item,index)=>{
-                                    return(<div key={index}>
-
-                                    </div>)
+                                Attribute.map((item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{item.attribute.nameAttribute}</td>
+                                             <td>{item.attribute.value}</td> 
+                                        </tr>
+                                   )
                                 })
                             }
-                            <tr>
-                                <td>1</td> 
-                            </tr> 
-                            <tr>
-                                <td>1</td> 
-                            </tr> 
                         </tbody>
-                    </Table> */}
+                    </Table>
                 </Tab>
 
             </Tabs>
