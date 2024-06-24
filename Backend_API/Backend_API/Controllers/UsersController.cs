@@ -47,7 +47,9 @@ namespace API_Server.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, account.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-
+                user.LastLogin = DateTime.Now;
+                _context.Users.Update(user);
+                _context.SaveChanges();
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
@@ -115,6 +117,12 @@ namespace API_Server.Controllers
             dataUser.UserName = userName;
             dataUser.Email = email;
             _context.Users.Update(dataUser);
+            _context.SaveChanges();
+            Log log = new Log();
+            log.NameAction = "Thay đổi thông tin " + userName;
+            log.DescriptionAction = "Thay đổi thông tin tài khoản idUser" + id + " của " + fullName;
+            log.DateAction = DateTime.Now;
+            _context.Logs.Add(log);
             _context.SaveChanges();
             return Ok(dataUser);
         }
