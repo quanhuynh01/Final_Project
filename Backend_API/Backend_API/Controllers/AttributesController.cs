@@ -80,7 +80,7 @@ namespace Backend_API.Controllers
             {
             Attribute a = new Attribute();
             a.NameAttribute = attribute.NameAttribute;
-
+            a.Value = attribute.Value;
             // Gán các thuộc tính khác của attribute vào đối tượng a nếu cần
             // Ví dụ: a.Description = attribute.Description;
 
