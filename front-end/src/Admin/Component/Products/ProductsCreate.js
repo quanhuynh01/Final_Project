@@ -14,7 +14,7 @@ const ProductsCreate = () => {
     const [Categories, setCategories] = useState([]);//hiển thị danh mục
     const [Catepost, setCatepost] = useState([]);//sản phẩm theo danh mục
     const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm
-    const [Attributepost, setAttributepost] = useState([]);//View thuộc tính của sản phẩm
+    const [Attributepost, setAttributepost] = useState([]);//lưu thuộc tính của sản phẩm
 
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
@@ -50,7 +50,7 @@ const ProductsCreate = () => {
     const AttributeOptions = Attribute.map(item => (
         {
             value: item.id,
-            label: item.nameAttribute
+            label: item.nameAttribute + ":  " + item.value
         }
     ));
     

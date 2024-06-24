@@ -39,7 +39,21 @@
   <script src="%PUBLIC_URL%/vendors/jqvmap/dist/jquery.vmap.min.js"></script>
   <script src="%PUBLIC_URL%/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
   <script src="%PUBLIC_URL%/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
- 
+  <!-- <script>
+    if(window.location.pathname.startsWith("/admin"))
+    {
+      var link  = document.createElement("link");
+      link.href = "%PUBLIC_URL%/vendors/bootstrap/dist/css/bootstrap.min.css";
+      link.rel="stylesheet";
+      document.head.appendChild(link)
+
+      var link2  = document.createElement("link");
+      link.href = "%PUBLIC_URL%/vendors/bootstrap/dist/css/bootstrap.min.css";
+      link.rel="stylesheet";
+      document.head.appendChild(link2);
+    }
+
+  </script> -->
  
 </body>              
 
