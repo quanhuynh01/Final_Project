@@ -22,9 +22,9 @@ const Account = () => {
     });
 
     useEffect(() => {
-        const jwt = localStorage.getItem('token'); // Lấy mã JWT từ localStorage hoặc nơi lưu trữ khác
+        const jwt = localStorage.getItem('token'); // Lấy mã JWT từ localStorage 
         if (jwt) {
-            const decodedJwt = jwtDecode(jwt); // Giả sử sử dụng thư viện jwtDecode để giải mã JWT
+            const decodedJwt = jwtDecode(jwt); //  sử dụng thư viện jwtDecode để giải mã JWT
             const userId = decodedJwt["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
             setId(userId); 
             if (userId) {
