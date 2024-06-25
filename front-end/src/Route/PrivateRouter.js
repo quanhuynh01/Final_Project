@@ -3,6 +3,7 @@ import LayoutAdmin from '../Admin/LayoutAdmin/LayoutAdmin';
 import Products from '../Admin/Component/Products/Products';
 import Categories from '../Admin/Component/Categories/Categories';
 import Login from '../User/Component/Login/Login';
+import Login2 from '../User/Component/Login2/Login2'
 import Brand from '../Admin/Component/Brand/Brand';
 import BrandEdit from '../Admin/Component/Brand/BrandEdit';
 import Attribute from '../Admin/Component/Attribute/Attribute';
@@ -12,8 +13,6 @@ import AttributeEdit from '../Admin/Component/Attribute/AttributeEdit';
 import CustomerSupplier from '../Admin/Component/CustomerSupplier/CustomerSupplier';
 import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
 import ProductsEdit from '../Admin/Component/Products/ProductsEdit';
- 
- 
 
 const PrivateRouter = () => {
     return (
@@ -48,6 +47,10 @@ const PrivateRouter = () => {
                 {/* login admin*/}
                 <Route path="/login" element={<Login />}>
                     <Route index element={<Login />} />
+                </Route>
+
+                <Route path="/login2" element={<Login2 />}>
+                    <Route index element={<Login2 />} />
                 </Route>
             </Routes>
         </BrowserRouter>

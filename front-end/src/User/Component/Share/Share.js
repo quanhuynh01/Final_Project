@@ -11,6 +11,10 @@ const Share = () => {
             <ul>
                 <li style={{ '--i': 0, '--clr': '#1877f2' }}>
                     <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
                 </li>
             </ul>
         </div>
