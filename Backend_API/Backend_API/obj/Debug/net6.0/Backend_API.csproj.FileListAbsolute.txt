@@ -861,3 +861,9 @@ D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Deb
 D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\BouncyCastle.Crypto.dll
 D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
 D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\StackExchange.Redis.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\MailKit.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\MimeKit.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\NETCore.MailKit.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\StackExchange.Redis.dll

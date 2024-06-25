@@ -9,9 +9,9 @@ const AttributeValue = () => {
     const [lsAttributeValue, setlsAttributeValue] = useState([]);    
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`)
-        .then(res=>setlsAttributeValue(res.data));
+        .then(res=>setlsAttributeValue(res.data.data));
     }, []);
- 
+    
     return (<>
       <SidebarAdmin />
         <div id="right-panel" className="right-panel"  style={{ width: '86%' }}>
