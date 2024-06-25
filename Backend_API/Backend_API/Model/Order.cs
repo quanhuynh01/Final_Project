@@ -1,4 +1,6 @@
-﻿namespace Backend_API.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Backend_API.Model
 {
     public class Order
     {
@@ -9,5 +11,13 @@
         public string PhoneShip { get; set; }
         public DateTime DateShip { get; set; }
         public int TotalMoney { get; set; }
+        [NotMapped]
+        public List<OrderDetail> OrderDetails { get; set; }
+        [NotMapped]
+        public List<Cart> Carts { get; set; }  
+        public int DeliveryStatusId { get; set; }
+        public DeliveryStatus DeliveryStatus { get; set; }
+
+
     }
 }

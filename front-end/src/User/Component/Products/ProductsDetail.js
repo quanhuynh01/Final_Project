@@ -5,15 +5,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import './ProductsDetail.css'
 import { Button, Tab, Table, Tabs } from "react-bootstrap";
+import { jwtDecode } from 'jwt-decode';
 const ProductsDetail = () => {
     const { id } = useParams();
     const [productDetail, setproductDetail] = useState({ brand: { brandName: "" } });
     const [Image, setImage] = useState([]);
     const [Attribute, setAttribute] = useState([]);
+    const [IdUser, setIdUser] = useState(null);
     const [currentImage, setCurrentImage] = useState(`https://localhost:7201${productDetail.avatar}`);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
-            if (res.status == 200) {  
+            if (res.status == 200) {
                 setAttribute(res.data.lstAttribute);
                 setproductDetail(res.data.data.product);
                 setCurrentImage(res.data.data.product.avatar);
@@ -21,6 +23,14 @@ const ProductsDetail = () => {
 
         })
         axios.get(`https://localhost:7201/api/ProductThumbs/hinhsp/${id}`).then(res => setImage(res.data));
+
+        const jwt = localStorage.getItem('token'); // Lấy mã JWT từ localStorage 
+        if (jwt) {
+            const decodedJwt = jwtDecode(jwt); //  sử dụng thư viện jwtDecode để giải mã JWT
+            const userId = decodedJwt["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+            setIdUser(userId);
+        }
+
     }, []);
 
     //xử lý click active hình ảnh
@@ -28,14 +38,25 @@ const ProductsDetail = () => {
         // console.log(imageUrl.image);
         setCurrentImage(imageUrl.image);
     };
-
+    const addToCart = (item) => {
+        axios.post(`https://localhost:7201/api/Carts/addToCart/${IdUser}?ProductId=${item.id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    alert("Thêm sản phẩm vào giỏ thành công");
+                }
+            })
+            .catch(error => console.error(error));
+    };
     function convertToVND(price) {
-        // Giả sử đơn giá hiện tại là USD, và tỷ giá chuyển đổi là 23,000 VND cho 1 USD
-        const exchangeRate = 23000;
-        const priceInVND = price * exchangeRate;
+        const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
-   console.log(Attribute);
+ 
     return (<>
         <Header />
         <div className="">
@@ -83,7 +104,7 @@ const ProductsDetail = () => {
                         <p ><i className="fa fa-gift text-danger"></i> Giao hàng tận nơi</p>
                     </div>
                     <Button className="mr-5 btn btn-danger">Mua ngay</Button>
-                    <Button className="btn btn-outline-danger"> <i className="fa fa-shopping-cart"></i> Thêm vào giỏ</Button>
+                    <Button onClick={() => addToCart(productDetail)} className="btn btn-outline-danger"> <i className="fa fa-shopping-cart"></i> Thêm vào giỏ</Button>
                 </div>
             </div>
             <Tabs
@@ -98,19 +119,19 @@ const ProductsDetail = () => {
                             <a href="javascript:void(0)" id="expandDescription">XEM THÊM <i className="fas fa-angle-double-down" aria-hidden="true" /></a>
                             <a href="javascript:void(0)" id="collapseDescription" style={{ display: 'none' }}>THU GỌN <i className="fas fa-angle-double-up" aria-hidden="true" /></a>
                         </div>
-                    </div> */} 
+                    </div> */}
                 </Tab>
                 <Tab eventKey="profile" title="Thông số kỹ thuật">
-                    <Table striped bordered hover  > 
+                    <Table striped bordered hover  >
                         <tbody>
                             {
                                 Attribute.map((item, index) => {
                                     return (
                                         <tr key={index}>
                                             <td>{item.attribute.nameAttribute}</td>
-                                             <td>{item.attribute.value}</td> 
+                                            <td>{item.attribute.value}</td>
                                         </tr>
-                                   )
+                                    )
                                 })
                             }
                         </tbody>
