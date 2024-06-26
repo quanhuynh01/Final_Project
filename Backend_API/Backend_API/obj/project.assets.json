@@ -11998,24 +11998,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vietq\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
+      "projectUniqueName": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
       "projectName": "Backend_API",
-      "projectPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
-      "packagesPath": "C:\\Users\\vietq\\.nuget\\packages\\",
-      "outputPath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\obj\\",
+      "projectPath": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\vietq\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12023,7 +12018,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -12036,11 +12031,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -12105,7 +12095,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

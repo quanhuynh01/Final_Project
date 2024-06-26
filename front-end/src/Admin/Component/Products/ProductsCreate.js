@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import Select from 'react-select';
 import $ from 'jquery'
 import Swal from "sweetalert2";
-
+ 
 const ProductsCreate = () => {
     const navigate = useNavigate();
     const [Brand, setBrand] = useState([]);
