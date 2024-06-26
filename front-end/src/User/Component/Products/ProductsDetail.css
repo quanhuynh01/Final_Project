@@ -15,3 +15,27 @@
 .tab-pane{
     width: 100%;
 }
+.rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .rating-input {
+    width: 150px;
+    margin-right: 10px;
+  }
+  
+  .rating-stars {
+    color: #ccc;
+    display: inline-block;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .rating-stars .selected {
+    color: gold;
+  }
+  
+  #selected-rating {
+    font-weight: bold;
+  }

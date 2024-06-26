@@ -6,12 +6,15 @@ import axios from "axios";
 import './ProductsDetail.css'
 import { Button, Tab, Table, Tabs } from "react-bootstrap";
 import { jwtDecode } from 'jwt-decode';
+import Swal from "sweetalert2";
+import Navbar from "../Navbar/Navbar";
 const ProductsDetail = () => {
     const { id } = useParams();
     const [productDetail, setproductDetail] = useState({ brand: { brandName: "" } });
     const [Image, setImage] = useState([]);
     const [Attribute, setAttribute] = useState([]);
     const [IdUser, setIdUser] = useState(null);
+    const [Review, setReview] = useState({}); 
     const [currentImage, setCurrentImage] = useState(`https://localhost:7201${productDetail.avatar}`);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
@@ -39,15 +42,17 @@ const ProductsDetail = () => {
         setCurrentImage(imageUrl.image);
     };
     const addToCart = (item) => {
-        axios.post(`https://localhost:7201/api/Carts/addToCart/${IdUser}?ProductId=${item.id}`, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        axios.post(`https://localhost:7201/api/Carts/addToCart/${IdUser}?ProductId=${item.id}`)
             .then(res => {
                 console.log(res);
                 if (res.status === 200) {
-                    alert("Thêm sản phẩm vào giỏ thành công");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm vào giỏ hàng",
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
                 }
             })
             .catch(error => console.error(error));
@@ -56,16 +61,34 @@ const ProductsDetail = () => {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
- 
+    const handleChangeReview =(e)=>{
+        var name = e.target.name;
+        var value = e.target.value;
+        setReview(prev => ({ ...prev, [name]: value }));
+
+    }
+    const handleSubmitReview =(e) =>{ 
+        e.preventDefault();
+        console.log(Review);
+    }
+   
     return (<>
         <Header />
-        <div className="">
-            <Breadcrumb className="">
-                <Breadcrumb.Item className="ml-5" href="/">Trang chủ</Breadcrumb.Item>
-                <Breadcrumb.Item active>Chi tiết sản phẩm</Breadcrumb.Item>
-            </Breadcrumb>
+        <Navbar />
+        {/* Breadcrumb Start */}
+        <div className="container-fluid">
+            <div className="row px-xl-5">
+                <div className="col-12">
+                    <nav className="breadcrumb bg-light mb-30">
+                        <a className="breadcrumb-item text-dark" href="/">Trang chủ</a>
+                        <span className="breadcrumb-item active">Chi tiết sản phẩm</span>
+                    </nav>
+                </div>
+            </div>
         </div>
-        <section className="detail container" >
+        {/* Breadcrumb End */}
+
+        {/* <section className="detail container" >
             <div className="row">
                 <div className="col-6 image-section" >
                     <div className="big-image-holder col-12 " id="js-big-img" style={{ height: "370px" }}>
@@ -114,12 +137,7 @@ const ProductsDetail = () => {
                 fill
             >
                 <Tab eventKey="home" title="Mô tả sản phẩm">
-                    {/* <div className="pd-desc-group js-static-container" id="pd-decs">
-                        <h2 align="center" style={{ lineHeight: '1.2', fontSize: '2rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif' }}><span style={{ color: 'rgb(51, 102, 255)' }}><span style={{ fontWeight: 'bolder' }}><span style={{ fontFamily: 'arial, helvetica, sans-serif', fontSize: '24pt' }}>Laptop ASUS ROG Flow X16 GV601VV NL016W</span></span></span></h2><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontWeight: 'bolder' }}><span style={{ fontSize: '14pt', color: 'rgb(204, 153, 255)' }}><em>Một chiếc laptop sở hữu cấu hình khủng, hiệu năng cao với bản lề đa dụng 360° là những gì khi nhắc tới chiếc laptop ASUS ROG Flow X16 GV601VV NL016W</em></span></span></p><h3 style={{ lineHeight: '1.2', fontSize: '1.75rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Hiệu năng ấn tượng</span></h3><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Đây là một trong những mẫu laptop - máy tính xách tay chơi game cao cấp nhất của ASUS khi sử dụng cấu hình mới nhất từ Intel Gen 13 và card đồ họa cực kì mạnh mẽ. Sở hữu một trong những cấu hình cao nhất hiện nay với chip Intel Core i9 13900H gen 13 cùng card đồ họa RTX 4060 Series 4000 cho hiệu năng cực kì mạnh mẽ. Máy hoàn toàn đáp ứng mọi nhu cầu sử dụng phức tạp và xử lý mượt mà các ứng dụng đồ họa chuyên nghiệp và các tựa game online nặng…</span></p><h3 style={{ lineHeight: '1.2', fontSize: '1.75rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Thiết kế ấn tượng, linh hoạt</span></h3><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Nhanh - mượt mà - linh hoạt là những từ mô tả laptop gaming 16 inch đầu tiên của ROG sở hữu thiết kế xoay gập linh hoạt nhờ bản lề 360°. Nâng tầm phong cách với phiên bản Supernova cùng logo kim loại màu tím lấp lánh. Các đường vân được thiết kế dọc khung máy cho kết cấu vững chắc và cảm giác cầm nắm chắc chắn. Thiết kế gọn nhẹ giúp máy có thể dễ dàng đặt trong trong túi xách và có thêm không gian cho các trang bị gaming yêu thích của bạn.</span></p><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif' }}><span style={{ fontSize: '14pt' }}><img src="https://anphat.com.vn/media/lib/20-04-2023/asusrogflowx16gv601vvnl016w1.jpeg" alt="" width={800} style={{ maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} /></span></p><h3 style={{ lineHeight: '1.2', fontSize: '1.75rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Trải nghiệm màn hình siêu sắc nét</span></h3><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>ASUS ROG Flow X16 đi kèm với màn hình ROG Nebula HDR, độ phân giải 2K (QHD - 2560x1600) dưới tấm nền Mini LED cùng tần số quét 240Hz và thời gian phản hồi 3ms giúp mang lại khả năng tái tạo hình ảnh chân thật, sống động và tuyệt vời. Độ phủ màu cao lên 100% DCI-P3 cùng chuẩn màu PANTONE mang tới trải nghiệm màu sắc đầy đủ và chân thật nhất, đáp ứng hoàn hảo nhu cầu tận dụng hiệu năng khủng của X16 để sử dụng làm việc đồ hoạ, chỉnh sửa hình ảnh hay video. Công nghệ Dolby Vision® cho hình ảnh hiển thị đẹp mắt và chi tiết hơn, giúp cải thiện HDR ở video 4K, điều chỉnh động để mọi hình ảnh hiển thị rực rỡ, sáng và sống động hơn.</span></p><h3 style={{ lineHeight: '1.2', fontSize: '1.75rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif' }}><span style={{ fontSize: '14pt' }}><img src="https://anphat.com.vn/media/product/44769_asus_rog_flow_x16_gv601vv_nl016w__7_.jpg" alt="" width={800} height={800} style={{ maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} />Tản nhiệt hiệu quả</span></h3><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Hệ thống tản nhiệt&nbsp;<span style={{ fontWeight: 'bolder' }}>ASUS ROG Flow X1</span>6 với buồng hơi cao cấp giữ cho đồ họa của ROG XG Mobile luôn hoạt động mạnh mẽ. Thiết kế tùy chỉnh của chúng tôi tăng 54% diện tích tiếp xúc với bộ tản nhiệt so với cách bố trí ống dẫn nhiệt điển hình, cho phép luân chuyển nhiệt nhanh hơn và tạo nhiều không gian hơn cho luồng khí. Kết hợp với thiết kế đứng tiết kiệm diện tích của XG Mobile, hệ thống tản nhiệt thông khí tối ưu này cho phép hoạt động mạnh mẽ hơn trong thân hình siêu nhỏ gọn.</span></p><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif' }}>&nbsp;<img src="https://anphat.com.vn/media/lib/20-04-2023/asusrogflowx16gv601vvnl016w3.jpeg" alt="" width={800} style={{ maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} /></p><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Công nghệ&nbsp;<span style={{ fontWeight: 'bolder' }}>Tri-Fan</span>&nbsp;và tản nhiệt toàn phần giúp&nbsp;<em><span style={{ fontWeight: 'bolder' }}>ASUS ROG Flow X16</span></em>&nbsp;biến hình từ một model laptop mỏng nhẹ thành một chiếc laptop gaming thực thụ. Hợp chất tản nhiệt kim loại lỏng Thermal Grizzly hỗ trợ nâng cao truyền nhiệt và hạn chế gây tiếng ồn khi quạt tản nhiệt hoạt động.</span></p><h3 style={{ lineHeight: '1.2', fontSize: '1.75rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Kết nối đa dụng</span></h3><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif', textAlign: 'justify' }}><span style={{ fontSize: '14pt' }}>Được trang bị đủ tất cả các cổng cần thiết cho các công việc sáng tạo chuyên nghiệp hay giải trí. Bao gồm cổng HDMI, USB 3.2, ROG XG Mobile Interface, USB 3.2 Gen 2 Type-C support DisplayPort cùng jack cắm tai nghe tiêu chuẩn 3.5mm… Cổng kết nối ROG XG Mobile Interface là chi tiết độc quyền với mục đích chính là khai thác tối đa chiếc card đồ họa GeForce RTX 4060.</span></p><p style={{ marginBottom: '1rem', color: 'rgb(51, 51, 51)', fontFamily: 'Roboto, sans-serif' }}><span style={{ fontSize: '14pt' }}><img src="https://anphat.com.vn/media/lib/20-04-2023/asusrogflowx16gv601vvnl016w2.jpeg" alt="" width={800} style={{ maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} /></span></p>                                <div className="pd-btn-desc ">
-                            <a href="javascript:void(0)" id="expandDescription">XEM THÊM <i className="fas fa-angle-double-down" aria-hidden="true" /></a>
-                            <a href="javascript:void(0)" id="collapseDescription" style={{ display: 'none' }}>THU GỌN <i className="fas fa-angle-double-up" aria-hidden="true" /></a>
-                        </div>
-                    </div> */}
+                  
                 </Tab>
                 <Tab eventKey="profile" title="Thông số kỹ thuật">
                     <Table striped bordered hover  >
@@ -140,7 +158,160 @@ const ProductsDetail = () => {
 
             </Tabs>
 
-        </section>
+        </section> */}
+        {/* Shop Detail Start */}
+        <div className="container-fluid pb-5">
+            <div className="row px-xl-5">
+                <div className="col-lg-5 mb-30">
+                    {/* Carousel hình ảnh */}
+                </div>
+                <div className="col-lg-7 h-auto mb-30  ">
+                    <div className="h-100 bg-light p-30 p-5 ">
+                        <h3>{productDetail.productName}</h3>
+                        <div className="d-flex mb-3">
+                            <div className="text-warning mr-2">
+                                <small className="fa fa-star" />
+                                <small className="fa fa-star" />
+                                <small className="fa fa-star" />
+                                <small className="fa fa-star-half-alt" />
+                                <small className="fa fa-star" />
+                            </div>
+                            <small className="pt-1">(99 Reviews)</small>
+                        </div>
+                        <h5 className="font-weight-semi-bold  "><del>{convertToVND(productDetail.price)}</del></h5>
+                        <h3 className="font-weight-semi-bold mb-4 text-danger">{convertToVND(productDetail.salePrice)}</h3>
+                        <div className="d-flex align-items-center mb-4 pt-2">
+                            <div className="input-group quantity mr-3" style={{ width: 130 }}>
+                                <div className="input-group-btn">
+                                    <button className="btn btn-warning btn-minus">
+                                        <i className="fa fa-minus" />
+                                    </button>
+                                </div>
+                                <input type="text" className="form-control  border-0 text-center" defaultValue={1} />
+                                <div className="input-group-btn">
+                                    <button className="btn btn-warning  btn-plus">
+                                        <i className="fa fa-plus" />
+                                    </button>
+                                </div>
+                            </div>
+                            <button onClick={() => addToCart(productDetail)} className="btn btn-warning px-3"><i className="fa fa-shopping-cart mr-1" />Thêm vào giỏ</button>
+                        </div>
+                        <div className="d-flex pt-2">
+                            <strong className="text-dark mr-2">Chia sẽ:</strong>
+                            <div className="d-inline-flex">
+                                <a className="text-dark px-2" href="">
+                                    <i className="fa  fa-facebook-f" />
+                                </a>
+                                <a className="text-dark px-2" href="">
+                                    <i className="fa  fa-twitter" />
+                                </a>
+                                <a className="text-dark px-2" href="">
+                                    <i className="fa fa-linkedin " />
+                                </a>
+                                <a className="text-dark px-2" href="">
+                                    <i className="fa  fa-pinterest" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="row px-xl-5">
+                <div className="col">
+                    <div className="bg-light p-30">
+                        <div className="nav nav-tabs mb-4">
+                            <a className="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
+                            <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Thông số kỹ thuật</a>
+                            <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                        </div>
+                        <div className="tab-content">
+                            <div className="tab-pane fade show active" id="tab-pane-1">
+                                <h4 className="mb-3">Product Description</h4>
+                                <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
+                                <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                            </div>
+                            <div className="tab-pane fade" id="tab-pane-2">
+                                <h4 className="mb-3">Thông số kỹ thuật</h4>
+                                <Table striped bordered hover  >
+                                    <tbody>
+                                        {
+                                            Attribute.map((item, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{item.attribute.nameAttribute}</td>
+                                                        <td>{item.attribute.value}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </Table>
+                            </div>
+                            <div className="tab-pane fade" id="tab-pane-3">
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <h4 className="mb-4">1 review </h4>
+                                        <div className="media mb-4">
+                                            <img src="img/user.jpg" alt="Image" className="img-fluid mr-3 mt-1" style={{ width: 45 }} />
+                                            <div className="media-body">
+                                                <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
+                                                <div className="text-warning mb-2">
+                                                    <i className="fa   fa-star" />
+                                                    <i className="fa  fa-star" />
+                                                    <i className="fa  fa-star" />
+                                                    <i className="fa  fa-star-half-alt" />
+                                                    <i className="fa  fa-star" />
+                                                </div>
+                                                <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <h4 className="mb-4">Đánh giá</h4>
+                                        <small>Email của bạn sẽ không được hiển thị công khai. Các trường bắt buộc được đánh dấu *</small>
+                                        <div className="d-flex my-3">
+                                            <div className="rating">
+                                                <p className="mb-0 mr-2">Đánh giá của bạn *:</p>
+                                                <div className="text-warning">
+                                                    <input type="range" min={1} max={5} step={1} className="rating-input" id="rating-input" />
+                                                    <div className="rating-stars">
+                                                        <i className="fa fa-star" />
+                                                        <i className="fa fa-star" />
+                                                        <i className="fa fa-star" />
+                                                        <i className="fa fa-star" />
+                                                        <i className="fa fa-star" />
+                                                    </div>
+                                                </div>
+                                                <p id="selected-rating" />
+                                            </div>
+
+                                        </div>
+                                        <form>
+                                            <div className="form-group">
+                                                <label htmlFor="message">Nội dung *</label>
+                                                <textarea onChange={handleChangeReview} name="content" id="message" cols={30} rows={5} className="form-control" defaultValue={""} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="name">Tên của bạn *</label>
+                                                <input onChange={handleChangeReview} name="name" type="text" className="form-control" id="name" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="email">Email *</label>
+                                                <input onChange={handleChangeReview} name="email" type="email" className="form-control" id="email" />
+                                            </div>
+                                            <div className="form-group mb-0">
+                                                <button onClick={(e)=>handleSubmitReview(e)} type="button" className="btn btn-primary px-3"  >Gửi</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/* Shop Detail End */}
     </>);
 }
 
