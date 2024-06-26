@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Breadcrumb, Button, Form, FormControl, FormLabel, Table } from "react-bootstrap";
 import Header from "../Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import Swal from "sweetalert2";
 
 const Cart = () => {
+    const navigate = useNavigate();
     const [IdUser, setIdUser] = useState(null);
     const [cart, setCart] = useState([]);
     const [User, setUser] = useState({
@@ -25,8 +27,8 @@ const Cart = () => {
             axios.get(`https://localhost:7201/api/Users/${userId}`).then(res => setUser(res.data));
         }
     }, []);
- 
- 
+
+
     const removeFromCart = (productId) => {
         const updatedCart = cart.filter(item => item.id !== productId);
         setCart(updatedCart);
@@ -70,155 +72,163 @@ const Cart = () => {
                 Amount: item.quantity,
                 TotalMoney: (item.product.salePrice * item.quantity).toString() // Chuyển TotalMoney thành string
             })),
-            Carts : cart
+            Carts: cart
         };
-        
+
 
         axios.post('https://localhost:7201/api/Orders/addOrder', orderData)
             .then(response => {
-                //console.log(response.data);
-                // Xử lý sau khi đặt hàng thành công (ví dụ: điều hướng đến trang xác nhận đơn hàng)
+                console.log(response.data);
+                if (response.status === 200) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Đặt hành thành công",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    navigate("/tai-khoan#orders-tab");
+                }
             })
             .catch(error => {
                 alert(error.response.data.message)
                 //console.error('There was an error placing the order!', error);
             });
     };
-
-    
+    const handleDelete = (id) => {
+        axios.delete(`https://localhost:7201/api/Carts/${id}`).then(res => {
+            console.log(res);
+            if (res.status === 204) {
+                alert("Xóa sản phẩm ra khỏi giỏ hàng thành công");
+                window.location.reload();
+            }
+        }
+        )
+    }
     return (
         <>
             <Header />
-            <Breadcrumb>
-                <Breadcrumb.Item href="/">Trang chủ</Breadcrumb.Item>
-                <Breadcrumb.Item active>Giỏ hàng</Breadcrumb.Item>
-            </Breadcrumb>
-            <h1 className="text-center mt-3 mb-4">Giỏ hàng của bạn</h1>
-            <div className="row border bg-light" style={{ justifyContent: "center", width: "95%", margin: "auto" }}>
-                 {cart.length === 0 ? (
-                        <p> </p>
-                    ) : (<>
-                        <div className="col-6 ">
-                    <h2 className="text-center mb-4 mt-5">Thông tin giao hàng</h2>
-                    <Form.Group className="card p-5">
-                        <div className="row">
-                            <div className="col-6">
-                                <Form.Label>Tên người nhận</Form.Label>
-                                <Form.Control
-                                    name="fullName"
-                                    value={User.fullName}
-                                    type="text"
-                                    placeholder="Nhập tên người nhận"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Số điện thoại người nhận</Form.Label>
-                                <Form.Control
-                                    name="phoneNumber"
-                                    value={User.phoneNumber}
-                                    type="text"
-                                    placeholder="Nhập số điện thoại người nhận"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="col-12">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    name="email"
-                                    value={User.email}
-                                    type="Email"
-                                    placeholder="Nhập Email"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="col-12">
-                                <Form.Label>Nhập địa chỉ giao hàng</Form.Label>
-                                <Form.Control
-                                    name="addressShipping"
-                                    value={AddressShipping}
-                                    type="text"
-                                    placeholder="Nhập địa chỉ giao hàng"
-                                    onChange={handleAddressChange}
-                                />
-                            </div>
-                        </div>
-                    </Form.Group>
+            {/* Breadcrumb Start */}
+            <div className="container-fluid">
+                <div className="row px-xl-5">
+                    <div className="col-12">
+                        <nav className="breadcrumb bg-light mb-30">
+                            <a className="breadcrumb-item text-dark" href="/">Trang chủ</a>
+                            <span className="breadcrumb-item active">Giỏ hàng</span>
+                        </nav>
+                    </div>
                 </div>
-                    </>  
-                    )}
-              
-                <div className=" col-6">
-                    <h2 className="mb-4 mt-5 text-center">Thông tin giỏ hàng</h2>
-                    {cart.length === 0 ? (
-                        <>
-                         <p className="text-center">Giỏ hàng của bạn trống.</p>
-                         <Link className="text-primary d-flex justify-content-center" to={"/"}>Mua hàng</Link>
-                        </>
-                       
-                    ) : (
-                        <Table striped bordered hover variant="light">
-                            <thead>
-                                <tr>
-                                    <th>Mã sản phẩm</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cart.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.product.sku}</td>
-                                        <td>
-                                            <Link to={`/chi-tiet-san-pham/${item.product.id}`}>
-                                                <div className="d-flex">
-                                                    <img style={{ width: "75px", height: "70px" }} src={`https://localhost:7201${item.product.avatar}`} alt="Avatar" />
-                                                    <p className="ml-2">{item.product.productName}</p>
-                                                </div>
-                                            </Link>
-                                        </td>
-                                        <td>{convertToVND(item.product.salePrice)}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>
-                                            <button className="btn btn-danger" onClick={() => removeFromCart(item.id)}>
-                                                <i className="fa fa-trash"></i> Xóa
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    )}
-                    
-                    {cart.length === 0 ? (
-                        <p> </p>
-                    ) : (<>
-                     <Form className="">
-                        <div className="row">
-                            <FormLabel className="col-2">Mã giảm giá</FormLabel>
-                            <FormControl className="col-8" placeholder="Nhập mã giảm giá"></FormControl>
-                            <Button className="col-2">Áp mã</Button>
-                        </div>
-                    </Form>
-                    <h5 className="mt-2">Tổng giá: {convertToVND(calculateTotalPrice())}</h5>
-                    </>  
-                    )}
-                    
-                </div>
-                {cart.length === 0 ? (
-                        <p> </p>
-                    ) : (<>
-                     <div className="p-3">
-                    <Button type="submit" onClick={handleSuccess}>Đặt hàng</Button>
-                </div>
-                    </>  
-                    )}
-               
             </div>
+            {/* Breadcrumb End */}
 
-                    
+            {cart.length === 0 ? (
+                <h3 className="text-center mt-3">Giỏ hàng của bạn trống</h3>
+            ) : (<>
+                {/* Cart Start */}
+                <div className="container-fluid ">
+                    <div className="row ">
+                        <div className="col-lg-7 table-responsive mb-5 card p-2">
+                            <table className="table table-light table-borderless table-hover text-center mb-0">
+                                <thead className="thead-dark">
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="align-middle">
+                                    {
+                                        cart.map((item, index) => {
+                                            return (<tr key={index}><td className="align-middle"><img src={`https://localhost:7201/${item.product.avatar}`} alt={item.product.productName} style={{ width: 50 }} /> {item.product.productName}</td>
+                                                <td className="align-middle">
+                                                    <div className="input-group quantity mx-auto" style={{ width: 100 }}>
+                                                        <div className="input-group-btn">
+                                                            <button className="btn btn-sm btn-warning btn-minus">
+                                                                <i className="fa fa-minus" />
+                                                            </button>
+                                                        </div>
+                                                        <input type="text" readOnly className="form-control form-control-sm   border-0 text-center" value={item.quantity} />
+                                                        <div className="input-group-btn">
+                                                            <button className="btn btn-sm btn-warning btn-plus">
+                                                                <i className="fa fa-plus" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="align-middle">{convertToVND(item.product.salePrice)} </td>
+                                                <td className="align-middle"><button onClick={() => handleDelete(item.id)} className="btn btn-sm btn-danger"><i className="fa fa-times" /></button></td>
+                                            </tr>)
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="col-lg-5 c">
+                            <h5 className="section-title position-relative text-uppercase mb-3 "><span className="  pr-3">Thông tin giao hàng</span></h5>
+                            <div className="bg-light p-30 mb-5">
+                                <div className="border-bottom pb-2">
+                                    <Form.Group className="card p-3">
+                                        <div className="row">
+                                            <div className="col-6">
+                                                <Form.Label>Tên người nhận</Form.Label>
+                                                <Form.Control
+                                                    name="fullName"
+                                                    value={User.fullName}
+                                                    type="text"
+                                                    placeholder="Nhập tên người nhận"
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="col-6">
+                                                <Form.Label>Số điện thoại người nhận</Form.Label>
+                                                <Form.Control
+                                                    name="phoneNumber"
+                                                    value={User.phoneNumber}
+                                                    type="text"
+                                                    placeholder="Nhập số điện thoại người nhận"
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="col-12">
+                                                <Form.Label>Email</Form.Label>
+                                                <Form.Control
+                                                    name="email"
+                                                    value={User.email}
+                                                    type="Email"
+                                                    placeholder="Nhập Email"
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="col-12">
+                                                <Form.Label>Nhập địa chỉ giao hàng</Form.Label>
+                                                <Form.Control
+                                                    name="addressShipping"
+                                                    value={AddressShipping}
+                                                    type="text"
+                                                    placeholder="Nhập địa chỉ giao hàng"
+                                                    onChange={handleAddressChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Form.Group>
+                                </div>
+                                <div className="pt-2">
+                                    <div className="d-flex justify-content-between mt-2">
+                                        <h5>Tổng giá</h5>
+                                        <h5>{convertToVND(calculateTotalPrice())}</h5>
+                                    </div>
+                                    <button onClick={handleSuccess} type="button" className="   btn btn-block btn-warning font-weight-bold my-3 py-3">Đặt hàng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* Cart End */}
+            </>
+            )}
+
+
 
         </>
     );
