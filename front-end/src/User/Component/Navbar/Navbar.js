@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import './Navbar.css'
 const Navbar = () => {
   const [Categories, setCategories] = useState([]);
   useEffect(() => {
@@ -20,8 +21,8 @@ const Navbar = () => {
           
           {Categories.filter(category => category.show).map((item) => {
           return ( 
-            <div className="nav-item dropdown dropright">
-            <a href="#"  className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">{item.nameCategory} <i className="fa fa-angle-right float-right mt-1" /></a>
+            <div key={item.id} className="nav-item dropdown dropright">
+            <a href="#"  className="nav-link  " data-toggle="dropdown" aria-expanded="false">{item.nameCategory} <i className="fa fa-angle-right float-right mt-1" /></a>
             <div className="dropdown-menu position-absolute rounded-0 border-0 m-0">
               <a href="#" className="dropdown-item">Laptop Gamming</a>
               <a href="#" className="dropdown-item">Laptop văn phòng</a>
@@ -57,23 +58,23 @@ const Navbar = () => {
         </div>
       </nav>
     </div>
-    <div className="col-lg-9 pt-10" style={{paddingTop: '10px'}}>
-      <nav className="  navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+    <div className="col-lg-9 pt-10" style={{padding: '10px'}}>
+      <nav className="  navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0 ">
         <a href="#" className="text-decoration-none d-block d-lg-none">
-          <span className="h1 text-uppercase text-dark bg-light px-2">Multi</span>
-          <span className="h1 text-uppercase text-light bg-primary px-2 ml-n1">Shop</span>
+          <span className="h1 text-uppercase text-warning bg-dark px-2">ĐQ</span>
+          <span className="h1 text-uppercase text-light bg-warning px-2 ml-n1">Shop</span>
         </a>
  
         <div className="collapse navbar-collapse justify-content-between" id="navbarCollapse" >
           <div className="navbar-nav mr-auto py-0 d-flex ">
-            <a href ="index.html" className="nav-item nav-link  ">Home</a>
-            <a href ="shop.html" className="nav-item nav-link">Shop</a>
-            <a href="detail.html" className="nav-item nav-link">Shop Detail</a>
-            <a href="contact.html" className="nav-item nav-link">Contact</a>
+            <a href ="/" className="nav-item nav-link  ">Trang chủ</a>
+            <a href ="shop.html" className="nav-item nav-link">Sản phẩm</a>
+            <a href="detail.html" className="nav-item nav-link">Giới thiệu</a>
+            <a href="contact.html" className="nav-item nav-link">Liên hệ</a>
           </div>
           <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
          
-            <a href="#" title="Cart" className="btn btn-warning   ">
+            <a href="/cart" title="Cart" className="btn btn-warning   ">
               <i className="fa fa-shopping-cart text-white pr-2" />
               <span className="bg-light badge text-danger border border-secondary rounded-circle" style={{paddingBottom: 2}}>5</span>
             </a>

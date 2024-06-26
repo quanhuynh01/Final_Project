@@ -116,7 +116,7 @@ namespace Backend_API.Controllers
                 };
 
                 _context.Order.Add(o);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 if (order.OrderDetails != null && order.OrderDetails.Any())
                 {
@@ -144,14 +144,14 @@ namespace Backend_API.Controllers
                         };
 
                         _context.OrderDetails.Add(detail);
-                        await _context.SaveChangesAsync();
+                        _context.SaveChanges();
 
                         // Cập nhật số lượng tồn kho của sản phẩm sau khi đặt hàng
                         var productToUpdate = await _context.Products.FindAsync(item.ProductId);
                         productToUpdate.Stock -= item.Amount;
 
                         _context.Products.Update(productToUpdate);
-                        await _context.SaveChangesAsync();
+                         _context.SaveChanges();
                     }
                 }
                 if (order.Carts != null && order.Carts.Any())
@@ -173,8 +173,7 @@ namespace Backend_API.Controllers
 
                         // Tiến hành xóa sản phẩm từ giỏ hàng
                         _context.Cart.Remove(item);
-                    }
-
+                    } 
                     await _context.SaveChangesAsync();
                 }
 

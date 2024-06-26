@@ -108,28 +108,36 @@ namespace Backend_API.Controllers
         }
 
 
-            [HttpPost("addToCart/{idUser}")]
-        public async Task<IActionResult> addToCart(string idUser,int ProductId)
+        [HttpPost("addToCart/{idUser}")]
+        public async Task<IActionResult> addToCart(string idUser, int ProductId)
         {
-            var existProduct = _context.Cart.Where(p => p.UserId == idUser && p.ProductId == ProductId).FirstOrDefault();
-            if(existProduct!=null)
+            try
             {
-                existProduct.Quantity += 1;
-                _context.Cart.Update(existProduct);
-                _context.SaveChanges();
+                var existProduct = _context.Cart.Where(p => p.UserId == idUser && p.ProductId == ProductId).FirstOrDefault();
+                if (existProduct != null)
+                {
+                    existProduct.Quantity += 1;
+                    _context.Cart.Update(existProduct);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    Cart cart = new Cart();
+                    cart.UserId = idUser;
+                    cart.ProductId = ProductId;
+                    cart.Quantity = 1;
+                    _context.Cart.Add(cart);
+                    _context.SaveChanges();
+                }
             }
-            else
+            catch(Exception ex)
             {
-                Cart cart = new Cart();
-                cart.UserId = idUser;
-                cart.ProductId = ProductId;
-                cart.Quantity = 1;
-                _context.Cart.Add(cart);
-                _context.SaveChanges();
-            } 
+
+            }
+            
             return Ok();
-        } 
-            private bool CartExists(int id)
+        }
+        private bool CartExists(int id)
         {
             return _context.Cart.Any(e => e.Id == id);
         }
