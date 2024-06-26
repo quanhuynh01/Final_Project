@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
 using Attribute = Backend_API.Model.Attribute;
+using System.ComponentModel;
+using CategoryAttribute = Backend_API.Model.CategoryAttribute;
 
 namespace Backend_API.Controllers
 {
@@ -76,16 +78,29 @@ namespace Backend_API.Controllers
         // POST: api/Attributes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Attribute>> PostAttribute([FromForm] Attribute attribute)
+        public async Task<ActionResult<Attribute>> PostAttribute([FromForm] Attribute attribute, [FromForm] List<int>CateId)
             {
             Attribute a = new Attribute();
             a.NameAttribute = attribute.NameAttribute;
             a.Value = attribute.Value;
-            // Gán các thuộc tính khác của attribute vào đối tượng a nếu cần
-            // Ví dụ: a.Description = attribute.Description;
-
-            _context.Attributes.Add(a); // Thêm đối tượng a thay vì attribute
+            _context.Attributes.Add(a); // Thêm đối tượng a 
             await _context.SaveChangesAsync();
+            if (CateId.Count > 0)
+            {
+                foreach(var item in CateId)
+                {
+                     CategoryAttribute  ca = new CategoryAttribute()
+                     {
+                         AttributeId = a.Id,
+                         CategoryId= item
+                         
+                     };
+                    _context.CategoryAttributes.Add(ca);
+                    _context.SaveChanges();
+                }
+            }
+
+           
 
             return CreatedAtAction("GetAttribute", new { id = a.Id }, a); // Trả về đối tượng a thay vì attribute
         }

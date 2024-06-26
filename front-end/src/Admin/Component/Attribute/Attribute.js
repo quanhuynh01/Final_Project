@@ -4,17 +4,20 @@ import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import { Button, Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import Select from 'react-select';
 const Attribute = () => {
     const [Attribute, setAttribute] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Attributes`)
             .then( res=>setAttribute(res.data));
+        axios.get(`https://localhost:7201/api/Categories`)
+        .then(res=>setCategories(res.data));
     }, []);
  
     const [AttributeCreate, setAttributeCreate] = useState({});
     const [AttributeValue, setAttributeValue] = useState({});
-
+    const [Categories , setCategories] = useState([]);
+    const [CategoriesPost , setCategoriesPost] = useState([]);
 
         //modal bootstrap
         const [show, setShow] = useState(false);
@@ -24,11 +27,7 @@ const Attribute = () => {
         //attribute value
         const [showAttr, setShowAttr] = useState(false);
         const handleCloseAttr = () => setShowAttr(false);
-        const handleShowAttr = (attributeId) => {
-            setShowAttr(true);
-            setAttributeValue({AttributeId:attributeId});
-            //console.log("Attribute ID:", attributeId);
-        }
+ 
         const handleChange = (e) => {
             let name = e.target.name;
             let value = e.target.value;
@@ -44,15 +43,20 @@ const Attribute = () => {
 
     const handleDelete =(id)=>{
 
-    };
-
-
+    }; 
+    const categoryOptions = Categories.map(item => ({
+        value: item.id,
+        label: item.nameCategory
+    }));
     const handleSubmit = (e) => { 
         e.preventDefault();
         const formData = new FormData();
         Object.entries(AttributeCreate).forEach(([key, value]) => { 
             formData.append(key, value); 
         });
+        CategoriesPost.forEach((id) => {
+            formData.append("CateId[]", id);
+        }); 
         axios.post(`https://localhost:7201/api/Attributes`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -74,26 +78,34 @@ const Attribute = () => {
                     }, 1300);
                 }
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
                 alert("Thêm thất bại!!!")
             }) 
     }
 
-    const handleCreateAttr = (e) => {
-        e.preventDefault();
-        axios.post(`https://localhost:7201/api/Attributevalues`,AttributeValue).then( (res) =>{
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: `Thêm giá trị ${res.data.nameValue} thành công` ,
-                showConfirmButton: false,
-                timer: 1500
-              }); 
-            setTimeout(() => {
-                window.location.reload();
-            }, 1300); 
-        }); 
-    }
+    // const handleCreateAttr = (e) => {
+    //     e.preventDefault();
+    //     axios.post(`https://localhost:7201/api/Attributevalues`,AttributeValue).then( (res) =>{
+    //         Swal.fire({
+    //             position: "center",
+    //             icon: "success",
+    //             title: `Thêm giá trị ${res.data.nameValue} thành công` ,
+    //             showConfirmButton: false,
+    //             timer: 1500
+    //           }); 
+    //         setTimeout(() => {
+    //             window.location.reload();
+    //         }, 1300); 
+    //     }); 
+    // }
+     // Xử lý chọn nhiều danh mục
+     const handleMultiSelectChange = (selectedOptions) => {
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        setCategoriesPost(selectedValues);
+        console.log(selectedValues);
+    };
+
 
     return ( <>
      <SidebarAdmin />
@@ -178,6 +190,19 @@ const Attribute = () => {
                         <Form.Label>Giá trị thuộc tính</Form.Label>
                         <Form.Control name="Value" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập giá trị thuộc tính" />
                     </Form.Group> 
+                    <Form.Group>
+                        <Select
+                            name="CateId"
+                            options={categoryOptions}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            onChange={handleMultiSelectChange}
+                            placeholder="Chọn danh mục..."
+                            isMulti
+                            value={categoryOptions.filter(option => CategoriesPost.includes(option.value))}
+                        />
+ 
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -191,7 +216,7 @@ const Attribute = () => {
         </Modal> 
 
 {/* Create attributevalues */}
-<Modal show={showAttr} onHide={handleCloseAttr}>
+{/* <Modal show={showAttr} onHide={handleCloseAttr}>
             <Modal.Header  >
                 <Modal.Title>Tạo mới thương hiệu</Modal.Title>
             </Modal.Header>
@@ -211,7 +236,7 @@ const Attribute = () => {
                 Thêm mới
                 </Button>
             </Modal.Footer>
-        </Modal> 
+        </Modal>  */}
 
     </> );
 }
