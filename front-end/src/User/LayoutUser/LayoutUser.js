@@ -4,7 +4,7 @@ import Home from "../Component/Home/Home";
 import Navbar from "../Component/Navbar/Navbar"; 
 import SlideShow from "../Component/SlideShow/SlideShow"; 
 const LayoutUser = () => {
-    return ( <>
+    return ( <div style={{position:"relative"}}>
     <Header/>
     <Navbar/>
     <Home/> 
@@ -14,7 +14,7 @@ const LayoutUser = () => {
     {/*
      */}
      <Footer/>
-    </> );
+    </div> );
 }     
  
 export default LayoutUser;
