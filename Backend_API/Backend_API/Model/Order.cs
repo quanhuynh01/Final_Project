@@ -5,6 +5,7 @@ namespace Backend_API.Model
     public class Order
     {
         public int Id { get; set; }
+        public string Code { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public string ShippingAdress { get; set; }
@@ -18,6 +19,7 @@ namespace Backend_API.Model
         public int DeliveryStatusId { get; set; }
         public DeliveryStatus DeliveryStatus { get; set; }
 
+        public bool Paid { get; set; }
 
     }
 }

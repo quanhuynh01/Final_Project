@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_API.Migrations
 {
     [DbContext(typeof(MiniStoredentity_Context))]
-    [Migration("20240625042357_init")]
-    partial class init
+    [Migration("20240627035542_init1")]
+    partial class init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,8 +185,8 @@ namespace Backend_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -253,6 +253,9 @@ namespace Backend_API.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateShip")
                         .HasColumnType("datetime2");
@@ -457,6 +460,39 @@ namespace Backend_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductThumbs");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateComment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Backend_API.Model.User", b =>
@@ -812,6 +848,17 @@ namespace Backend_API.Migrations
                 });
 
             modelBuilder.Entity("Backend_API.Model.ProductThumb", b =>
+                {
+                    b.HasOne("Backend_API.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Review", b =>
                 {
                     b.HasOne("Backend_API.Model.Product", "Product")
                         .WithMany()

@@ -13,6 +13,7 @@ import CustomerSupplier from '../Admin/Component/CustomerSupplier/CustomerSuppli
 import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
 import ProductsEdit from '../Admin/Component/Products/ProductsEdit';
 import Email from '../Admin/Component/Email/Email';
+import Order from '../Admin/Component/Order/Order';
  
  
 
@@ -45,6 +46,9 @@ const PrivateRouter = () => {
                     </Route>
                     <Route path="email-config">
                         <Route index element={<Email />}></Route>   
+                    </Route>
+                    <Route path="order">
+                        <Route index element={<Order />}></Route>   
                     </Route>
                    
                 </Route>

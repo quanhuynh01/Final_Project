@@ -4,6 +4,7 @@ using Backend_API.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_API.Migrations
 {
     [DbContext(typeof(MiniStoredentity_Context))]
-    partial class MiniStoredentity_ContextModelSnapshot : ModelSnapshot
+    [Migration("20240627014918_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,29 +143,6 @@ namespace Backend_API.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Backend_API.Model.CategoryAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("CategoryAttributes");
-                });
-
             modelBuilder.Entity("Backend_API.Model.CustomerSupplier", b =>
                 {
                     b.Property<int>("Id")
@@ -275,17 +254,11 @@ namespace Backend_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateShip")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DeliveryStatusId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Paid")
-                        .HasColumnType("bit");
 
                     b.Property<string>("PhoneShip")
                         .HasColumnType("nvarchar(max)");
@@ -784,25 +757,6 @@ namespace Backend_API.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.CategoryAttribute", b =>
-                {
-                    b.HasOne("Backend_API.Model.Attribute", "Attribute")
-                        .WithMany()
-                        .HasForeignKey("AttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend_API.Model.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attribute");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Backend_API.Model.Order", b =>

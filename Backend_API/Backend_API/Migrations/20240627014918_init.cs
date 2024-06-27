@@ -126,7 +126,7 @@ namespace Backend_API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -468,6 +468,30 @@ namespace Backend_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Review",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateComment = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Review", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Review_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WistLists",
                 columns: table => new
                 {
@@ -625,6 +649,11 @@ namespace Backend_API.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Review_ProductId",
+                table: "Review",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WistLists_ProductId",
                 table: "WistLists",
                 column: "ProductId");
@@ -681,6 +710,9 @@ namespace Backend_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductThumbs");
+
+            migrationBuilder.DropTable(
+                name: "Review");
 
             migrationBuilder.DropTable(
                 name: "WistLists");
