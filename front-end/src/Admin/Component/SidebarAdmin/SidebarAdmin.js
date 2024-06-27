@@ -34,7 +34,7 @@ const SidebarAdmin = () => {
                         <li className="menu-item-has-children dropdown">
                             <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-table" />Đơn hàng</a>
                             <ul className="sub-menu children dropdown-menu">
-                                <li><i className="fa fa-table" /><a href="tables-basic.html">Danh sách đơn hàng</a></li>
+                                <li><i className="fa fa-table" /> <Link to={`${adminPath}/order`}>Danh sách đơn hàng</Link></li>
                             </ul>
                         </li>
                         <li className="menu-item-has-children dropdown">

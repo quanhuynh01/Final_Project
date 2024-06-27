@@ -2,14 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import $ from 'jquery'
-import './Header.css'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Cart from '../Cart/Cart';
+import './Header.css' 
 import axios from 'axios';
 
 
@@ -29,7 +22,22 @@ const Header = ({ soluong }) => {
     setTokenUpdated(true); // Đã cập nhật token 
     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(cartItems); 
-     
+         ///tìm kiếm sản phẩm
+    $('.text-search').on('input',function(){
+      let text = $(this).val();
+      if (text.length >0) {
+        axios.get(`https://localhost:7201/Search/${text}`).then(res =>
+          {
+          if (res.data !=null) {
+              $('.ls-Product').removeClass("d-none");
+              $('.ls-Product').addClass("d-block");
+          }
+            setsearchResult(res.data) 
+          } );
+      }
+      
+         
+    }); 
   }, []); 
 
   useEffect(() => {
@@ -44,22 +52,15 @@ const Header = ({ soluong }) => {
     $('.click-show').on('click', function () {
       $('.menu-logout').toggleClass('d-none');
     });
-    ///tìm kiếm sản phẩm
-    $('.text-search').on('input',function(){
-      let text = $(this).val();
-      if (text.length >0) {
-        axios.get(`https://localhost:7201/Search/${text}`).then(res =>setsearchResult(res.data));
-      }
-         
-    }); 
 
-
+  
   }, [token, tokenUpdated]); //
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
   }; 
+  console.log(searchResult);
  
   return (<>
     {/* <div className="container-fluid  ">
@@ -168,8 +169,9 @@ const Header = ({ soluong }) => {
               <>
                     <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
                     <div className="dropdown-menu dropdown-menu-right  " style={{ marginTop: "35px" }}>
-                      <button className="dropdown-item" type="button">Sign in</button>
-                      <button className="dropdown-item" type="button">Sign up</button>
+                      <Link to={"/login"}><button className="dropdown-item" type="button">Sign in </button></Link>
+                      <Link to={"/register"}><button className="dropdown-item" type="button">Sign up </button></Link>
+                  
                     </div>
               </>
             )} 
@@ -189,15 +191,15 @@ const Header = ({ soluong }) => {
   </div>
   <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
     <div className="col-lg-4">
-      <a href='' className="text-decoration-none">
+      <a href='/' className="text-decoration-none">
         <span className="h1 text-uppercase text-warning bg-dark px-2">ĐQ</span>
         <span className="h1 text-uppercase text-dark bg-warning px-2 ml-n1">Shop</span>
       </a>
     </div>
-    <div className="col-lg-4 col-6 text-left">
+    <div className="col-lg-4 col-6 text-left" style={{position:"relative"}}>
       <form >
         <div className="input-group">
-          <input type="text" className="form-control" placeholder="Search for products" />
+          <input type="text" className="form-control text-search" placeholder="Search for products" />
           <div className="input-group-append">
             <span className="input-group-text bg-transparent text-warning">
               <i className="fa fa-search" />
@@ -205,6 +207,9 @@ const Header = ({ soluong }) => {
           </div>
         </div>
       </form>
+      <div className='bg-light d-none ls-Product' style={{position:"absolute"}}>
+        <h4>Sản phẩm</h4>
+      </div>
     </div>
     {/* <div className="col-lg-4 col-6 text-right">
       <p className="m-0">Customer Service</p>
