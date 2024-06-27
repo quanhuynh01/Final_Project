@@ -4,12 +4,14 @@
   "private": true,
   "dependencies": {
     "@iconscout/react-unicons": "^2.0.2",
+    "@iconscout/unicons": "^4.0.8",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "ag-grid-react": "^31.3.2",
     "axios": "^1.6.8",
+    "boostrap": "^2.0.0",
     "bootstrap": "^5.3.3",
     "datatables.net-dt": "^2.0.5",
     "google-login-react": "^0.2.17",
@@ -26,6 +28,7 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "resolve-url-loader": "^5.0.0",
     "slicknav": "^1.0.8",
     "sweetalert2": "^11.11.1",
     "web-vitals": "^2.1.4"

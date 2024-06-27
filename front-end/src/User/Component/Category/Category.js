@@ -13,7 +13,7 @@ const Category = ({ categories = []}) => {
                 </div>
                 <div className='img-cate'>
                   <img
-                    style={{ height: "70px", width: "70px" }}
+                    style={{ height: "50px", width: "70px" }}
                     src={`https://localhost:7201/${item.iconCate}`}
                     alt={item.nameCategory}
                   />

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 const Navbar = () => {
   const [Categories, setCategories] = useState([]);
@@ -68,7 +69,7 @@ const Navbar = () => {
             <a href ="index.html" className="nav-item nav-link  ">Home</a>
             <a href ="shop.html" className="nav-item nav-link">Shop</a>
             <a href="detail.html" className="nav-item nav-link">Shop Detail</a>
-            <a href="contact.html" className="nav-item nav-link">Contact</a>
+            <Link title='Đăng nhập' to={'/contact'} className="btn btn-sm btn-light mr-2">Contact</Link>
           </div>
           <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
          
@@ -85,5 +86,5 @@ const Navbar = () => {
 
     </> );
 }
- 
+
 export default Navbar;

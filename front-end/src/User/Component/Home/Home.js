@@ -6,6 +6,7 @@ import { Button, Card, Tab, Tabs } from 'react-bootstrap';
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode';
 import Share from '../Share/Share';
+import Carousel from '../Carousel/Carousel';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -56,6 +57,7 @@ const Home = () => {
 
 
   return (<>
+  {/* <Carousel /> */}
     <main id="main" className='mt-5'>
       {/* ======= About Section ======= */}
       <div id="about" className="about-area area-padding">

@@ -7,13 +7,14 @@ import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
  
- 
   const [Login, setLogin] = useState();
+
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
     setLogin(prev => ({ ...prev, [name]: value }));
   } 
+
   const HandelSubmitGoogle =()=>{
       alert('123');
   }
@@ -62,10 +63,8 @@ const Login = () => {
             timer: 1500
           });
           console.error('Error:', error);
-
         });
     }
-
   }
  
   return (<div className="sufee-login d-flex align-content-center flex-wrap">   

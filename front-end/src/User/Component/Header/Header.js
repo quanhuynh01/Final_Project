@@ -97,7 +97,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+      <div className="row align-items-center bg-light px-xl-5 d-none d-lg-flex">
         <div className="col-lg-4">
           <a href="#" className="text-decoration-none">
             <span className="h1 text-uppercase text-warning bg-dark px-2">ĐQ</span>

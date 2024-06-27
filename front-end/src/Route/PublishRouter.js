@@ -5,6 +5,7 @@ import Login2 from "../User/Component/Login2/Login2";
 import ProductsDetail from "../User/Component/Products/ProductsDetail";
 import ProductsList from "../User/Component/Products/ProductsList";
 import Cart from "../User/Component/Cart/Cart";
+import Contact from "../User/Component/Contact/Contact";
 
 const PublishRouter = () => {
     return (<>
@@ -26,6 +27,7 @@ const PublishRouter = () => {
                 <Route path="/cart" element={<Cart />}>
                     <Route index element={<Cart />} />
                 </Route>
+                <Route path="/contact" element={<Contact />} />
             </Routes>
         </BrowserRouter>
 

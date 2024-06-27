@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { UilUser, UilAt, UilLockAlt } from '@iconscout/react-unicons';
-import './Login2.module.css';
+import './Login2.css';
+import '@iconscout/unicons/css/line.css';
 
 const LoginSignUpForm = () => {
   const [isSignUp, setIsSignUp] = useState(false); // State để chuyển đổi giữa Đăng Nhập và Đăng Ký
@@ -184,7 +185,6 @@ const LoginSignUpForm = () => {
                           <button
                             type="submit"
                             className="btn mt-4"
-                            onClick={HandelSubmit}
                           >
                             Sign Up
                           </button>
