@@ -41,11 +41,12 @@ namespace Backend_API.Controllers
                                             .Where(p => p.ProductId == id)
                                             .FirstOrDefault();
             var listAttibute = _context.ProductAttributes.Where(a=>a.ProductId == id).Include(a=>a.Attribute).ToList();
+            var Review = _context.Review.Where(r => r.ProductId == id).ToList();
             if (product == null)
             {
                 return NotFound();
             } 
-            return Ok(new {data= product,lstAttribute = listAttibute});
+            return Ok(new {data= product,lstAttribute = listAttibute,Review = Review});
         }
 
         // PUT: api/Products/5

@@ -24,7 +24,7 @@ namespace Backend_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
-            return await _context.Order.ToListAsync();
+            return await _context.Order.Include(u=>u.User).Include(d=>d.DeliveryStatus).ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -112,7 +112,8 @@ namespace Backend_API.Controllers
                     PhoneShip = order.PhoneShip,
                     TotalMoney = order.TotalMoney,
                     ShippingAdress = order.ShippingAdress,
-                    DeliveryStatusId =1
+                    DeliveryStatusId =1,
+                    Paid = false
                 };
 
                 _context.Order.Add(o);
@@ -184,7 +185,22 @@ namespace Backend_API.Controllers
             {
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi xử lý đơn hàng.", error = ex.Message });
             }
-        } 
+        }
+         
+        [HttpGet("/getOrderByUserId/{idUser}")]
+        public async Task<IActionResult> getOrderByUserId(string idUser)
+        {
+            var order = _context.Order.Where(o=>o.UserId == idUser).ToList();
+            if (order == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(new { data = order });
+            }     
+        }
+
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.Id == id);

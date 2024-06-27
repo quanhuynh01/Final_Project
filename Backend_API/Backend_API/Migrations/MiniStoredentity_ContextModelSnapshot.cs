@@ -252,11 +252,17 @@ namespace Backend_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateShip")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DeliveryStatusId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PhoneShip")
                         .HasColumnType("nvarchar(max)");
@@ -455,6 +461,39 @@ namespace Backend_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductThumbs");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateComment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Backend_API.Model.User", b =>
@@ -810,6 +849,17 @@ namespace Backend_API.Migrations
                 });
 
             modelBuilder.Entity("Backend_API.Model.ProductThumb", b =>
+                {
+                    b.HasOne("Backend_API.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Review", b =>
                 {
                     b.HasOne("Backend_API.Model.Product", "Product")
                         .WithMany()
