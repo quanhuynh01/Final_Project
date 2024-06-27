@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "KfuaJCSXH9YxpxHGAVyxriO6dyBxiuvIrwYd36E1ESw=",
+  "Hash": "58tAurHcrgQGqRkfXp6F2R4pxNVcJw3d/EpsgKikLbU=",
   "Source": "Backend_API",
   "BasePath": "_content/Backend_API",
   "Mode": "Default",
@@ -323,6 +323,23 @@
       "OriginalItemSpec": "wwwroot\\images\\categories\\PC.png"
     },
     {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .jpg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/categories/Phụ kiện .jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\categories\\Phụ kiện .jpg"
+    },
+    {
       "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .png",
       "SourceId": "Backend_API",
       "SourceType": "Discovered",
@@ -627,6 +644,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\Product\\2\\1.png"
+    },
+    {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\2.jpg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/2/2.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\2\\2.jpg"
+    },
+    {
+      "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\3.jpg",
+      "SourceId": "Backend_API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\",
+      "BasePath": "_content/Backend_API",
+      "RelativePath": "images/Product/2/3.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product\\2\\3.jpg"
     },
     {
       "Identity": "D:\\Quân công việc\\Filecode API\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\3\\0.png",
