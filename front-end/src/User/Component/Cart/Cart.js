@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import Swal from "sweetalert2";
+import Footer from "../Footer/Footer";
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -227,10 +228,8 @@ const Cart = () => {
                 {/* Cart End */}
             </>
             )}
-
-
-
-        </>
+        <Footer/>
+        </> 
     );
 };
 
