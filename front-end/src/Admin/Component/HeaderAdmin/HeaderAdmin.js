@@ -1,15 +1,20 @@
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 
 const HeaderAdmin = () => {
+  const [lsOrder, setlsOrder] = useState([]); // Khởi tạo token với giá trị null
+
   //view tên admin
   const [token, setToken] = useState(null); // Khởi tạo token với giá trị null
   const [tokenUpdated, setTokenUpdated] = useState(false); // Khởi tạo state để theo dõi việc cập nhật token
   const [Name, setName] = useState(); 
   useEffect(() => {
+    axios.get(`https://localhost:7201/api/Orders`).then((res) => setlsOrder(res.data));
       const tokenFromStorage = localStorage.getItem('token');
       setToken(tokenFromStorage); // Cập nhật token từ localStorage
       setTokenUpdated(true); // Đã cập nhật token
+      
   }, []); // useEffect chỉ chạy một lần sau khi component được mount
   
   useEffect(() => {
@@ -28,7 +33,7 @@ const HeaderAdmin = () => {
     localStorage.removeItem('token');
     window.location.href = 'http://localhost:3000/login';
 }
-
+console.log(lsOrder);
   return (
  
       <header id="header" className="header">
@@ -44,22 +49,15 @@ const HeaderAdmin = () => {
               <div className="dropdown for-notification">
                 <button className="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i className="fa fa-bell" />
-                  <span className="count bg-danger">5</span>
+                  <span className="count bg-danger">{lsOrder.filter(order => order.deliveryStatusId === 1).length}</span> 
                 </button>
                 <div className="dropdown-menu" aria-labelledby="notification">
-                  <p className="red">You have 3 Notification</p>
-                  <a className="dropdown-item media bg-flat-color-1" href="#">
+                  <p className="red">Bạn có <b className="text-danger">{lsOrder.filter(order => order.deliveryStatusId === 1).length} </b>đơn hàng mới</p>
+                  <a className="dropdown-item media bg-flat-color-3" href="#">
                     <i className="fa fa-check" />
                     <p>Server #1 overloaded.</p>
                   </a>
-                  <a className="dropdown-item media bg-flat-color-4" href="#">
-                    <i className="fa fa-info" />
-                    <p>Server #2 overloaded.</p>
-                  </a>
-                  <a className="dropdown-item media bg-flat-color-5" href="#">
-                    <i className="fa fa-warning" />
-                    <p>Server #3 overloaded.</p>
-                  </a>
+                  
                 </div>  
               </div>
               <div className="dropdown for-message">

@@ -9,10 +9,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { FormControl, Modal, Table } from "react-bootstrap";
+import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
 
 const Account = () => {
     const [Id, setId] = useState(null);
     const navigate = useNavigate();
+    
     const [User, setUser] = useState({
         userName: "",
         fullName: "",
@@ -22,7 +25,20 @@ const Account = () => {
         address: ""
     });
     const [lsOrder, setlsOrder] = useState([]);
+    const [lsOrderDetail, setlsOrderDetail] = useState([]);
+    //modal xem chi tiết đơn hàng
+    const [show, setShow] = useState(false);
 
+    const handleClose = () => setShow(false);
+    const handleShow = (id) => {
+        console.log(id);
+        axios.get(`https://localhost:7201/orderDetailByOderId/${id}`).then(res =>{
+            setShow(true);
+            setlsOrderDetail(res.data.data);
+            console.log(res.data);
+        });
+        
+    } 
 
     useEffect(() => {
         const jwt = localStorage.getItem('token'); // Lấy mã JWT từ localStorage 
@@ -101,13 +117,36 @@ const Account = () => {
                 return '';
         }
     };
-    console.log(lsOrder);
+
+    //khách hàng hủy đơn
+    const handleCancelOrder = (id) => {
+        axios.get(`https://localhost:7201/cancelOrder/${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Hủy đơn thành công");
+            }
+        })
+    }
+    const handleChangePassWord=(e)=>{
+        e.preventDefault();
+
+    }
+    //console.log(lsOrder); 
     return (
         <>
             <Header />
+            <div className="container-fluid">
+                <div className="row px-xl-5">
+                    <div className="col-12">
+                        <nav className="breadcrumb bg-light mb-30">
+                            <a className="breadcrumb-item text-dark" href="/">Trang chủ</a>
+                            <span className="breadcrumb-item active">Tài khoản</span>
+                        </nav>
+                    </div>
+                </div>
+            </div>
             <section className="account-box mt-4">
                 <div className=" p-4" style={{ width: "80%", margin: "auto" }}>
-                    <div className="mail-wrapper d-flex" style={{height:"400px"}}>
+                    <div className="mail-wrapper d-flex" style={{ height: "400px" }}>
                         <div className="mail-nav card p-2" id="mail-nav" style={{ width: "300px" }}>
                             <div>
                                 <ul className="menu nav flex-column">
@@ -122,7 +161,7 @@ const Account = () => {
                                             <i className="anticon anticon-mail" />
                                             <span>Xem đơn hàng</span>
                                         </a>
-                                    </li> 
+                                    </li>
                                     <li className="nav-item">
                                         <a href="#password-tab" className="nav-link" data-toggle="tab">
                                             <i className="anticon anticon-star" />
@@ -236,15 +275,31 @@ const Account = () => {
                                                                             <td>
                                                                                 {item.paid ? <p className='text-success'>Đã thanh toán</p> : <p className='text-danger'>Chưa thanh toán</p>}
                                                                             </td>
-                                                                            <td className={getStatusClass(item.deliveryStatus.id)}>{item.deliveryStatus.status}</td>
-                                                                            <td><a href={`/deltail-order/${item.id}`} className="btn btn-success"><i className="fa fa-eye text-white"></i></a></td>
+                                                                            <td className={getStatusClass(item.deliveryStatus)}>{item.deliveryStatus.status}</td>
+                                                                            <td>
+                                                                                {
+                                                                                    item.deliveryStatus.id === 3 ? (
+                                                                                        null
+                                                                                    ) : (
+                                                                                        <button onClick={() => handleShow(item.id)} className="btn btn-success"><i className="fa fa-eye text-white"></i>
+                                                                                        </button>)
+                                                                                }
+
+                                                                                {
+                                                                                    item.deliveryStatus.id === 1 ? (
+                                                                                        <Button className="ml-2" variant="danger" onClick={() => handleCancelOrder(item.id)}>
+                                                                                            Hủy đơn
+                                                                                        </Button>
+                                                                                    ) : null
+                                                                                }
+                                                                            </td>
                                                                         </tr>
                                                                         )
                                                                     })
                                                                 }
                                                             </tbody>
                                                         </table>
-                                                    </>) : (<> 
+                                                    </>) : (<>
                                                         <Link className="text-primary d-flex justify-content-center" to={"/"}>Mua sắm ngay</Link>
                                                     </>)
                                                 }
@@ -252,18 +307,73 @@ const Account = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <div id="password-tab" className="tab-pane">
-                                <h1>Thay đổi mật khẩu</h1>
+                                <h5 className="text-center">Thay đổi mật khẩu</h5>
+                                <Form className="mt-5">
+                                    <Form.Group className="col-6">
+                                        <FormCheckLabel>Mật khẩu cũ</FormCheckLabel>
+                                        <FormControl type="password" placeholder="Nhập mật khẩu cũ" />
+                                    </Form.Group>
+                                    <Form.Group className="col-6">
+                                        <FormCheckLabel>Mật khẩu mới</FormCheckLabel>
+                                        <FormControl  type="password" placeholder="Nhập mật khẩu mới" />
+                                    </Form.Group>
+                                    <Form.Group className="col-6 mt-5">
+                                        <Button onClick={(e)=>handleChangePassWord(e)} className="btn btn-success"><i className="fa fa-check"></i>Thay đổi</Button>
+                                    </Form.Group> 
+                                </Form>
                                 {/* Nội dung của tab Mật khẩu */}
                             </div>
                         </div>
                     </div>
                 </div>
-
             </section>
-
             <Footer />
+
+
+
+            {/* Modal */}
+            <Modal  show={show} onHide={handleClose}size="lg">
+                <Modal.Header >
+                    <Modal.Title>Chi tiết đơn hàng của bạn</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Ảnh</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tổng tiền</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                lsOrderDetail.map((item, index) => {
+                                    return (
+                                        <tr className="" key={index}>
+                                            <td>{index +1}</td>
+                                            <td><Link className="text-primary" to={`/chi-tiet-san-pham/${item.product.id}`}>{item.product.productName}</Link></td>
+                                            <td className=" "><img className="w-50 " src={`https://localhost:7201${item.product.avatar}`}/></td>
+                                            <td>{convertToVND(item.product.price)}</td>
+                                            <td>{item.amount}</td>
+                                            <td>{convertToVND(item.totalMoney)} </td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }

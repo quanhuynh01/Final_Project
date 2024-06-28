@@ -2,13 +2,41 @@ import { useEffect, useState } from "react";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import axios from "axios";
+import { Button } from "react-bootstrap";
 
 const Order = () => {
     const[lsOrder , setlsOrder] = useState([]);
     useEffect(()=>{
         axios.get(`https://localhost:7201/api/Orders`).then(res=>setlsOrder(res.data));
     },[])
-  
+    const handleAccept=(id)=>{
+        console.log(id);
+        axios.get(`https://localhost:7201/accept/${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Đã xác nhận đơn hàng");
+                window.location.reload();
+            }
+        })
+    }
+    const handleDeliver=(id)=>{
+        console.log(id);
+        axios.get(`https://localhost:7201/deliver/${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Đơn hàng bắt đầu vận chuyển");
+                window.location.reload();
+            }
+        })
+    }
+    const handleAcceptDeliver=(id)=>{
+        console.log(id);
+        axios.get(`https://localhost:7201/AcceptDeliver/${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Đơn hàng được giao thành công");
+                window.location.reload();
+            }
+        })
+    }
+
 
     return (<>
           <SidebarAdmin />
@@ -60,10 +88,30 @@ const Order = () => {
                                                     <td>{item.user.fullName}</td>  
                                                     <td>{item.deliveryStatus.status}</td>
                                                     <td>
-                                                        <button className="btn btn-warning text-white mr-1">Xác nhận </button>
-                                                        <button className="btn btn-primary mr-1">Giao hàng</button>
-                                                        <button className="btn btn-success mr-1">Đã giao</button>
-                                                     
+                                                        {
+                                                            item.deliveryStatusId === 1 ? (
+                                                                <Button onClick={()=>handleAccept(item.id)} className="btn btn-outline-success"  >
+                                                                    Xác nhận đơn
+                                                                </Button>
+                                                            ) :
+                                                                null
+                                                        }
+                                                        {
+                                                            item.deliveryStatusId === 2 ? (
+                                                                <Button  onClick={()=>handleDeliver(item.id)} className="btn btn-outline-warning"    >
+                                                                    Vận chuyển
+                                                                </Button>
+                                                            ) :
+                                                                null
+                                                        }
+                                                        {
+                                                            item.deliveryStatusId === 4 ? (
+                                                                <Button onClick={()=>handleAcceptDeliver(item.id)} variant="success"  >
+                                                                    Xác nhận giao hàng
+                                                                </Button>
+                                                            ) :
+                                                                null
+                                                        } 
                                                     </td>
                                                 </tr>
                                             ))
