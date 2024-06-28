@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import Header from "../Header/Header";
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+// import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './ProductsDetail.css'
@@ -19,15 +19,13 @@ const ProductsDetail = () => {
     const [Attribute, setAttribute] = useState([]);
     const [ViewReview, setViewReview] = useState([]);//danh sách đánh giá
     const [IdUser, setIdUser] = useState(null);
-    const [Review, setReview] = useState({ rating: 0, UserId: "", Content: "", Name: "", Email: "" });
-    const [currentImage, setCurrentImage] = useState(`https://localhost:7201${productDetail.avatar}`);
-    
+    const [Review, setReview] = useState({ rating: 0, UserId: "", Content: "", Name: "", Email: "" }); 
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
             if (res.status === 200) {
                 setAttribute(res.data.lstAttribute);
                 setproductDetail(res.data.data.product);
-                setCurrentImage(res.data.data.product.avatar);
+         
                 setViewReview(res.data.review);
             }
         });
@@ -42,9 +40,9 @@ const ProductsDetail = () => {
         }
     }, [id]);
 
-    const handleImageClick = (imageUrl) => {
-        setCurrentImage(imageUrl.image);
-    };
+    // const handleImageClick = (imageUrl) => {
+    //     setCurrentImage(imageUrl.image);
+    // };
 
     const addToCart = (item) => {
         axios.post(`https://localhost:7201/api/Carts/addToCart/${IdUser}?ProductId=${item.id}`)

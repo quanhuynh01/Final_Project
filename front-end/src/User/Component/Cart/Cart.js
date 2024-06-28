@@ -58,7 +58,11 @@ const Cart = () => {
     const handleAddressChange = (e) => {
         setAddressShipping(e.target.value);
     };
-
+    function generateOrderCode() {
+        const timestamp = new Date().getTime().toString();
+        const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `ORD-${timestamp.slice(-6)}-${randomNum}`;
+      }
     const handleSuccess = (e) => {
         e.preventDefault();
         const orderData = {
@@ -73,6 +77,7 @@ const Cart = () => {
                 Amount: item.quantity,
                 TotalMoney: (item.product.salePrice * item.quantity).toString() // Chuyển TotalMoney thành string
             })),
+            Code: generateOrderCode(),
             Carts: cart
         };
 
@@ -115,7 +120,7 @@ const Cart = () => {
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
                             <a className="breadcrumb-item text-dark" href="/">Trang chủ</a>
-                            <span className="breadcrumb-item active">Giỏ hàng</span>
+                            <span className="breadcrumb-item active">Chi tiết sản phẩm</span>
                         </nav>
                     </div>
                 </div>
