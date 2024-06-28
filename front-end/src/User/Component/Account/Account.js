@@ -236,7 +236,8 @@ const Account = () => {
                                                                             <td>
                                                                                 {item.paid ? <p className='text-success'>Đã thanh toán</p> : <p className='text-danger'>Chưa thanh toán</p>}
                                                                             </td>
-                                                                            <td className={getStatusClass(item.deliveryStatus.id)}>{item.deliveryStatus.status}</td>
+                                                                             
+                                                                            <td className={getStatusClass(item.deliveryStatusId)}>{item.deliveryStatus.status}</td>
                                                                             <td><a href={`/deltail-order/${item.id}`} className="btn btn-success"><i className="fa fa-eye text-white"></i></a></td>
                                                                         </tr>
                                                                         )
