@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
+using System.Text;
 
 namespace Backend_API.Controllers
 {
@@ -98,6 +99,25 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
+        // Hàm tạo mã code ngẫu nhiên
+        private string GenerateRandomCode(int length)
+        {
+            // Chuỗi ký tự có thể sử dụng để tạo mã code
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            // Sử dụng StringBuilder để xây dựng mã code
+            StringBuilder codeBuilder = new StringBuilder();
+
+            // Tạo ngẫu nhiên mã code bằng cách chọn các ký tự từ chuỗi chars
+            Random random = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                int index = random.Next(chars.Length);
+                codeBuilder.Append(chars[index]);
+            }
+
+            return codeBuilder.ToString();
+        }
 
         [HttpPost("addOrder")]
         public async Task<IActionResult> addOrder([FromBody] Order order)
@@ -112,8 +132,9 @@ namespace Backend_API.Controllers
                     PhoneShip = order.PhoneShip,
                     TotalMoney = order.TotalMoney,
                     ShippingAdress = order.ShippingAdress,
-                    DeliveryStatusId =1,
-                    Paid = false
+                    DeliveryStatusId = 1,
+                    Paid = false,
+                    Code = GenerateRandomCode(6)
                 };
 
                 _context.Order.Add(o);
@@ -141,7 +162,8 @@ namespace Backend_API.Controllers
                             OrderId = o.Id,
                             ProductId = item.ProductId,
                             Amount = item.Amount,
-                            TotalMoney = item.TotalMoney
+                            TotalMoney = item.TotalMoney,
+                            
                         };
 
                         _context.OrderDetails.Add(detail);
@@ -190,7 +212,7 @@ namespace Backend_API.Controllers
         [HttpGet("/getOrderByUserId/{idUser}")]
         public async Task<IActionResult> getOrderByUserId(string idUser)
         {
-            var order = _context.Order.Where(o=>o.UserId == idUser).ToList();
+            var order = _context.Order.Where(o=>o.UserId == idUser).Include(d=>d.DeliveryStatus).ToList();
             if (order == null)
             {
                 return NotFound();

@@ -69,8 +69,24 @@
       "PackagePath": "staticwebassets\\images\\Product\\2\\2.jpg"
     },
     {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\2.png",
+      "PackagePath": "staticwebassets\\images\\Product\\2\\2.png"
+    },
+    {
       "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\3.jpg",
       "PackagePath": "staticwebassets\\images\\Product\\2\\3.jpg"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\3.png",
+      "PackagePath": "staticwebassets\\images\\Product\\2\\3.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\4.png",
+      "PackagePath": "staticwebassets\\images\\Product\\2\\4.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\5.png",
+      "PackagePath": "staticwebassets\\images\\Product\\2\\5.png"
     },
     {
       "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\3\\0.png",
@@ -167,6 +183,10 @@
     {
       "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\PC.png",
       "PackagePath": "staticwebassets\\images\\categories\\PC.png"
+    },
+    {
+      "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .jpg",
+      "PackagePath": "staticwebassets\\images\\categories\\Phụ kiện .jpg"
     },
     {
       "Id": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .png",

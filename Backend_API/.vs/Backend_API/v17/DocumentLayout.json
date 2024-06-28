@@ -7,16 +7,24 @@
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\attribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\attribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Migrations\\20240627120535_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Backend_API\\Migrations\\20240627120535_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\attributescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,6 +33,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\data\\ministoredentity_context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\data\\ministoredentity_context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\attribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\attribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\categoryattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -59,20 +75,8 @@
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\cartscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\model\\log.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\model\\log.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|d:\\ckc\\doantotnghiepk21\\source\\final_project\\backend_api\\backend_api\\migrations\\20240625054647_init2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B6F9D6F-0D25-4727-8A5C-06BBEBF855C9}|Backend_API\\Backend_API.csproj|solutionrelative:backend_api\\migrations\\20240625054647_init2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -82,11 +86,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "Order.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Order.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\Order.cs",
@@ -99,67 +103,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Program.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Program.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Program.cs",
-              "RelativeToolTip": "Backend_API\\Program.cs",
+              "DocumentIndex": 5,
+              "Title": "20240627120535_init.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Migrations\\20240627120535_init.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Migrations\\20240627120535_init.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Migrations\\20240627120535_init.cs",
+              "RelativeToolTip": "Backend_API\\Migrations\\20240627120535_init.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T13:43:28.899Z"
+              "WhenOpened": "2024-06-27T12:05:35.988Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "20240625054647_init2.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Migrations\\20240625054647_init2.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Migrations\\20240625054647_init2.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Migrations\\20240625054647_init2.cs",
-              "RelativeToolTip": "Backend_API\\Migrations\\20240625054647_init2.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentIndex": 0,
+              "Title": "OrdersController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\OrdersController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\OrdersController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\OrdersController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\OrdersController.cs",
+              "ViewState": "AQIAAGgAAAAAAAAAAAAwwIkAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T05:46:47.88Z"
+              "WhenOpened": "2024-06-25T01:50:12.281Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CategoryAttribute.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\CategoryAttribute.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Model\\CategoryAttribute.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\CategoryAttribute.cs",
-              "RelativeToolTip": "Backend_API\\Model\\CategoryAttribute.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T05:43:59.736Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Attribute.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attribute.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Model\\Attribute.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attribute.cs",
-              "RelativeToolTip": "Backend_API\\Model\\Attribute.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T05:41:43.398Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Attributevalue.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attributevalue.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Model\\Attributevalue.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attributevalue.cs",
-              "RelativeToolTip": "Backend_API\\Model\\Attributevalue.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T05:41:39.053Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "DeliveryStatus.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\DeliveryStatus.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\DeliveryStatus.cs",
@@ -171,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "OrderDetail.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\OrderDetail.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\OrderDetail.cs",
@@ -183,39 +153,115 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "OrdersController.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\OrdersController.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Controllers\\OrdersController.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\OrdersController.cs",
-              "RelativeToolTip": "Backend_API\\Controllers\\OrdersController.cs",
-              "ViewState": "AQIAAGcAAAAAAAAAAAAAAGcAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T01:50:12.281Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 8,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\appsettings.json",
               "RelativeDocumentMoniker": "Backend_API\\appsettings.json",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\appsettings.json",
               "RelativeToolTip": "Backend_API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA3AAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-06-13T12:38:18.134Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MiniStoredentity_Context.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Data\\MiniStoredentity_Context.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Data\\MiniStoredentity_Context.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Data\\MiniStoredentity_Context.cs",
+              "RelativeToolTip": "Backend_API\\Data\\MiniStoredentity_Context.cs",
+              "ViewState": "AQIAABQAAAAAAAAAAAA7wCAAAABDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-20T09:53:27.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\UsersController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\UsersController.cs",
+              "ViewState": "AQIAAC4BAAAAAAAAAAAQwKwAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T10:44:42.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\User.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Model\\User.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\User.cs",
+              "RelativeToolTip": "Backend_API\\Model\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-20T09:23:00.84Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Program.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Program.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Program.cs",
+              "RelativeToolTip": "Backend_API\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-26T13:43:28.899Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Controllers\\ProductsController.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "Backend_API\\Controllers\\ProductsController.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAIAwwCAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-27T12:07:01.244Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Attribute.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attribute.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Model\\Attribute.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attribute.cs",
+              "RelativeToolTip": "Backend_API\\Model\\Attribute.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T05:41:43.398Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Attributevalue.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attributevalue.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Model\\Attributevalue.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Attributevalue.cs",
+              "RelativeToolTip": "Backend_API\\Model\\Attributevalue.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T05:41:39.053Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "AttributesController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\AttributesController.cs",
               "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\AttributesController.cs",
               "RelativeToolTip": "Backend_API\\Controllers\\AttributesController.cs",
-              "ViewState": "AQIAAFEAAAAAAAAAAIAwwGkAAAAIAAAA",
+              "ViewState": "AQIAAFQAAAAAAAAAAAD4v2MAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-25T06:00:05.915Z",
               "EditorCaption": ""
@@ -223,6 +269,18 @@
             {
               "$type": "Document",
               "DocumentIndex": 10,
+              "Title": "CategoryAttribute.cs",
+              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\CategoryAttribute.cs",
+              "RelativeDocumentMoniker": "Backend_API\\Model\\CategoryAttribute.cs",
+              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\CategoryAttribute.cs",
+              "RelativeToolTip": "Backend_API\\Model\\CategoryAttribute.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T05:43:59.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "MailConfig.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\MailConfig.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\MailConfig.cs",
@@ -234,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "CartsController.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\CartsController.cs",
               "RelativeDocumentMoniker": "Backend_API\\Controllers\\CartsController.cs",
@@ -246,19 +304,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "MiniStoredentity_Context.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Data\\MiniStoredentity_Context.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Data\\MiniStoredentity_Context.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Data\\MiniStoredentity_Context.cs",
-              "RelativeToolTip": "Backend_API\\Data\\MiniStoredentity_Context.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAAAswBwAAAA8AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-20T09:53:27.533Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "Category.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Category.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\Category.cs",
@@ -270,19 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Controllers\\UsersController.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Backend_API\\Controllers\\UsersController.cs",
-              "ViewState": "AQIAAGwAAAAAAAAAAAAAwH0AAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-22T10:44:42.768Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "Log.cs",
               "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\Log.cs",
               "RelativeDocumentMoniker": "Backend_API\\Model\\Log.cs",
@@ -291,18 +325,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-20T09:49:24.582Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\User.cs",
-              "RelativeDocumentMoniker": "Backend_API\\Model\\User.cs",
-              "ToolTip": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Model\\User.cs",
-              "RelativeToolTip": "Backend_API\\Model\\User.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAcwBAAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-20T09:23:00.84Z"
             }
           ]
         }
