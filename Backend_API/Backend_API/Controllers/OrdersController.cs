@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
-using System.Text;
 
 namespace Backend_API.Controllers
 {
@@ -99,25 +98,6 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
-        // Hàm tạo mã code ngẫu nhiên
-        private string GenerateRandomCode(int length)
-        {
-            // Chuỗi ký tự có thể sử dụng để tạo mã code
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            // Sử dụng StringBuilder để xây dựng mã code
-            StringBuilder codeBuilder = new StringBuilder();
-
-            // Tạo ngẫu nhiên mã code bằng cách chọn các ký tự từ chuỗi chars
-            Random random = new Random();
-            for (int i = 0; i < length; i++)
-            {
-                int index = random.Next(chars.Length);
-                codeBuilder.Append(chars[index]);
-            }
-
-            return codeBuilder.ToString();
-        }
 
         [HttpPost("addOrder")]
         public async Task<IActionResult> addOrder([FromBody] Order order)
@@ -132,9 +112,9 @@ namespace Backend_API.Controllers
                     PhoneShip = order.PhoneShip,
                     TotalMoney = order.TotalMoney,
                     ShippingAdress = order.ShippingAdress,
-                    DeliveryStatusId = 1,
+                    DeliveryStatusId =1,
                     Paid = false,
-                    Code = GenerateRandomCode(6)
+                    Code= order.Code,
                 };
 
                 _context.Order.Add(o);
@@ -162,8 +142,7 @@ namespace Backend_API.Controllers
                             OrderId = o.Id,
                             ProductId = item.ProductId,
                             Amount = item.Amount,
-                            TotalMoney = item.TotalMoney,
-                            
+                            TotalMoney = item.TotalMoney
                         };
 
                         _context.OrderDetails.Add(detail);
@@ -212,7 +191,7 @@ namespace Backend_API.Controllers
         [HttpGet("/getOrderByUserId/{idUser}")]
         public async Task<IActionResult> getOrderByUserId(string idUser)
         {
-            var order = _context.Order.Where(o=>o.UserId == idUser).Include(d=>d.DeliveryStatus).ToList();
+            var order = _context.Order.Include(d=>d.DeliveryStatus).Where(o=>o.UserId == idUser).ToList();
             if (order == null)
             {
                 return NotFound();
@@ -222,6 +201,81 @@ namespace Backend_API.Controllers
                 return Ok(new { data = order });
             }     
         }
+        [HttpGet("/orderDetailByOderId/{id}")]
+        public async Task<IActionResult> orderDetailByOderId(int id)
+        {
+            var order = _context.OrderDetails.Include(p=>p.Product).Where(o => o.OrderId == id).ToList();
+            if (order == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(new { data = order });
+            }
+        }
+
+        //nhận đơn hàng
+        [HttpGet("/accept/{id}")]
+        public async Task<IActionResult> accept(int id)
+        {
+            if (id != null)
+            {
+                var data = _context.Order.Find(id);
+                data.DeliveryStatusId = 2;
+                _context.Order.Update(data);
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+        //vận chuyển đơn hàng
+        [HttpGet("/deliver/{id}")]
+        public async Task<IActionResult> deliver(int id)
+        {
+            if (id != null)
+            {
+                var data = _context.Order.Find(id);
+                data.DeliveryStatusId = 4; 
+                _context.Order.Update(data);
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+        //hủy đơn hàng
+        [HttpGet("/cancelOrder/{id}")]
+        public async Task<IActionResult> cancelOrder(int id)
+        {
+            if(id!=null)
+            {
+                var data = _context.Order.Find(id);
+                data.DeliveryStatusId = 3;//hủy đơn
+                _context.Order.Update(data);
+                _context.SaveChanges();
+                return Ok();
+            }    
+            
+            return BadRequest();
+        }
+        //xác nhận giao đơn hàng
+        [HttpGet("/AcceptDeliver/{id}")]
+        public async Task<IActionResult> AcceptDeliver(int id)
+        {
+            if (id != null)
+            {
+                var data = _context.Order.Find(id);
+                data.DeliveryStatusId =5;
+                _context.Order.Update(data);
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
 
         private bool OrderExists(int id)
         {

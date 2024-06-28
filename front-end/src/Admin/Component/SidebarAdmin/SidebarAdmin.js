@@ -52,7 +52,7 @@ const SidebarAdmin = () => {
                         </li>
 
 
-                        <h3 className="menu-title">Icons</h3>{/* /.menu-title */}
+                        {/* <h3 className="menu-title">Icons</h3>
                         <li className="menu-item-has-children dropdown">
                             <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-tasks" />Icons</a>
                             <ul className="sub-menu children dropdown-menu">
@@ -78,7 +78,7 @@ const SidebarAdmin = () => {
                                 <li><i className="menu-icon fa fa-street-view" /><a href="maps-vector.html">Vector Maps</a></li>
                             </ul>
                         </li>
-                        <h3 className="menu-title">Extras</h3>{/* /.menu-title */}
+                        <h3 className="menu-title">Extras</h3> 
                         <li className="menu-item-has-children dropdown">
                             <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-glass" />Pages</a>
                             <ul className="sub-menu children dropdown-menu">
@@ -86,7 +86,7 @@ const SidebarAdmin = () => {
                                 <li><i className="menu-icon fa fa-sign-in" /><a href="page-register.html">Register</a></li>
                                 <li><i className="menu-icon fa fa-paper-plane" /><a href="pages-forget.html">Forget Pass</a></li>
                             </ul>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>{/* /.navbar-collapse */}
             </nav>
