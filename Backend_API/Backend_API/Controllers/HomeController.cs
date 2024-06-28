@@ -12,22 +12,10 @@ namespace Backend_API.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> Sendmail()
+        [HttpGet("ImportExcel")]
+        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)
         {
-            MailMessage mailMessage = new MailMessage();
-
-            SmtpClient smtpClient = new SmtpClient();
-            {
-                smtpClient.Host = "smtp.gmail.com";
-                smtpClient.Port = 587;
-                smtpClient.EnableSsl = true;
-                //UserName và Password của mail
-                smtpClient.Credentials = new NetworkCredential("quanhuynh855@gmail.com", "15112003Q"); 
-                 
-                smtpClient.Send("0306211073@caothang.edu.vn", "Text", "Subject", "Message"); 
-            }
-
+            
             return Ok();
         }
 
