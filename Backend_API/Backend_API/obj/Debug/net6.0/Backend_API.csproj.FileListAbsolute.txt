@@ -867,3 +867,7 @@ D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\n
 D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
 D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\BouncyCastle.Crypto.dll
 D:\CKC\DoAnTotNghiepK21\Source\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\StackExchange.Redis.dll
+D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\ExcelDataReader.dll
+D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\ExcelDataReader.DataSet.dll
+D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
+D:\Quân công việc\Filecode API\Final_Project\Backend_API\Backend_API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
