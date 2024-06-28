@@ -163,8 +163,9 @@ namespace API_Server.Controllers
         [Route("list-user")]
         public async Task<IActionResult> listUsers()
         {
-            var data = _context.Users.ToList();
-            return Ok(data);
+            var users = await _userManager.GetUsersInRoleAsync("admin");
+            var nonAdminUsers = await _userManager.Users.Where(u => !users.Contains(u)).ToListAsync();
+            return Ok(nonAdminUsers); 
         }
 
         [HttpGet]

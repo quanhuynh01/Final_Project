@@ -60,7 +60,7 @@ const Header = ({ soluong }) => {
     localStorage.removeItem('token');
     window.location.reload();
   }; 
-  console.log(searchResult);
+ // console.log(searchResult);
  
   return (<>
     {/* <div className="container-fluid  ">

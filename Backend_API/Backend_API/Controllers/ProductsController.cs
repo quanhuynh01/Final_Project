@@ -248,7 +248,12 @@ namespace Backend_API.Controllers
                 return Ok(new { message = "Không có dữ liệu" });
             }
         }
+        [HttpPost("ImportExcel")]
+        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)
+        {
 
+            return Ok();
+        }
 
         private bool ProductExists(int id)
         {
