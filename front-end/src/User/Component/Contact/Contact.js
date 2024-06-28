@@ -1,17 +1,112 @@
-import React from "react";
-import { useEffect } from "react";
-import { Breadcrumb, Button, Form, Table } from "react-bootstrap";
+import React, { useRef } from "react";
+import { useEffect, useState } from "react";
+import { Breadcrumb, Button, Form, Table } from "react-bootstrap";  
 import Header from "../Header/Header";
 import Navbar from "../Navbar/Navbar";
+
+import Swal from 'sweetalert2';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const Contact = () => {
-    useEffect(() => {
-        const element = document.querySelector('.text-uppercase-override');
-        if (element) {
-          element.style.setProperty('text-transform', 'uppercase', 'important');
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm('service_jcjss04', 'template_gnx7gh8', form.current, {
+        publicKey: 'S3wq9dYZBRcA3ZgHr',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Gửi liên hệ thành công!",
+            showConfirmButton: false,
+            timer: 1500
+          });
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Gửi liên hệ thất bại!",
+            showConfirmButton: false,
+            timer: 1500
+          });
         }
-      }, []);
+      );
+  };
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Kiểm tra nếu có trường nào trống
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Vui lòng điền đầy đủ thông tin!",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      return;
+    }
+
+    // Thiết lập các thông số cho EmailJS
+    const serviceID = 'service_jcjss04';
+    const templateID = 'template_gnx7gh8';
+
+    // Gửi email qua EmailJS
+    emailjs.send(serviceID, templateID, formData)
+      .then(response => {
+        console.log('Form submitted successfully:', response.status, response.text);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Gửi liên hệ thành công!",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      })
+      .catch(error => {
+        console.error('Error submitting form:', error);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Gửi liên hệ thất bại!",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      });
+  };
 
     return (<>
             <Header />
@@ -24,16 +119,16 @@ const Contact = () => {
             <h2 className="section-title position-relative text-uppercase-override mx-xl-5 mb-4">
                 <span className="bg-secondary pr-3">Contact Us</span>
             </h2>
-          <div className="row px-xl-5">
             <div className="col-lg-7 mb-5">
               <div className="contact-form bg-light p-30">
                 <div id="success"></div>
-                <form name="sentMessage" id="contactForm" noValidate="novalidate">
+                <form ref={form} onSubmit={sendEmail}>
                   <div className="control-group">
+                    <label>Name</label>
                     <input
                       type="text"
                       className="form-control"
-                      id="name"
+                      name="user_name"
                       placeholder="Your Name"
                       required="required"
                       data-validation-required-message="Please enter your name"
@@ -41,10 +136,11 @@ const Contact = () => {
                     <p className="help-block text-danger"></p>
                   </div>
                   <div className="control-group">
+                    <label>Email</label>
                     <input
                       type="email"
                       className="form-control"
-                      id="email"
+                      name="user_email"
                       placeholder="Your Email"
                       required="required"
                       data-validation-required-message="Please enter your email"
@@ -52,10 +148,11 @@ const Contact = () => {
                     <p className="help-block text-danger"></p>
                   </div>
                   <div className="control-group">
+                    <label>Subject</label>
                     <input
                       type="text"
                       className="form-control"
-                      id="subject"
+                      name="subject"
                       placeholder="Subject"
                       required="required"
                       data-validation-required-message="Please enter a subject"
@@ -63,10 +160,11 @@ const Contact = () => {
                     <p className="help-block text-danger"></p>
                   </div>
                   <div className="control-group">
+                    <label>Message</label>
                     <textarea
                       className="form-control"
                       rows="8"
-                      id="message"
+                      name="message"
                       placeholder="Message"
                       required="required"
                       data-validation-required-message="Please enter your message"
@@ -74,9 +172,7 @@ const Contact = () => {
                     <p className="help-block text-danger"></p>
                   </div>
                   <div>
-                    <button className="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">
-                      Send Message
-                    </button>
+                    <input className="btn btn-primary py-2 px-4" type="submit" value="Send Message" />
                   </div>
                 </form>
               </div>
@@ -104,7 +200,6 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-          </div>
         </div>
         </>
       );

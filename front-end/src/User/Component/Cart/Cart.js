@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Breadcrumb, Button, Form, Table } from "react-bootstrap";
 import Header from "../Header/Header";
 
-
 const Cart = () => {
     const [cart, setCart] = useState([]);
     // Lấy giỏ hàng từ localStorage khi component được render
@@ -27,8 +26,6 @@ const Cart = () => {
             return acc;
         }
     }, []);
-
-
 
     // Hàm xử lý khi nhấn nút Xóa sản phẩm khỏi giỏ hàng
     const removeFromCart = (productId) => {
@@ -60,7 +57,7 @@ const Cart = () => {
                             <Form.Label>Tên người nhận</Form.Label>
                             <Form.Control type="text" placeholder="Nhập tên người nhận"></Form.Control>
                         </div>
-                        <div className="col-6">
+                        <div className="col-6 ">
                             <Form.Label>Số điện thoại người nhận</Form.Label>
                             <Form.Control type="text" placeholder="Nhập số điện thoại người nhận"></Form.Control>
                         </div>
@@ -127,7 +124,6 @@ const Cart = () => {
                 <Button type="submit">Đặt hàng</Button>
             </div>
         </div>
-  
     </>
     );
 };
