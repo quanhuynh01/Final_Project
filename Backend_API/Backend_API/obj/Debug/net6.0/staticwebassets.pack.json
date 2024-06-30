@@ -1,95 +1,99 @@
 {
   "Files": [
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\CellPhoneS.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\CellPhoneS.png",
       "PackagePath": "staticwebassets\\images\\CusSup\\CellPhoneS.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\adf.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\CusSup\\adf.jpg",
       "PackagePath": "staticwebassets\\images\\CusSup\\adf.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\0.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\0.png",
       "PackagePath": "staticwebassets\\images\\Product\\2\\0.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\1.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\Product\\2\\1.png",
       "PackagePath": "staticwebassets\\images\\Product\\2\\1.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Apple.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Apple.png",
       "PackagePath": "staticwebassets\\images\\brands\\Apple.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Asus.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Asus.png",
       "PackagePath": "staticwebassets\\images\\brands\\Asus.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Dell.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\Dell.png",
       "PackagePath": "staticwebassets\\images\\brands\\Dell.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.jpg",
       "PackagePath": "staticwebassets\\images\\brands\\HP.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\HP.png",
       "PackagePath": "staticwebassets\\images\\brands\\HP.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.jpg",
       "PackagePath": "staticwebassets\\images\\brands\\asdf.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\asdf.png",
       "PackagePath": "staticwebassets\\images\\brands\\asdf.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\dsfa.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\dsfa.jpg",
       "PackagePath": "staticwebassets\\images\\brands\\dsfa.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdds.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdds.jpg",
       "PackagePath": "staticwebassets\\images\\brands\\sdds.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.jpg",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.jpg",
       "PackagePath": "staticwebassets\\images\\brands\\sdf.jpg"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\brands\\sdf.png",
       "PackagePath": "staticwebassets\\images\\brands\\sdf.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop .png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop .png",
       "PackagePath": "staticwebassets\\images\\categories\\Laptop .png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop AB.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop AB.png",
       "PackagePath": "staticwebassets\\images\\categories\\Laptop AB.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop nha.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop nha.png",
       "PackagePath": "staticwebassets\\images\\categories\\Laptop nha.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop.jpg",
+      "PackagePath": "staticwebassets\\images\\categories\\Laptop.jpg"
+    },
+    {
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Laptop.png",
       "PackagePath": "staticwebassets\\images\\categories\\Laptop.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Màn hình.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Màn hình.png",
       "PackagePath": "staticwebassets\\images\\categories\\Màn hình.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\PC.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\PC.png",
       "PackagePath": "staticwebassets\\images\\categories\\PC.png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Phụ kiện .png",
       "PackagePath": "staticwebassets\\images\\categories\\Phụ kiện .png"
     },
     {
-      "Id": "D:\\INTERN\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Ram.png",
+      "Id": "F:\\GitHub\\Final_Project\\Backend_API\\Backend_API\\wwwroot\\images\\categories\\Ram.png",
       "PackagePath": "staticwebassets\\images\\categories\\Ram.png"
     },
     {
