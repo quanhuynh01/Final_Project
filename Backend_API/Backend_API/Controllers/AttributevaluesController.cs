@@ -118,7 +118,7 @@ namespace Backend_API.Controllers
 
         public async Task<IActionResult> saveAttributeValueForProduct(int id,int idPro)
         {
-            var AttributeId = _context.Attributevalues.Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
+            var AttributeId = _context.Attributevalues.Include(a=>a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
  
             ProductAttribute pro = new ProductAttribute()
             {
@@ -127,9 +127,11 @@ namespace Backend_API.Controllers
                 AttributeValueId =id  
                 // Gán các thuộc tính cho p từ attributeValue nếu cần
             };
+            var nameAttribute = AttributeId.Attribute.NameAttribute;
+            var attributevalue = await _context.Attributevalues.FindAsync(id);
             _context.ProductAttributes.Add(pro);
             _context.SaveChanges();
-            return Ok();
+            return Ok(new {Id = pro.Id,nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
         }
          
             private bool AttributevalueExists(int id)

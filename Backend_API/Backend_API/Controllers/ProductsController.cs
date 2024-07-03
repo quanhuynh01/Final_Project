@@ -112,32 +112,53 @@ namespace Backend_API.Controllers
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, [FromForm] Product product, [FromForm] List<int> CateId)
         {
-            if (id != product.Id)
+            if (id != null)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
+                var data = _context.Products.Find(id);
+                if(data !=null)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                    data.ProductName = product.ProductName;
+                    data.Price = product.Price;
+                    data.SalePrice = product.SalePrice;
+                    data.Warranty = product.Warranty;
+                    data.WarrantyType = product.WarrantyType;
+                    data.Active = product.Active;
+                    data.BestSeller = product.BestSeller;
+                    data.BrandId = product.BrandId;
+                    data.Description = product.Description;
+                    data.SKU= product.SKU;
+                    _context.Products.Update(data);
+                    _context.SaveChanges();
+                    if (CateId.Count > 0)
+                    {
+                        // Lấy danh sách danh mục hiện tại của sản phẩm
+                        var currentProductCategories = _context.ProductCategories
+                            .Where(pc => pc.ProductId == id)
+                            .ToList();
 
-            return NoContent();
+                        // Xóa các danh mục hiện tại của sản phẩm
+                        _context.ProductCategories.RemoveRange(currentProductCategories);
+                        await _context.SaveChangesAsync();
+
+                        // Thêm danh mục mới cho sản phẩm
+                        foreach (var cateId in CateId)
+                        {
+                            var productCategory = new ProductCategory
+                            {
+                                ProductId = id,
+                                CategoryId = cateId
+                            };
+                            _context.ProductCategories.Add(productCategory);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    return Ok();
+                }    
+             
+            }    
+            return Ok();
         }
 
 
@@ -147,7 +168,7 @@ namespace Backend_API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromForm] Product product, [FromForm] List<IFormFile> AvatarFiles
-            ,[FromForm] List<int> CateId, [FromForm] List<int> AttrId)
+            ,[FromForm] List<int> CateId, [FromForm] List<int> AttributevalueId)
         {   
             try
             {
@@ -163,6 +184,7 @@ namespace Backend_API.Controllers
                 p.BrandId = product.BrandId;
                 p.DateCreate = DateTime.Now;
                 p.Stock = product.Stock;
+                p.SoftDelete = false;
                 if (p != null)
                 { 
                     _context.Products.Add(p);
@@ -227,17 +249,19 @@ namespace Backend_API.Controllers
                                 _context.SaveChanges();
                             }
                         }
-                        if(AttrId.Count >0 )
+                        if (AttributevalueId.Count > 0)
                         {
-                            foreach (var item in AttrId)
+                            foreach (var item in AttributevalueId)
                             {
+                                var idThuocTinhtheogiatri = _context.Attributevalues.Where(i => i.Id== item).FirstOrDefault();
                                 ProductAttribute pa = new ProductAttribute();
                                 pa.ProductId = p.Id;
-                                pa.AttributeId = item;
+                                pa.AttributeValueId = item;
+                                pa.AttributeId = idThuocTinhtheogiatri.AttributeId;
                                 _context.ProductAttributes.Add(pa);
                                 _context.SaveChanges();
                             }
-                        }    
+                        }
                     }
                     return Ok(new { data = product ,id = p.Id });
                 }
@@ -257,16 +281,39 @@ namespace Backend_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                //var ProductThumb = _context.ProductThumbs.Where(p => p.ProductId == id).ToList();
+                //foreach (var item in ProductThumb)
+                //{
+                //    _context.ProductThumbs.Remove(item);
+                //    _context.SaveChangesAsync();
+                //} 
+                //var productAttribute = _context.ProductAttributes.Where(p => p.ProductId == id).ToList();
+                //foreach (var item in productAttribute)
+                //{
+                //    _context.ProductAttributes.Remove(item);
+                //    _context.SaveChangesAsync();
+                //}
+                //var ProductCategories = _context.ProductCategories.Where(p => p.ProductId == id).ToList();
+                //foreach (var item in ProductCategories)
+                //{
+                //    _context.ProductCategories.Remove(item);
+                //    _context.SaveChangesAsync();
+                //}
+                var product = await _context.Products.FindAsync(id);
+                product.SoftDelete = true;
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+                return Ok(new { id = product.Id });
             }
+            catch(Exception ex)
+            {
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            }
+            return Ok();
 
-            return NoContent();
+
         }
         [HttpDelete("/deleteAtttributeProduct/{id}")]
         public async Task<IActionResult> deleteAtttributeProduct(int id)
