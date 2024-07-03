@@ -33,9 +33,6 @@ namespace Backend_API.Migrations
                     b.Property<string>("NameAttribute")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Attributes");
@@ -139,29 +136,6 @@ namespace Backend_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.CategoryAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("CategoryAttributes");
                 });
 
             modelBuilder.Entity("Backend_API.Model.CustomerSupplier", b =>
@@ -425,6 +399,9 @@ namespace Backend_API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttributeValueId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -784,25 +761,6 @@ namespace Backend_API.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.CategoryAttribute", b =>
-                {
-                    b.HasOne("Backend_API.Model.Attribute", "Attribute")
-                        .WithMany()
-                        .HasForeignKey("AttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend_API.Model.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attribute");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Backend_API.Model.Order", b =>

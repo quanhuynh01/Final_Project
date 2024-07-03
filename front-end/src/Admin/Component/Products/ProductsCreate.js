@@ -1,4 +1,4 @@
-import { Button, Form, FormLabel, InputGroup } from "react-bootstrap";
+import { Button, Form, FormLabel, InputGroup, Modal, Tab, Tabs } from "react-bootstrap";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import axios from "axios";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import Select from 'react-select';
 import $ from 'jquery'
 import Swal from "sweetalert2";
- 
+
 const ProductsCreate = () => {
     const navigate = useNavigate();
     const [Brand, setBrand] = useState([]);
@@ -15,7 +15,7 @@ const ProductsCreate = () => {
     const [Catepost, setCatepost] = useState([]);//sản phẩm theo danh mục
     const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm
     const [Attributepost, setAttributepost] = useState([]);//lưu thuộc tính của sản phẩm
-
+    const [Attributevalues, setAttributevalues] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
@@ -31,6 +31,7 @@ const ProductsCreate = () => {
     const handleSelected = (e) => {
         let name = e.target.name;
         let value = e.target.value;
+        console.log(name, value);
         setProducts(prev => ({ ...prev, [name]: value }));
     }
     const handleCheck = (e) => {
@@ -47,25 +48,26 @@ const ProductsCreate = () => {
         value: item.id,
         label: item.nameCategory
     }));
-    const AttributeOptions = Attribute.map(item => (
-        {
-            value: item.id,
-            label: item.nameAttribute + ":  " + item.value
-        }
-    ));
-    
+
     //xử lý chọn nhiều danh mục
     const handleMultiSelectChange = (selectedOptions) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []; 
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
         setCatepost(selectedValues);
     }
-    
-    //xử lý chọn thuộc tính
-    const handleAttribute = (selectedOptions) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        setAttributepost(selectedValues);
+    //xử lý tạo thuộc tính
+    const [show, setShow] = useState(false); //modal
+    const handleClose = () => setShow(false);
+    const handleClickShowAttributeValue = (id) => {
+        console.log(id);
+        axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`).then(res => {
+            if (res.data.data !== null) {
+                setShow(true)
+                setAttributevalues(res.data.data)
+            }
+        }
+        );
     }
-    console.log(Attributepost);
+
 
     useEffect(() => {
     }, [Products])
@@ -74,40 +76,40 @@ const ProductsCreate = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        Object.entries(Products).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
 
+        // Check if BrandId is selected and at least one image file is uploaded
+        if (Products.BrandId !== undefined && Array.isArray(Products.AvatarFile) && Products.AvatarFile.length > 0) {
+            const formData = new FormData();
+            Object.entries(Products).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
 
-        // Thêm tất cả các tệp hình ảnh vào FormData
-        Products.AvatarFile.forEach((file) => {
-            formData.append("AvatarFiles", file);
-        }); 
-        Catepost.forEach((id) => {
-            formData.append("CateId[]", id);
-        }); 
-        Attributepost.forEach((id) => {
-            formData.append("AttrId[]", id);
-        });  
-        if (Products.BrandId !== undefined) { 
+            // Add all image files to FormData if they exist
+            Products.AvatarFile.forEach((file) => {
+                formData.append("AvatarFiles", file);
+            });
+
+            // Add all category IDs to FormData
+            Catepost.forEach((id) => {
+                formData.append("CateId[]", id);
+            });
+
             Swal.fire({
                 title: "Thêm sản phẩm",
                 html: "Đang xử lý ...",
-                timer:1000,
+                timer: 1000,
                 timerProgressBar: true,
                 didOpen: () => {
-                    Swal.showLoading(); 
-                } 
+                    Swal.showLoading();
+                }
             }).then((result) => {
-                /* Read more about handling dismissals below */
                 if (result.dismiss === Swal.DismissReason.timer) {
                     console.log("I was closed by the timer");
                 }
             });
+
             axios.post(`https://localhost:7201/api/Products`, formData)
                 .then(res => {
-
                     if (res.status === 200) {
                         Swal.fire({
                             position: "center",
@@ -115,17 +117,19 @@ const ProductsCreate = () => {
                             title: "Thêm sản phẩm thành công",
                             showConfirmButton: false,
                             timer: 1000
-                          });
+                        });
                         navigate(`/admin/products/edit/${res.data.id}`);
-                    }
-                    else {
+                    } else {
                         console.log('Lỗi server');
                     }
+                })
+                .catch(error => {
+                    console.log('Lỗi khi thêm sản phẩm:', error);
                 });
         } else {
-            alert('Vui lòng chọn hãng sản xuất');
+            alert('Vui lòng chọn đầy đủ thông tin');
         }
-    }
+    };
 
     //console.log(Attributevalues);
 
@@ -156,121 +160,150 @@ const ProductsCreate = () => {
             </div>
             <div className="content mt-3  ">
                 <div className="animated fadeIn">
-                    <Form className="card p-3">
-                        <Form.Group className="mb-3 row p-3" >
-                            <div className="col-6">
-                                <Form.Label>Tên sản phẩm</Form.Label>
-                                <Form.Control onChange={handleChange} name="ProductName" type="text" placeholder="Nhập mã sản phẩm" />
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Mã sản phẩm</Form.Label>
-                                <Form.Control onChange={handleChange} name="SKU" type="text" placeholder="Nhập mã sản phẩm" />
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Ảnh sản phẩm</Form.Label>
-                                <Form.Control multiple onChange={handleImage} name="AvatarFile" type="file" />
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Tồn kho</Form.Label>
-                                <InputGroup className="mb-3">
-                                    <Form.Control onChange={handleChange} name="Stock" type="number" min={0} placeholder="Nhập tồn kho" />
-                                </InputGroup>
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Danh mục</Form.Label>
-                                <Select
-                                    isMulti
-                                    name="CateId"
-                                    options={categoryOptions}
-                                    className="basic-multi-select"
-                                    classNamePrefix="select"
-                                    onChange={handleMultiSelectChange}
-                                    placeholder="Chọn danh mục..."
 
-                                />
-                            </div>
-                        </Form.Group>
-                        <Form.Group className="mb-3 row p-3" >
-                            <div className="col-6">
-                                <Form.Label>Giá bán</Form.Label>
-                                <InputGroup className="mb-3">
-                                    <Form.Control onChange={handleChange} name="Price" type="number" min={0} placeholder="Nhập giá bán" />
-                                    <InputGroup.Text >.000 VNĐ</InputGroup.Text>
-                                </InputGroup>
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Giá khuyến mãi</Form.Label>
-                                <InputGroup className="mb-3">
-                                    <Form.Control onChange={handleChange} name="SalePrice" type="number" min={0} placeholder="Nhập khuyến mãi" />
-                                    <InputGroup.Text>.000 VNĐ</InputGroup.Text>
-                                </InputGroup>
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Bảo hành</Form.Label>
-                                <InputGroup className="mb-3">
-                                    <Form.Control onChange={handleChange} name="Warranty" type="number" min={0} placeholder="Nhập bảo hành" />
-                                    <InputGroup.Text>Tháng</InputGroup.Text>
-                                </InputGroup>
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Loại bảo hành</Form.Label>
-                                <InputGroup className="mb-3">
-                                    <Form.Control onChange={handleChange} name="WarrantyType" type="text" placeholder="Nhập loại bảo hành" />
-                                    {/* <InputGroup.Text>Tháng</InputGroup.Text> */}
-                                </InputGroup>
-                            </div>
-                            <div className="col-6">
-                                <Form.Label>Hãng sản xuất</Form.Label>
-                                <Form.Select name="BrandId" onChange={handleSelected} className="form-control" value={Products.BrandId}>
-                                    <option disabled>Chọn hãng sản xuất</option>
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                        <Tab eventKey={1} title="Thông tin sản phẩm">
+                            <Form className="card p-3">
+                                <Form.Group className="mb-3 row p-3" >
+                                    <div className="col-6">
+                                        <Form.Label>Tên sản phẩm</Form.Label>
+                                        <Form.Control onChange={handleChange} name="ProductName" type="text" placeholder="Nhập mã sản phẩm" />
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Mã sản phẩm</Form.Label>
+                                        <Form.Control onChange={handleChange} name="SKU" type="text" placeholder="Nhập mã sản phẩm" />
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Ảnh sản phẩm</Form.Label>
+                                        <Form.Control multiple onChange={handleImage} name="AvatarFile" type="file" />
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Tồn kho</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <Form.Control onChange={handleChange} name="Stock" type="number" min={0} placeholder="Nhập tồn kho" />
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Danh mục</Form.Label>
+                                        <Select
+                                            isMulti
+                                            name="CateId"
+                                            options={categoryOptions}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                            onChange={handleMultiSelectChange}
+                                            placeholder="Chọn danh mục..."
+
+                                        />
+                                    </div>
+                                </Form.Group>
+                                <Form.Group className="mb-3 row p-3" >
+                                    <div className="col-6">
+                                        <Form.Label>Giá bán</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <Form.Control onChange={handleChange} name="Price" type="number" min={0} placeholder="Nhập giá bán" />
+                                            <InputGroup.Text >.000 VNĐ</InputGroup.Text>
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Giá khuyến mãi</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <Form.Control onChange={handleChange} name="SalePrice" type="number" min={0} placeholder="Nhập khuyến mãi" />
+                                            <InputGroup.Text>.000 VNĐ</InputGroup.Text>
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Bảo hành</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <Form.Control onChange={handleChange} name="Warranty" type="number" min={0} placeholder="Nhập bảo hành" />
+                                            <InputGroup.Text>Tháng</InputGroup.Text>
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Loại bảo hành</Form.Label>
+                                        <InputGroup className="mb-3">
+                                            <Form.Control onChange={handleChange} name="WarrantyType" type="text" placeholder="Nhập loại bảo hành" />
+                                            {/* <InputGroup.Text>Tháng</InputGroup.Text> */}
+                                        </InputGroup>
+                                    </div>
+                                    <div className="col-6">
+                                        <Form.Label>Hãng sản xuất</Form.Label>
+                                        <Form.Select name="BrandId" onChange={handleSelected} className="form-control" value={Products.BrandId}>
+                                            <option disabled>Chọn hãng sản xuất</option>
+                                            {
+                                                Brand.map((item, index) => (
+                                                    <option key={index} value={item.id}>{item.brandName}</option>
+                                                ))
+                                            }
+                                        </Form.Select>
+
+                                    </div>
+                                    <div className=" col-6 row align-item-center">
+                                        <div className="col-6">
+                                            <Form.Group className="mb-3" >
+                                                <Form.Check onChange={handleCheck} name="BestSeller" type="checkbox" label="Bán chạy" />
+                                            </Form.Group>
+                                        </div>
+                                        <div className="col-6">
+                                            <Form.Group className="mb-3" >
+                                                <Form.Check onChange={handleCheck} name="Active" type="checkbox" label="Trạng thái" />
+                                            </Form.Group>
+                                        </div>
+                                    </div>
+                                </Form.Group>
+                                <hr></hr>
+                                <Button onClick={handleSubmit} className="col-1 btn btn-success" type="button">
+                                    <i className="fa fa-plus"></i>Tạo mới
+                                </Button>
+                            </Form>
+                        </Tab>
+                        <Tab eventKey={2} title="Thuộc tính sản phẩm">
+                            <Form className="card p-3">
+                                <h4>Chọn danh sách thuộc tính cho sản phẩm</h4>
+                                <Form.Group className="mb-3 row p-3">
                                     {
-                                        Brand.map((item, index) => (
-                                            <option key={index} value={item.id}>{item.brandName}</option>
-                                        ))
+                                        Attribute.map((item, index) => {
+                                            return (<div className="card p-2 col-6" key={index}>
+                                                <Button className="btn " onClick={() => handleClickShowAttributeValue(item.id)} key={index} >{item.nameAttribute}</Button>
+                                            </div>
+                                            )
+                                        })
                                     }
-                                </Form.Select>
+                                </Form.Group>
+                            </Form>
+                        </Tab>
+                        <Tab eventKey={3} title="Tab 3" disabled>
+                            Tab 3 content
+                        </Tab>
+                    </Tabs>
 
-                            </div>
-                            <div className=" col-6 row align-item-center">
-                                <div className="col-6">
-                                    <Form.Group className="mb-3" >
-                                        <Form.Check onChange={handleCheck} name="BestSeller" type="checkbox" label="Bán chạy" />
-                                    </Form.Group>
-                                </div>
-                                <div className="col-6">
-                                    <Form.Group className="mb-3" >
-                                        <Form.Check onChange={handleCheck} name="Active" type="checkbox" label="Trạng thái" />
-                                    </Form.Group>
-                                </div>
 
-                            </div>
-
-                        </Form.Group>
-                        <hr></hr>
-                        <Form.Group className="mb-3 row p-3" >
-                            <div className="col-6">
-                                <FormLabel>Chọn danh sách thuộc tính cho sản phẩm</FormLabel>
-                                <div >
-                                    <Select
-                                        isMulti
-                                        name="AttrId"
-                                        options={AttributeOptions}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                        onChange={handleAttribute}
-                                        placeholder="Chọn thuộc tính..." 
-                                    /> 
-                                </div> 
-                            </div>
-                        </Form.Group>
-                        <Button onClick={handleSubmit} className="col-1 btn btn-success" type="button">
-                            <i className="fa fa-plus"></i>Tạo mới
-                        </Button>
-                    </Form>
                 </div>
             </div> {/* .content */}
         </div>
+        {/* //modal hiển thị giá trị thuộc tính sản phẩm */}
+        <Modal show={show} onHide={handleClose} size="md">
+            <Modal.Header>
+                <Modal.Title>Danh sách giá trị thuộc tính</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="">
+                <Form.Group className="col-12">
+                    {Array.isArray(Attributevalues) && Attributevalues.map((item, index) => (
+                        <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
+                            <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
+                            <Button className="w-25">Chọn</Button>
+                            {/* onClick={()=>hanleClickSaveHandleAttributeValue(item.id)} */}
+                        </div>
+                    ))}
+                </Form.Group>
+            </Modal.Body>
 
+            <Modal.Footer>
+                <Button variant="primary" onClick={handleClose}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
     </>);
 }
 

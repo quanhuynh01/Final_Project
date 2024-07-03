@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "NKBB1HE8QwgOdrxj3Ge/6HdJFvar30Svj8fIsGNYkvp4kKygcrZikuNdZJJlYTyPSe+FHVOQERm/evbs+5a+Dw==",
+  "dgSpecHash": "DRM9OOstts0jRvkiwqp9qSmyc7enf+vQOOMW5Y59Kn+rOK/KrdQmcEFHFX6mJjFOwbVpl4oTAssOciRv3xXKzw==",
   "success": true,
   "projectFilePath": "D:\\CKC\\DoAnTotNghiepK21\\Source\\Final_Project\\Backend_API\\Backend_API\\Backend_API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\vietq\\.nuget\\packages\\exceldatareader\\3.7.0\\exceldatareader.3.7.0.nupkg.sha512",
+    "C:\\Users\\vietq\\.nuget\\packages\\exceldatareader.dataset\\3.7.0\\exceldatareader.dataset.3.7.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",
@@ -233,7 +235,7 @@
     "C:\\Users\\vietq\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
-    "C:\\Users\\vietq\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
+    "C:\\Users\\vietq\\.nuget\\packages\\system.text.encoding.codepages\\8.0.0\\system.text.encoding.codepages.8.0.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\system.text.encoding.extensions\\4.3.0\\system.text.encoding.extensions.4.3.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
     "C:\\Users\\vietq\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",

@@ -22,11 +22,11 @@
   .li-item{
     padding: 10px;
   }
-  .nav-tabs{
+  /* .nav-tabs{
     margin-top: 20px;
     display: flex;
     justify-content: center;
-  }
+  } */
   .tab-content{
     display: flex;
     justify-content: center;

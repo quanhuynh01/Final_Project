@@ -33,7 +33,7 @@ const HeaderAdmin = () => {
     localStorage.removeItem('token');
     window.location.href = 'http://localhost:3000/login';
 }
-console.log(lsOrder);
+//console.log(lsOrder);
   return (
  
       <header id="header" className="header">

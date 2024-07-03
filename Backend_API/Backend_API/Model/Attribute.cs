@@ -3,8 +3,7 @@
     public class Attribute
     {
         public int Id { get; set; }
-        public string NameAttribute { get; set; }
-        public string Value { get; set; }
+        public string NameAttribute { get; set; } 
         
     }
 }
