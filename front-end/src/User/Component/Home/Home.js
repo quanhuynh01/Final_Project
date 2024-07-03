@@ -11,6 +11,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [Categories, setCategories] = useState([]);
   const [User, setUser] = useState(null);
+  
 
   useEffect(() => {
     axios.get('https://localhost:7201/api/Products')
@@ -21,123 +22,212 @@ const Home = () => {
   //khởi chạy khi render để lấy id User
   useEffect(() => {
     let token = localStorage.getItem('token');
-    if (token != null) {
+    if (token != null) { 
       const decode = jwtDecode(token);
       const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-      setUser(userId);
+      setUser(userId); 
     }
   }, []);
 
   //thêm vào giỏ hàng
-  const addToCart = (Product) => {  
-    //xử lý nếu đã có sản phẩm thì update số lượng 
-    let cart = JSON.parse(localStorage.getItem('cart')) || []; //Tạo cart luôn là 1 mảng hợp lệ để lưu vào localStorage 
-    if (Product) { 
-      cart.push(Product);
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
-   
-    // const formdata = new FormData();
-    // Object.entries(item).forEach(([key, value]) => {
-    //   formdata.append(key, value);
-    // });
-    // formdata.append("idUser", User);
-    // axios.post(`https://localhost:7201/api/Products/addToCart`, formdata).then(res => console.log(res));
-  };
+  const addToCart = (item) => {
+    console.log(item);
+    console.log(User);
+    axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
+        .then(res => {
+          console.log(res.data);
+            if (res.status === 200) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Thêm vào giỏ hàng",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+            }
+        })
+        .catch(error => console.error(error));
+};
 
   //chuyển đổi tiền
   function convertToVND(price) { 
-    const exchangeRate = 23000;
+    const exchangeRate = 1000;
     const priceInVND = price * exchangeRate;
     return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   }
 
+ 
 
-
-
+ 
   return (<>
-    <main id="main" className='mt-5'>
-      {/* ======= About Section ======= */}
-      <div id="about" className="about-area area-padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12 col-sm-12 col-xs-12">
-              <div className="section-headline text-center">
-                <h2>Về dịch vụ chúng tôi</h2>
-              </div>
-            </div>
-          </div>
-          <div className="row mt-4" style={{ alignItems: 'center' }}>
-            {/* single-well start*/}
-            <div className="col-md-6 col-sm-6 col-xs-12">
-              <div className="well-left">
-                <div className="single-well">
-                  <a href="#">
-                    <img src="https://i.ytimg.com/vi/7q4PJr48Dxo/maxresdefault.jpg" alt='' />
-                  </a>
-                </div>
-              </div>
-            </div>
-            {/* single-well end*/}
-            <div className="col-md-6 col-sm-6 col-xs-12">
-              <div className="well-middle">
-                <div className="single-well">
-                  <a href="#">
-                    <h4 className="sec-head">Hệ thống thương mại điện tử</h4>
-                  </a>
-                  <p>
-                    Novazone công ty chuyên cung cấp các sản phẩm và dịch vụ công nghệ
-                  </p>
-                  <ul>
-                    <li className='li-item'>
-                      <i className="fa fa-check text-primary" /> Bảo hành 1 đổi 1
-                    </li>
-                    <li className='li-item'>
-                      <i className="fa fa-check text-primary" /> Giao hàng tận nơi
-                    </li>
-                    <li className='li-item'>
-                      <i className="fa fa-check text-primary" /> Giao hàng miễn phí trong nội thành Hồ Chí Minh
-                    </li>
-                    <li className='li-item'>
-                      <i className="fa fa-check text-primary" /> Bảo hành tận nơi
-                    </li>
-                    <li className='li-item'>
-                      <i className="fa fa-check text-primary" /> Giá rẻ bất ngờ
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            {/* End col*/}
-          </div>
-        </div>
-      </div>{/* End About Section */}
-    </main>
-    {/* Danh mục sản phẩm */}
-    <div className='mt-4 mb-4'>
-      <h2 className='text-center'>Danh mục sản phẩm</h2>
-      <div className='d-flex justify-content-center mt-3'>
+<div className="container-fluid pt-5">
+  <div className="row px-xl-5 pb-3">
+    <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
+        <h1 className="fa fa-check text-primary m-0 mr-3" />
+        <h5 className="font-weight-semi-bold m-0">Quality Product</h5>
+      </div>
+    </div>
+    <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
+        <h1 className="fa fa-truck text-primary m-0 mr-2"></h1>  
+        <h5 className="font-weight-semi-bold m-0">Free Shipping</h5>
+      </div>
+    </div>
+    <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
+        <h1 className="fa fa-exchange text-primary m-0 mr-3" />
+        <h5 className="font-weight-semi-bold m-0">14-Day Return</h5>
+      </div>
+    </div>
+    <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
+        <h1 className="fa fa-phone text-primary m-0 mr-3" />
+        <h5 className="font-weight-semi-bold m-0">24/7 Support</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="container-fluid pt-5">
+      <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Categories</span></h2>
+      <div className="row px-xl-5 pb-3">
         {
-          Categories.filter(s => s.show === true).map((item, index) => (
-            <Link key={index} to={`danh-muc/${item.id}`}>
-              <div className='cate-item mr-2'>
-                <div className='' style={{ alignItems: "center" }} >
-                  <div className='img-cate d-flex justify-content-center p-1'>
-                    <img style={{ height: "70px", width: "70px" }} src={`https://localhost:7201/${item.iconCate}`} alt='' />
+          Categories.map((item, index) => {
+            return (
+              <div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <Link to={`/danh-muc/${item.id}`} className="text-decoration-none"  >
+                <div className="cat-item d-flex align-items-center mb-4">
+                    <div className="overflow-hidden" style={{ width: 100, height: 100 }}>
+                      <img className="img-fluid" src="img/cat-1.jpg" alt='' />
+                    </div>
+                    <div className="flex-fill pl-3">
+                      <h6>{item.nameCategory}</h6>
+                      <small className="text-body">100 Products</small>
+                    </div>
                   </div>
-                  <div className='name-cate  d-flex justify-content-center p-1'>
-                    <h5>{item.nameCategory}</h5>
-                  </div>
-                </div>
+                </Link> 
               </div>
-            </Link>
-          ))
+            )
+          })
         }
+
       </div>
     </div>
 
-    {/* Tab sản phẩm */}
-    <Tabs
+    {/* sản phẩm */}
+<div className="container-fluid pt-5 pb-3">
+  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Featured Products</span></h2>
+  <div className="row px-xl-5">
+    {
+      products.map((item,index)=>{
+        return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
+          <div className="product-item bg-light mb-4">
+            <div className="product-img position-relative overflow-hidden">
+              <img className="img-fluid w-100" src={`https://localhost:7201${item.avatar}`} alt='' />
+              <div className="product-action">
+                <a onClick={()=>addToCart(item)} className="btn btn-outline-dark btn-square"  ><i className="fa fa-shopping-cart" /></a>
+                <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-heart" /></a> 
+                <Link  className="btn btn-outline-dark btn-square" to={`/chi-tiet-san-pham/${item.id}`}><i className="fa fa-search" /></Link>  
+              </div>
+            </div>
+            <div className="text-center py-4">
+              <Link
+                className="h6 text-decoration-none text-truncate"
+                to={`/chi-tiet-san-pham/${item.id}`}
+              >
+                {/* {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName} */}
+              </Link>
+
+              <div className="d-flex align-items-center justify-content-center mt-2">
+                <h5>{convertToVND(item.salePrice)}</h5><h6 className="text-muted ml-2"><del>{convertToVND(item.price)}</del></h6>
+              </div>
+              <div className="d-flex align-items-center justify-content-center mb-1">
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small>(99)</small>
+              </div>
+            </div>
+          </div>
+        </div>)
+      })
+        } 
+  </div>
+</div>
+      {/* hình ảnh sale */}
+    <div className="container-fluid pt-5 pb-3">
+      <div className="row px-xl-5">
+        <div className="col-md-6">
+          <div className="product-offer mb-30" style={{ height: 300 }}>
+            <img className="img-fluid" src="img/offer-1.jpg" alt='' />
+            <div className="offer-text">
+              <h6 className="text-white text-uppercase">Save 20%</h6>
+              <h3 className="text-white mb-3">Special Offer</h3>
+              <a href='' className="btn btn-primary">Shop Now</a>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="product-offer mb-30" style={{ height: 300 }}>
+            <img className="img-fluid" src="img/offer-2.jpg" alt='' />
+            <div className="offer-text">
+              <h6 className="text-white text-uppercase">Save 20%</h6>
+              <h3 className="text-white mb-3">Special Offer</h3>
+              <a href='' className="btn btn-primary">Shop Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div className="container-fluid pt-5 pb-3">
+  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Recent Products</span></h2>
+  <div className="row px-xl-5">
+  {
+      products.map((item,index)=>{
+        return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
+          <div className="product-item bg-light mb-4">
+            <div className="product-img position-relative overflow-hidden">
+              <img className="img-fluid w-100" src={`https://localhost:7201${item.avatar}`} alt='' />
+              <div className="product-action">
+                <a onClick={()=>addToCart(item)} className="btn btn-outline-dark btn-square"  ><i className="fa fa-shopping-cart" /></a>
+                <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-heart" /></a> 
+                <Link  className="btn btn-outline-dark btn-square" to={`/chi-tiet-san-pham/${item.id}`}><i className="fa fa-search" /></Link>  
+              </div>
+            </div>
+            <div className="text-center py-4">
+              <Link
+                className="h6 text-decoration-none text-truncate"
+                to={`/chi-tiet-san-pham/${item.id}`}
+              >
+                {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName}
+              </Link>
+
+              <div className="d-flex align-items-center justify-content-center mt-2">
+                <h5>{convertToVND(item.salePrice)}</h5><h6 className="text-muted ml-2"><del>{convertToVND(item.price)}</del></h6>
+              </div>
+              <div className="d-flex align-items-center justify-content-center mb-1">
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small className="fa fa-star text-primary mr-1" />
+                <small>(99)</small>
+              </div>
+            </div>
+          </div>
+        </div>)
+      })
+        }  
+  </div>
+</div>
+
+{/* hãng */}
+ 
+    {/* <Tabs
       defaultActiveKey="bestSeller"
       id="uncontrolled-tab-example"
       className="mb-3"
@@ -212,16 +302,14 @@ const Home = () => {
             </Card>
           ))}
         </div>
-      </Tab> */}
-
-    </Tabs>
-    {/* Danh sách hãng */}
+      </Tab> 
+ 
+    </Tabs> 
     <section className='mt-5'>
       <div>
         <h2 className='text-center mb-5'>Đối tác của chúng tôi</h2>
-      </div>
-
-    </section>
+      </div>  </section> */}
+   
   </>);
 }
 

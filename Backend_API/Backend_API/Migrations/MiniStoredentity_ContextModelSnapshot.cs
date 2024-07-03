@@ -33,9 +33,6 @@ namespace Backend_API.Migrations
                     b.Property<string>("NameAttribute")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Attributes");
@@ -402,6 +399,9 @@ namespace Backend_API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttributeValueId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")

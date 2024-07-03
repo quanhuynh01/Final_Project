@@ -114,11 +114,25 @@ namespace Backend_API.Controllers
 
                 return Ok(new { success = true ,data = attributeValues });
             }
+        [HttpPost("saveAttributeValueForProduct/{id}")]
 
-
-
-
-        private bool AttributevalueExists(int id)
+        public async Task<IActionResult> saveAttributeValueForProduct(int id,int idPro)
+        {
+            var AttributeId = _context.Attributevalues.Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
+ 
+            ProductAttribute pro = new ProductAttribute()
+            {
+                ProductId = idPro,
+                AttributeId = AttributeId.AttributeId,
+                AttributeValueId =id  
+                // Gán các thuộc tính cho p từ attributeValue nếu cần
+            };
+            _context.ProductAttributes.Add(pro);
+            _context.SaveChanges();
+            return Ok();
+        }
+         
+            private bool AttributevalueExists(int id)
         {
             return _context.Attributevalues.Any(e => e.Id == id);
         }
