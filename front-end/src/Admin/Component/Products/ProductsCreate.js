@@ -5,7 +5,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Select from 'react-select';
-import $ from 'jquery'
 import Swal from "sweetalert2";
 
 const ProductsCreate = () => {
@@ -13,9 +12,10 @@ const ProductsCreate = () => {
     const [Brand, setBrand] = useState([]);
     const [Categories, setCategories] = useState([]);//hiển thị danh mục
     const [Catepost, setCatepost] = useState([]);//sản phẩm theo danh mục
-    const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm
-    const [Attributepost, setAttributepost] = useState([]);//lưu thuộc tính của sản phẩm
+    const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm 
     const [Attributevalues, setAttributevalues] = useState([]);
+
+    const [AttributevaluesForProduct, setAttributevaluesForProduct] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
@@ -67,7 +67,24 @@ const ProductsCreate = () => {
         }
         );
     }
-
+    //Xử lý phần thuộc tính sản phẩm
+    const hanleClickSaveHandleAttributeValue = (id) => {
+        console.log(id);
+        setAttributevaluesForProduct(prev => { 
+            if (!prev.some(attribute => attribute.AttributeValueId === id)) {
+                // Thêm id mới vào mảng
+                return [...prev, { AttributeValueId: id }];
+            }
+            else
+            {
+                alert("Thuộc tính đã tồn tại")
+                return prev; // Không thêm nếu id đã tồn tại
+            }
+           
+        });
+    }
+    
+    console.log(AttributevaluesForProduct);
 
     useEffect(() => {
     }, [Products])
@@ -76,24 +93,34 @@ const ProductsCreate = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         // Check if BrandId is selected and at least one image file is uploaded
-        if (Products.BrandId !== undefined && Array.isArray(Products.AvatarFile) && Products.AvatarFile.length > 0) {
+        if (Products.BrandId !== undefined && Array.isArray(Products.AvatarFile) && Products.AvatarFile.length > 0 && AttributevaluesForProduct.length > 0) {
             const formData = new FormData();
             Object.entries(Products).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-
+    
             // Add all image files to FormData if they exist
             Products.AvatarFile.forEach((file) => {
                 formData.append("AvatarFiles", file);
             });
-
+    
             // Add all category IDs to FormData
             Catepost.forEach((id) => {
                 formData.append("CateId[]", id);
             });
-
+    
+            // Add all attribute values to FormData
+            AttributevaluesForProduct.forEach((id) => {
+                formData.append("AttributevalueId[]", id.AttributeValueId);
+            });
+    
+            // Log the FormData content for debugging
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+    
             Swal.fire({
                 title: "Thêm sản phẩm",
                 html: "Đang xử lý ...",
@@ -107,7 +134,7 @@ const ProductsCreate = () => {
                     console.log("I was closed by the timer");
                 }
             });
-
+    
             axios.post(`https://localhost:7201/api/Products`, formData)
                 .then(res => {
                     if (res.status === 200) {
@@ -127,10 +154,17 @@ const ProductsCreate = () => {
                     console.log('Lỗi khi thêm sản phẩm:', error);
                 });
         } else {
-            alert('Vui lòng chọn đầy đủ thông tin');
+            // Kiểm tra các trường hợp cụ thể và hiển thị thông báo tương ứng
+            if (Products.BrandId === undefined) {
+                alert('Vui lòng chọn hãng sản xuất');
+            } else if (!Array.isArray(Products.AvatarFile) || Products.AvatarFile.length <= 0) {
+                alert('Vui lòng chọn hình ảnh cho sản phẩm');
+            } else if (AttributevaluesForProduct.length <= 0) {
+                alert('Vui lòng chọn thuộc tính cho sản phẩm');
+            }
         }
     };
-
+    
     //console.log(Attributevalues);
 
 
@@ -252,8 +286,8 @@ const ProductsCreate = () => {
                                     </div>
                                 </Form.Group>
                                 <hr></hr>
-                                <Button onClick={handleSubmit} className="col-1 btn btn-success" type="button">
-                                    <i className="fa fa-plus"></i>Tạo mới
+                                <Button onClick={handleSubmit} className="col-1 btn btn-success "  type="button">
+                                    <i className="fa fa-plus text-white"> Tạo mới</i>
                                 </Button>
                             </Form>
                         </Tab>
@@ -271,33 +305,39 @@ const ProductsCreate = () => {
                                     }
                                 </Form.Group>
                             </Form>
-                        </Tab>
-                        <Tab eventKey={3} title="Tab 3" disabled>
-                            Tab 3 content
-                        </Tab>
-                    </Tabs>
-
-
+                        </Tab> 
+                    </Tabs> 
                 </div>
             </div> {/* .content */}
         </div>
         {/* //modal hiển thị giá trị thuộc tính sản phẩm */}
         <Modal show={show} onHide={handleClose} size="md">
             <Modal.Header>
-                <Modal.Title>Danh sách giá trị thuộc tính</Modal.Title>
+                <Modal.Title>Danh sách giá trị thuộc tính</Modal.Title> 
             </Modal.Header>
             <Modal.Body className="">
                 <Form.Group className="col-12">
-                    {Array.isArray(Attributevalues) && Attributevalues.map((item, index) => (
-                        <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
-                            <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
-                            <Button className="w-25">Chọn</Button>
-                            {/* onClick={()=>hanleClickSaveHandleAttributeValue(item.id)} */}
-                        </div>
+                    {Array.isArray(Attributevalues) && Attributevalues.map((item, index) => {
+                        return ((
+                            <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
+                                <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
+                                <Button onClick={() => hanleClickSaveHandleAttributeValue(item.id)} className="w-25">Chọn</Button> 
+                            </div>
+                        ))
+                    }
+                    )}
+                </Form.Group> 
+                <div>
+                <h5>Các giá trị thuộc tính đã chọn:</h5>
+                <ul>
+                    {AttributevaluesForProduct.map((attribute, index) => (
+                        <li className="p-2" style={{color:"blue"}} key={index}>
+                            {Attributevalues.find(item => item.id === attribute.AttributeValueId)?.nameValue}
+                        </li>
                     ))}
-                </Form.Group>
-            </Modal.Body>
-
+                </ul>
+            </div>
+            </Modal.Body> 
             <Modal.Footer>
                 <Button variant="primary" onClick={handleClose}>
                     Close

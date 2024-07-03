@@ -374,6 +374,9 @@ namespace Backend_API.Migrations
                     b.Property<string>("SalePrice")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("SoftDelete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 

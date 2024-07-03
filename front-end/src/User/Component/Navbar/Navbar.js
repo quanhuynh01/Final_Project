@@ -42,10 +42,30 @@ const Navbar = () => {
             </a>
             <div className="collapse navbar-collapse justify-content-between" id="navbarCollapse">
               <div className="navbar-nav mr-auto py-0 d-flex">
-                <NavLink exact to="/" className="nav-item nav-link" activeClassName="active">Trang chủ</NavLink>
-                <NavLink to="/shop" className="nav-item nav-link" activeClassName="active">Sản phẩm</NavLink>
-                <NavLink to="/detail" className="nav-item nav-link" activeClassName="active">Giới thiệu</NavLink>
-                <NavLink to="/contact.html" className="nav-item nav-link" activeClassName="active">Liên hệ</NavLink>
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
+                >
+                  Trang chủ
+                </NavLink>
+                <NavLink
+                  to="/shop"
+                  className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
+                >
+                  Sản phẩm
+                </NavLink>
+                <NavLink
+                  to="/detail"
+                  className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
+                >
+                  Giới thiệu
+                </NavLink>
+                <NavLink
+                  to="/contact.html"
+                  className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
+                >
+                  Liên hệ
+                </NavLink>
               </div>
               <div className="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <NavLink to="/cart" title="Cart" className="btn btn-warning">
