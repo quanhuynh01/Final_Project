@@ -4,17 +4,19 @@ import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import { Button, Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+ 
 const Attribute = () => {
     const [Attribute, setAttribute] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Attributes`)
             .then( res=>setAttribute(res.data));
+       
     }, []);
  
     const [AttributeCreate, setAttributeCreate] = useState({});
-    const [AttributeValue, setAttributeValue] = useState({});
-
+    const [AttributeValue, setAttributeValue] = useState({AttributeId:null});
+ 
+    const [CategoriesPost , setCategoriesPost] = useState([]);
 
         //modal bootstrap
         const [show, setShow] = useState(false);
@@ -24,11 +26,11 @@ const Attribute = () => {
         //attribute value
         const [showAttr, setShowAttr] = useState(false);
         const handleCloseAttr = () => setShowAttr(false);
-        const handleShowAttr = (attributeId) => {
-            setShowAttr(true);
-            setAttributeValue({AttributeId:attributeId});
-            //console.log("Attribute ID:", attributeId);
-        }
+        const handleShowAttr = (id) =>{ 
+            // console.log(id);
+            setAttributeValue(prev => ({ ...prev,   AttributeId: id }))
+            setShowAttr(true)
+        };
         const handleChange = (e) => {
             let name = e.target.name;
             let value = e.target.value;
@@ -36,7 +38,7 @@ const Attribute = () => {
         }
 
         const handleChangeAttr = (e) => {
-            let name = e.target.name;
+            let name = e.target.name; 
             let value = e.target.value;
             setAttributeValue(prev => ({ ...prev, [name]: value }));
         }
@@ -44,15 +46,20 @@ const Attribute = () => {
 
     const handleDelete =(id)=>{
 
-    };
-
-
+    }; 
+    // const categoryOptions = Categories.map(item => ({
+    //     value: item.id,
+    //     label: item.nameCategory
+    // }));
     const handleSubmit = (e) => { 
         e.preventDefault();
         const formData = new FormData();
         Object.entries(AttributeCreate).forEach(([key, value]) => { 
             formData.append(key, value); 
         });
+        CategoriesPost.forEach((id) => {
+            formData.append("CateId[]", id);
+        }); 
         axios.post(`https://localhost:7201/api/Attributes`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -74,13 +81,15 @@ const Attribute = () => {
                     }, 1300);
                 }
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
                 alert("Thêm thất bại!!!")
             }) 
     }
 
     const handleCreateAttr = (e) => {
         e.preventDefault();
+       // console.log(AttributeValue);
         axios.post(`https://localhost:7201/api/Attributevalues`,AttributeValue).then( (res) =>{
             Swal.fire({
                 position: "center",
@@ -94,6 +103,13 @@ const Attribute = () => {
             }, 1300); 
         }); 
     }
+     // Xử lý chọn nhiều danh mục
+     const handleMultiSelectChange = (selectedOptions) => {
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        setCategoriesPost(selectedValues);
+        console.log(selectedValues);
+    };
+
 
     return ( <>
      <SidebarAdmin />
@@ -134,7 +150,6 @@ const Attribute = () => {
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Tên thuộc tính</th> 
-                                                <th scope="col">Giá trị</th> 
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -142,10 +157,9 @@ const Attribute = () => {
                                             {Attribute.map((item, index) => (
                                                 <tr key={index}>
                                                     <td>{index + 1}</td>
-                                                    <td>{item.nameAttribute}</td>
-                                                    <td>{item.value}</td>
-                                                   {/* <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
-                                                     <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a></td> */}
+                                                    <td>{item.nameAttribute}</td> 
+                                                   <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
+                                                     <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a></td>
                                                     <td> <a type="button"  className="btn btn-outline-warning" href= {`attributes/chinh-sua-thuoc-tinh/${item.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</a>
                                                     <button onClick={()=>handleDelete(item.id) } className="btn btn-outline-danger ml-2"><i className="fa fa-trash"></i> Xoá</button> </td>
                                                 </tr>
@@ -173,11 +187,7 @@ const Attribute = () => {
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Tên thuộc tính</Form.Label>
                         <Form.Control name="NameAttribute" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập tên thuộc tính" />
-                    </Form.Group> 
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Giá trị thuộc tính</Form.Label>
-                        <Form.Control name="Value" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập giá trị thuộc tính" />
-                    </Form.Group> 
+                    </Form.Group>  
                 </Form>
             </Modal.Body>
             <Modal.Footer>

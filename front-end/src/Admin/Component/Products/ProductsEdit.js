@@ -3,11 +3,13 @@ import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Form, FormLabel, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Tab, Tabs } from "react-bootstrap";
 import Select from 'react-select';
 
 const ProductsEdit = () => {
     const { id } = useParams();
+    const [show, setShow] = useState(false); //modal
+    const handleClose = () => setShow(false);
     const [productDetail, setProductDetail] = useState({
         sku: "",
         productName: "",
@@ -22,16 +24,16 @@ const ProductsEdit = () => {
         active: false
     });
     const [Brand, setBrand] = useState([]);
-    const [Attribute, setAttribute] = useState([]); // View thuộc tính của sản phẩm
-    const [Attributepost, setAttributepost] = useState([]); // Lưu thuộc tính của sản phẩm
+    const [Attribute, setAttribute] = useState([]); // View thuộc tính của sản phẩm 
+    const [AttributeViewHave, setAttributeViewHave] = useState([]); // View thuộc tính của sản phẩm đang có
     const [Categories, setCategories] = useState([]); // Hiển thị danh mục
     const [Catepost, setCatepost] = useState([]); // Sản phẩm theo danh mục
-
+    const [Attributevalues, setAttributevalues] = useState([]);
     useEffect(() => {
-        axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
-            console.log(res);
-            const product = res.data.data.product;
-            setProductDetail(product);  
+        axios.get(`https://localhost:7201/getProduct/${id}`).then(res => {
+             console.log(res.data); 
+            setAttributeViewHave(res.data.attributes);
+            setProductDetail(res.data.product);  
         });
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
         axios.get(`https://localhost:7201/api/Attributes`).then(res => setAttribute(res.data));
@@ -66,26 +68,47 @@ const ProductsEdit = () => {
     const handleMultiSelectChange = (selectedOptions) => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
         setCatepost(selectedValues);
-    };
-
-    // Xử lý chọn thuộc tính
-    const handleAttribute = (selectedOptions) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        setAttributepost(selectedValues);
-    };
-
+    }; 
     const categoryOptions = Categories.map(item => ({
         value: item.id,
         label: item.nameCategory
     }));
 
-    const AttributeOptions = Attribute.map(item => ({
-        value: item.id,
-        label: item.nameAttribute + ":  " + item.value
-    }));
+    const handleDeleteAttribute = (id) => {
+        axios.delete(`https://localhost:7201/deleteAtttributeProduct/${id}`)
+          .then(res => {
+            if (res.status === 200) {
+              alert("Xoá thuộc tính thành công");
+              // cập nhật state
+              setAttributeViewHave(prevAttributes => prevAttributes.filter(attr => attr.id !== id));
+            }
+          })
+          .catch(error => {
+            console.error("There was an error deleting the attribute!", error);
+          });
+      };
 
-    console.log(productDetail);
 
+    const handleClickShowAttributeValue = (id) => {
+        //    console.log(id);
+        axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`).then(res => {
+            if (res.data.data !== null) {
+                setShow(true)
+                setAttributevalues(res.data.data)
+            }
+        }
+        );
+    }
+    // console.log(Attributevalues);
+    const hanleClickSaveHandleAttributeValue = (idAttributeValue) => {
+        console.log(idAttributeValue);
+        axios.post(`https://localhost:7201/api/Attributevalues/saveAttributeValueForProduct/${idAttributeValue}?idPro=${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Thêm thuộc tính thành công");
+            }
+        });
+    }
+   console.log(AttributeViewHave);
     return (
         <>
             <SidebarAdmin />
@@ -110,7 +133,11 @@ const ProductsEdit = () => {
                     </div>
                 </div>
                 <div className="animated fadeIn">
-                    <Form className="card p-3">
+                 
+                </div>
+                <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                    <Tab eventKey={1} title="Thông tin sản phẩm">
+                           <Form className="card p-3">
                         <Form.Group className="mb-3 row p-3">
                             <div className="col-6">
                                 <Form.Label>Tên sản phẩm</Form.Label>
@@ -195,29 +222,72 @@ const ProductsEdit = () => {
                             </div>
                         </Form.Group>
                         <hr></hr>
-                        <Form.Group className="mb-3 row p-3">
-                            <div className="col-6">
-                                <FormLabel>Chọn danh sách thuộc tính cho sản phẩm</FormLabel>
-                                <div>
-                                    <Select
-                                        isMulti
-                                        name="attrId"
-                                        options={AttributeOptions}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                        onChange={handleAttribute}
-                                        placeholder="Chọn thuộc tính..."
-                                        value={AttributeOptions.filter(option => Attributepost.includes(option.value))}
-                                    />
-                                </div>
-                            </div>
-                        </Form.Group>
+                       
                         <Button className="col-1 btn btn-success" type="button">
-                            <i className="fa fa-plus"></i>Tạo mới
+                            <i className="fa fa-check text-white">Chỉnh sửa</i>
                         </Button>
                     </Form>
-                </div>
+                    </Tab>
+                    <Tab eventKey={2} title="Thuộc tính sản phẩm">
+                        <div className="content card p-3 mt-4">
+                            <h4 className="text-center">Danh sách thuộc tính sản phẩm đang có</h4>
+                            <div className="row">
+                            {
+                                 AttributeViewHave.map((item,index)=>{
+                                    return(<div className="mr-4 ml-4 col-2 p-3" key={index}>
+                                            <label>{item.nameAttribute} : {item.attributeValue}</label>
+                                            <button onClick={()=>handleDeleteAttribute(item.id)} className="btn btn-danger ml-2">Xoá</button>
+                                    </div>)
+                                 })
+                            }
+                            </div>
+                            
+                        </div>
+                       
+                        <Form className="card p-3">    
+                            <h4>Chọn danh sách thuộc tính cho sản phẩm</h4>
+                            <Form.Group className="mb-3 row p-3">
+                                {
+                                    Attribute.map((item,index)=>{
+                                        return(<div className="card p-2 col-6" key={index}>
+                                                 {/* <FormLabel key={index} className="  p-2">{item.nameAttribute}</FormLabel> */}
+                                                 <Button className="btn " onClick={()=>handleClickShowAttributeValue(item.id)} key={index} >{item.nameAttribute}</Button>   
+                                        </div> 
+                                        )
+                                    }) 
+                                } 
+                        </Form.Group>
+                        </Form>  
+                    </Tab>
+                    <Tab eventKey={3} title="Tab 3" disabled>
+                        Tab 3 content
+                    </Tab>
+                </Tabs>
             </div>
+
+            {/* //modal hiển thị giá trị thuộc tính sản phẩm */}
+            <Modal show={show} onHide={handleClose} size="md">
+                <Modal.Header>
+                    <Modal.Title>Danh sách giá trị thuộc tính</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="">
+                    <Form.Group className="col-12">
+                        {Array.isArray(Attributevalues) && Attributevalues.map((item, index) => (
+                            <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
+                                <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
+                                <Button onClick={()=>hanleClickSaveHandleAttributeValue(item.id)} className="w-25">Chọn</Button>
+                            </div>
+                        ))}
+                    </Form.Group>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Close
+                    </Button> 
+                </Modal.Footer>
+            </Modal>
+
         </>
     );
 };

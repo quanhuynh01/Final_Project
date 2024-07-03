@@ -118,7 +118,7 @@ const ProductsCategories = () => {
                             <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
                                 <Card.Img variant="top" src={`https://localhost:7201${item.product.avatar}`} alt='' />
                                 <Card.Body style={{ position: "relative" }}>
-                                    <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.id}`}>
+                                    <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.product.id}`}>
                                         <div className='d-flex' style={{ justifyContent: "space-between" }}>
                                             <Card.Text>Mã SP:{item.product.sku}</Card.Text>
                                             <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>

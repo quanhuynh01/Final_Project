@@ -22,10 +22,10 @@ const ProductsDetail = () => {
     const [Review, setReview] = useState({ rating: 0, UserId: "", Content: "", Name: "", Email: "" }); 
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
+            console.log(res.data);
             if (res.status === 200) {
-                setAttribute(res.data.lstAttribute);
-                setproductDetail(res.data.data.product);
-         
+                setAttribute(res.data.attributes);
+                setproductDetail(res.data); 
                 setViewReview(res.data.review);
             }
         });
@@ -129,6 +129,7 @@ const ProductsDetail = () => {
             const formattedTime = date.toLocaleTimeString();
             return `${formattedDate} - ${formattedTime}`;
         };
+        console.log(productDetail);
     return (
         <>
             <Header />
@@ -146,6 +147,7 @@ const ProductsDetail = () => {
             <div className="container-fluid pb-5">
                 <div className="row px-xl-5">
                     <div className="col-lg-5 mb-30">
+                        <img src={`https://localhost:7201${productDetail.avatar}`} alt=""/>
                     </div>
                     <div className="col-lg-7 h-auto mb-30">
                         <div className="h-100 bg-light p-30 p-5">
@@ -163,7 +165,7 @@ const ProductsDetail = () => {
                             <h5 className="font-weight-semi-bold"><del>{convertToVND(productDetail.price)}</del></h5>
                             <h3 className="font-weight-semi-bold mb-4 text-danger">{convertToVND(productDetail.salePrice)}</h3>
                             <div className="d-flex align-items-center mb-4 pt-2">
-                                {/* <div className="input-group quantity mr-3" style={{ width: 130 }}>
+                                <div className="input-group quantity mr-3" style={{ width: 130 }}>
                                     <div className="input-group-btn">
                                         <button className="btn btn-warning btn-minus">
                                             <i className="fa fa-minus" />
@@ -175,12 +177,51 @@ const ProductsDetail = () => {
                                             <i className="fa fa-plus" />
                                         </button>
                                     </div>
-                                </div> */}
+                                </div>
                                    <button onClick={() => addToCart(productDetail)}className="btn btn-outline-warning px-3 mr-3"><i className="	fa fa-credit-card" />  Mua ngay</button>
                                 <button onClick={() => addToCart(productDetail)} className="btn btn-warning px-3 text-white"><i className="fa fa-shopping-cart mr-1" />Thêm vào giỏ</button>
                             </div>
+                            <div className="square-trade d-flex align-items-center">
+                                <div className="square-trade-content" style={{ color: '#222', fontSize: 13 }}>
+                                    <div className="ribbon ribbon-top-left"><span><i className="fa fa-gift" />
+                                         Quà tặng và ưu đãi kèm theo
+                                    </span></div> 
+                                    <div className="km-title">KHUYẾN MẠI TẶNG BẢO HÀNH</div>
+                                    <ul>
+                                        <li><a href="#" target="_blank">Ưu đãi tặng thêm 06 tháng BẢO HÀNH tại ĐQ áp dụng từ 04.04-30.06.24 (BHMR005)</a></li>
+                                    </ul>
+                                   
+                                    <div className="km-title">BỘ QUÀ TẶNG TRỊ GIÁ 3.000.000Đ</div>
+                                    <ul>
+                                        <li>Balo Acer Gaming SUV trị giá <span style={{ color: 'red', fontWeight: 'bold' }}>2.000.000đ</span> (BALO497)</li>
+                                        <li>Tặng phiếu vệ sinh bảo dưỡng Laptop, PC miễn phí trọn đời trị giá 999.000đ (THEK417)</li>
+                                    </ul>
+                                    <div className="km-title">ƯU ĐÃI HẤP DẪN MUA KÈM LAPTOP</div>
+                                    <ul>
+                                        <li>Giảm ngay <span style={{ color: 'red', fontWeight: 'bold' }}>50.000đ</span> khi mua Balo, Cặp, Túi chống sốc cao cấp thương hiệu WIWU (https://hacom.vn/tim?q=wiwu&amp;scat_id=62)</li>
+                                        <li>Giảm ngay <span style={{ color: 'red', fontWeight: 'bold' }}>100.000đ</span> khi mua Balo Laptop Gaming   </li>
+                                        <li>Giảm ngay 100.000đ khi mua Ram Laptop thương hiệu KINGSTON&lt; LEXAR</li>
+                                        <li>Giảm ngay 200.000đ khi mua Ghế công thái học thương hiệu LEGION</li>
+                                    </ul>
+                                    <div className="km-title">KHUYẾN MẠI KHÁC</div>
+                                    <ul>
+                                        <li><a href="https://hacom.vn/mua-loa-hivi-swan-tai-hacom-san-sang-cho-trai-nghiem-moi "> Ưu đãi lớn khi mua kèm Loa Swan chính hãng do ĐQ phân phối</a></li>
+                                    </ul>
+                                   
+ 
+                                    <div className="km-title km-title-addcode"><i className="fa fa-gift" /> Khuyến Mãi Office</div>
+                                    <ul>
+                                        👉 Từ 05/04/2024 đến 30/06/2024: Giảm thêm 100.000đ cho Microsoft Office khi mua kèm Laptop !!!
+                                    </ul>
+                                    
+                                    <p className="lien-he-gia-tot"><i className="fa fa-phone fa-flip-horizontal" style={{ color: '#243a76' }} /> Cam kết giá tốt nhất thị trường, liên hệ 19001903
+                                        hoặc đến tận nơi để có giá tốt nhất!
+                                    </p>
+                                </div>
+                            </div>
+
                             <div className="d-flex pt-2">
-                                <strong className="text-dark mr-2">Chia sẽ:</strong>
+                                <strong className="text-dark mr-2">Chia sẻ:</strong>
                                 <div className="d-inline-flex">
                                     <a className="text-dark px-2" href="">
                                         <i className="fa fa-facebook-f" />
@@ -205,7 +246,7 @@ const ProductsDetail = () => {
                             <div className="nav nav-tabs mb-4">
                                 <a className="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
                                 <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Thông số kỹ thuật</a>
-                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá ({ViewReview.length})</a>
+                                {/* <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá ({ViewReview.length})</a> */}
                             </div>
                             <div className="tab-content">
                                 <div className="tab-pane fade show active p-3" id="tab-pane-1">
@@ -214,12 +255,12 @@ const ProductsDetail = () => {
                                     <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
                                 </div>
                                 <div className="tab-pane fade" id="tab-pane-2">
-                                    <h4 className="mb-3">Thông số kỹ thuật</h4>
-                                    <Table striped bordered hover>
+                                    <h4 className="mb-3 text-center">Thông số kỹ thuật</h4>
+                                    <Table className="container"  bordered hover>
                                         <tbody>
                                             {Attribute.map((item, index) => (
                                                 <tr key={index}>
-                                                    <td>{item.attributeName}</td>
+                                                    <td>{item.nameAttribute}</td>
                                                     <td>{item.attributeValue}</td>
                                                 </tr>
                                             ))}
@@ -229,7 +270,7 @@ const ProductsDetail = () => {
                                 <div className="tab-pane fade" id="tab-pane-3">
                                     <div className="row">
                                         <div className="col-md-6 ">
-                                            <h4 className="mb-4 ml-2 text-primary">{ViewReview.length} đánh giá</h4> 
+                                            {/* <h4 className="mb-4 ml-2 text-primary">{ViewReview.length} đánh giá</h4> 
                                                 {
                                                    ViewReview.length > 0 && ViewReview.map((item, index) => {
                                                         return (  
@@ -244,7 +285,7 @@ const ProductsDetail = () => {
                                                             </div>
                                                         )
                                                     })
-                                                } 
+                                                }  */}
                                         </div>
                                         <div className="col-md-6">
                                             <h4 className="mb-4">Để lại nhận xét</h4>
@@ -288,7 +329,7 @@ const ProductsDetail = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             {/* Shop Detail End */}
             <Footer/>
         </>

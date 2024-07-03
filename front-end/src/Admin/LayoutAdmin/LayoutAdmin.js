@@ -184,7 +184,7 @@ const LayoutAdmin = () => {
          
           <div className="row">
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-white bg-flat-color-1">
+              <div className="card text-light " style={{backgroundColor:"#01dbfd"}}>
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{Account.length}</span>
@@ -194,7 +194,7 @@ const LayoutAdmin = () => {
               </div>
             </div>
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-white bg-flat-color-2">
+              <div className="card text-white  " style={{backgroundColor:"rgb(255 72 72)"}}  >
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{Product.length}</span>
@@ -204,7 +204,7 @@ const LayoutAdmin = () => {
               </div>
             </div>
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-white bg-flat-color-4">
+              <div className="card text-white bg-success">
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{deliveredOrdersCount}</span>
@@ -214,7 +214,7 @@ const LayoutAdmin = () => {
               </div>
             </div>
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-white bg-flat-color-5">
+              <div className="card text-white  bg-warning">
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{convertToVND(totalRevenue)}</span>

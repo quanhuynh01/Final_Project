@@ -29,7 +29,9 @@ namespace Backend_API.Model
         public DbSet<Backend_API.Model.Order> Order { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
+ 
         public DbSet<DeliveryStatus> DeliveryStatuses { get; set; }
         public DbSet<Backend_API.Model.Review> Review { get; set; }
+
     }
 }

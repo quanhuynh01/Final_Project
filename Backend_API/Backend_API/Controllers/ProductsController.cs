@@ -31,23 +31,83 @@ namespace Backend_API.Controllers
         {
             return await _context.Products.Include(b=>b.Brand).ToListAsync();
         }
+        // GET: api/Products/5
+        [HttpGet("/getProduct/{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            var productDetails = await _context.Products
+               .Where(p => p.Id == id)
+               .Select(p => new
+               {
+                   Product =p, 
+                   Attributes = _context.ProductAttributes
+                                       .Where(pa => pa.ProductId == p.Id)
+                                       .Select(pa => new
+                                       {
+                                           Id = pa.Id,
+                                           NameAttribute = _context.Attributes
+                                                               .Where(a => a.Id == pa.AttributeId)
+                                                               .Select(a => a.NameAttribute)
+                                                               .FirstOrDefault(),
+                                           AttributeValue = _context.Attributevalues
+                                                               .Where(al => al.AttributeId == pa.AttributeId)
+                                                               .Select(al => al.NameValue)
+                                                               .FirstOrDefault()
+                                       })
+                                       .ToList()
+               })
+               .FirstOrDefaultAsync();
+
+            if (productDetails == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(productDetails);
+        }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
-        { 
-            var product = _context.ProductAttributes.Include(p => p.Product)
-                                            .ThenInclude(b => b.Brand)
-                                            .Where(p => p.ProductId == id)
-                                            .FirstOrDefault();
-            var listAttibute = _context.ProductAttributes.Where(a=>a.ProductId == id).Include(a=>a.Attribute).ToList();
-            var Review = _context.Review.Where(r => r.ProductId == id).ToList();
-            if (product == null)
+        public async Task<ActionResult<IEnumerable<object>>> GetProductDetails(int id)
+        {
+            var productDetails = await _context.Products
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    Id= p.Id,   
+                    ProductName = p.ProductName,
+                    Price = p.Price,
+                    SalePrice= p.SalePrice,
+                    Avatar = p.Avatar,
+
+                    Attributes = _context.ProductAttributes
+                                        .Where(pa => pa.ProductId == p.Id)
+                                        .Select(pa => new
+                                        {
+                                            NameAttribute = _context.Attributes
+                                                                .Where(a => a.Id == pa.AttributeId)
+                                                                .Select(a => a.NameAttribute)
+                                                                .FirstOrDefault(),
+                                            AttributeValue = _context.Attributevalues
+                                                                .Where(al => al.AttributeId == pa.AttributeId)
+                                                                .Select(al => al.NameValue)
+                                                                .FirstOrDefault()
+                                        })
+                                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (productDetails == null)
             {
                 return NotFound();
-            } 
-            return Ok(new {data= product,lstAttribute = listAttibute,Review = Review});
+            }
+
+            return Ok(productDetails);
         }
+
+
+
+
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -79,6 +139,9 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
+
+
+
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -205,14 +268,29 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
+        [HttpDelete("/deleteAtttributeProduct/{id}")]
+        public async Task<IActionResult> deleteAtttributeProduct(int id)
+        {
+            var data = _context.ProductAttributes.Find(id);
+            if
+                (data == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _context.ProductAttributes.Remove(data);
+                _context.SaveChanges();
+                return Ok();
+            } 
+        }
+            //[HttpPost("addAttribute/{idAttribute}")]
+            //public async Task<IActionResult> PostProductAttribute(int id)
+            //{
 
-        //[HttpPost("addAttribute/{idAttribute}")]
-        //public async Task<IActionResult> PostProductAttribute(int id)
-        //{
-
-        //    return NoContent();
-        //}
-        [HttpPost("addToCart")]
+            //    return NoContent();
+            //}
+            [HttpPost("addToCart")]
         public async Task<IActionResult> addToCart([FromForm] string IdUser , [FromForm] Product Product)
         { 
             return NoContent();

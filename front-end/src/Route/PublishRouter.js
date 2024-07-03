@@ -8,6 +8,7 @@ import ProductsCategories from "../User/Component/Products/ProductsCategories";
 import Register from "../User/Component/Login/Register";
 import Account from "../User/Component/Account/Account";
 import AccountForgot from "../User/Component/Login/AccountForgot";
+import Contact from "../User/Contact/Contact";
 
 const PublishRouter = () => {
     return (<>
@@ -35,6 +36,9 @@ const PublishRouter = () => {
                 <Route path="/danh-muc/:id" element={<ProductsCategories />} />
                 <Route path="/cart" element={<Cart />}>
                     <Route index element={<Cart />} />
+                </Route>
+                <Route path="/contact.html" element={<Contact />}>
+                    <Route index element={<Contact />} />
                 </Route>
             </Routes>
         </BrowserRouter>
