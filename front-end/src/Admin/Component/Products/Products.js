@@ -4,6 +4,8 @@ import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import axios from "axios";
  
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 
 const Products = () => {
@@ -13,13 +15,32 @@ const Products = () => {
         axios.get('https://localhost:7201/api/Products')
             .then(res => setProducts(res.data));
     }, []);
-    // const formatPrice = (price) => {
-    //     var p = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-    //     if (!p.includes('000 VNĐ')) {
-    //         p += ' 000 VNĐ';  
-    //     } 
-    //     return p; 
-    // };
+    const HandleDelete=(id)=>{
+        Swal.fire({
+            title: "Bạn có muốn xóa",
+            text: "Dữ liệu liên quan đến sản phẩm này sẽ bị mất",
+            icon: "warning",
+            showCancelButton: "true",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete"
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  axios.delete(`https://localhost:7201/api/Products/${id}`).then(res => { 
+                        console.log(res.data.id);
+                      if (res.status === 200) {
+                          Swal.fire({
+                              title: "Deleted!",
+                              text: "Your file has been deleted.",
+                              icon: "success"
+                          }); 
+                          setProducts(prevProducts => prevProducts.filter(product => product.id !== res.data.id));
+                      }
+                      
+                  }) 
+              }
+          });
+    }
    
     return (
         <>
@@ -62,7 +83,7 @@ const Products = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((item, index) => (
+                            {products.filter(p=>p.softDelete === false).map((item, index) => (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>{item.productName}</td>
@@ -71,12 +92,14 @@ const Products = () => {
                                     <td>{item.price}</td> 
                                     <td>
                                         <div>
-                                            <a   href={`products/edit/${item.id}`}
-                                                className="btn btn-outline-warning btn-delete" 
+                                            <a href={`products/edit/${item.id}`}
+                                                className="btn btn-outline-warning btn-delete mr-2"
                                             >
                                                 <i className="fa fa-edit"></i> Chỉnh sửa
                                             </a>
+                                            <Button onClick={()=>HandleDelete(item.id)} className="btn btn-danger" > <i className="fa fa-trash text-white"></i></Button>
                                         </div>
+                                       
                                     </td>
                                 </tr>
                             ))}

@@ -17,7 +17,10 @@ const Home = () => {
     axios.get('https://localhost:7201/api/Products')
       .then(res => setProducts(res.data.slice(0, 10)));//slice(0, 15) lấy ra 15 sản phẩm đầu
     axios.get(`https://localhost:7201/api/Categories`)
-      .then(res => setCategories(res.data));
+      .then(res => {
+       
+        setCategories(res.data)
+      });
   }, []);
   //khởi chạy khi render để lấy id User
   useEffect(() => {
@@ -54,10 +57,7 @@ const Home = () => {
     const exchangeRate = 1000;
     const priceInVND = price * exchangeRate;
     return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-  }
-
- 
-
+  } 
  
   return (<>
 <div className="container-fluid pt-5">
@@ -98,12 +98,11 @@ const Home = () => {
               <div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <Link to={`/danh-muc/${item.id}`} className="text-decoration-none"  >
                 <div className="cat-item d-flex align-items-center mb-4">
-                    <div className="overflow-hidden" style={{ width: 100, height: 100 }}>
-                      <img className="img-fluid" src="img/cat-1.jpg" alt='' />
+                    <div className="overflow-hidden d-flex" style={{ width: 100, height: 100 }}>
+                      <img className="img-fluid  " src={`https://localhost:7201${item.iconCate}`} alt='' />
                     </div>
                     <div className="flex-fill pl-3">
-                      <h6>{item.nameCategory}</h6>
-                      <small className="text-body">100 Products</small>
+                      <h6>{item.nameCategory}</h6> 
                     </div>
                   </div>
                 </Link> 
@@ -136,7 +135,7 @@ const Home = () => {
                 className="h6 text-decoration-none text-truncate"
                 to={`/chi-tiet-san-pham/${item.id}`}
               >
-                {/* {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName} */}
+                {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName}
               </Link>
 
               <div className="d-flex align-items-center justify-content-center mt-2">
@@ -225,91 +224,7 @@ const Home = () => {
   </div>
 </div>
 
-{/* hãng */}
  
-    {/* <Tabs
-      defaultActiveKey="bestSeller"
-      id="uncontrolled-tab-example"
-      className="mb-3"
-    >
-      <Tab eventKey="bestSeller" title={<h4>Sản phẩm bán chạy</h4>}>
-        <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
-          {products.filter(p => p.bestSeller === true).map((item) => (
-
-            <Card key={item.id} className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
-              <Card.Img variant="top" src={`https://localhost:7201${item.avatar}`} alt='' />
-              <Card.Body style={{ position: "relative" }}>
-                <Link key={item.id} to={`chi-tiet-san-pham/${item.id}`}>
-                  <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                    <Card.Text>Mã SP:{item.sku}</Card.Text>
-                    <Card.Text className={item.stock > 0 ? 'text-success' : 'text-danger'}>
-                      {item.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
-                    </Card.Text>
-                  </div>
-                  <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
-                    {item.productName}
-                  </Card.Title>
-                  <Card.Text>Giá: {convertToVND(item.price)}</Card.Text>
-                </Link>
-              </Card.Body>
-              <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                <Button onClick={() => addToCart(item)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-              </div>
-              <p className='best-seller'>Bán chạy</p>
-            </Card>
-
-          ))}
-        </div>
-      </Tab>
-
-
-      {/* <Tab eventKey="New" title={<h4>Sản phẩm mới</h4>}>
-        <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
-          {[...Array(10)].map((_, i) => (
-            <Card key={i} style={{ width: '17.5rem', margin: '10px' }}>
-              <Card.Img variant="top" src="https://sunhitech.vn/images/products/laptop-asus-rog-zephyrus-g14-ga402nj-l4056w-amd-ryzen-7-7735hs-16gb-512gb-rtx-3050-14-inch-fhd-win-11-xam-1.jpg" />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the
-                  bulk of the card's content.
-                </Card.Text>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Button onClick={() => addToCart()} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-                </div>
-              </Card.Body>
-              <p className='products-new'>Mới</p>
-            </Card>
-          ))}
-        </div>
-      </Tab>
-      <Tab eventKey="NewDate" title={<h4>Sản phẩm Hot</h4>}>
-        <div className='d-flex justify-content-center' style={{ flexWrap: "wrap", width: "80%", margin: "auto" }}>
-          {[...Array(10)].map((_, i) => (
-            <Card key={i} style={{ width: '17.5rem', margin: '10px' }}>
-              <Card.Img variant="top" src="https://sunhitech.vn/images/products/laptop-asus-rog-zephyrus-g14-ga402nj-l4056w-amd-ryzen-7-7735hs-16gb-512gb-rtx-3050-14-inch-fhd-win-11-xam-1.jpg" />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the
-                  bulk of the card's content.
-                </Card.Text>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Button onClick={() => addToCart()} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-                </div>
-              </Card.Body>
-              <p className='products-new'>Mới</p>
-            </Card>
-          ))}
-        </div>
-      </Tab> 
- 
-    </Tabs> 
-    <section className='mt-5'>
-      <div>
-        <h2 className='text-center mb-5'>Đối tác của chúng tôi</h2>
-      </div>  </section> */}
-   
   </>);
 }
 

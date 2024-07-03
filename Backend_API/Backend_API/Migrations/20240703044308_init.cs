@@ -4,23 +4,23 @@
 
 namespace Backend_API.Migrations
 {
-    public partial class init1 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "AttributeValueId",
-                table: "ProductAttributes",
-                type: "int",
+            migrationBuilder.AddColumn<bool>(
+                name: "SoftDelete",
+                table: "Products",
+                type: "bit",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AttributeValueId",
-                table: "ProductAttributes");
+                name: "SoftDelete",
+                table: "Products");
         }
     }
 }

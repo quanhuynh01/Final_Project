@@ -27,5 +27,8 @@ namespace Backend_API.Model
         public Brand Brand { get; set; }
         public DateTime DateCreate { get; set; }
         public Boolean Active { get; set; }
+        public Boolean SoftDelete { get; set; }
+
+        
     }
 }
