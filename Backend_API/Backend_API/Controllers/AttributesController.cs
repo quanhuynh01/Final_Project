@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
 using Attribute = Backend_API.Model.Attribute;
 using System.ComponentModel;
-using CategoryAttribute = Backend_API.Model.CategoryAttribute;
+ 
 
 namespace Backend_API.Controllers
 {
@@ -81,25 +81,10 @@ namespace Backend_API.Controllers
         public async Task<ActionResult<Attribute>> PostAttribute([FromForm] Attribute attribute, [FromForm] List<int>CateId)
             {
             Attribute a = new Attribute();
-            a.NameAttribute = attribute.NameAttribute;
-            a.Value = attribute.Value;
-            _context.Attributes.Add(a); // Thêm đối tượng a 
+            a.NameAttribute = attribute.NameAttribute; 
+            _context.Attributes.Add(a);  
             await _context.SaveChangesAsync();
-            if (CateId.Count > 0)
-            {
-                foreach(var item in CateId)
-                {
-                     CategoryAttribute  ca = new CategoryAttribute()
-                     {
-                         AttributeId = a.Id,
-                         CategoryId= item
-                         
-                     };
-                    _context.CategoryAttributes.Add(ca);
-                    _context.SaveChanges();
-                }
-            }
-
+ 
            
 
             return CreatedAtAction("GetAttribute", new { id = a.Id }, a); // Trả về đối tượng a thay vì attribute
