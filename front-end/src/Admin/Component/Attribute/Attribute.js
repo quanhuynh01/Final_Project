@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Table } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
  
@@ -12,7 +12,7 @@ const Attribute = () => {
             .then( res=>setAttribute(res.data));
        
     }, []);
- 
+    const [lsAttributeValue, setlsAttributeValue] = useState([]);    
     const [AttributeCreate, setAttributeCreate] = useState({});
     const [AttributeValue, setAttributeValue] = useState({AttributeId:null});
  
@@ -31,6 +31,19 @@ const Attribute = () => {
             setAttributeValue(prev => ({ ...prev,   AttributeId: id }))
             setShowAttr(true)
         };
+
+        //Xem giá trị thuộc tính
+        const [ShowAttributeValue, setShowAttributeValue] = useState(false);
+
+        const handleCloseAttributeValue = () => setShowAttributeValue(false);
+        const handleShowAttributeValue = (id) =>
+            {
+                setShowAttributeValue(true);
+                axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`)
+                .then(res=>setlsAttributeValue(res.data.data));
+            }
+
+
         const handleChange = (e) => {
             let name = e.target.name;
             let value = e.target.value;
@@ -97,19 +110,18 @@ const Attribute = () => {
                 title: `Thêm giá trị ${res.data.nameValue} thành công` ,
                 showConfirmButton: false,
                 timer: 1500
-              }); 
-            setTimeout(() => {
-                window.location.reload();
-            }, 1300); 
+              });  
+              setShowAttr(false)
         }); 
     }
      // Xử lý chọn nhiều danh mục
      const handleMultiSelectChange = (selectedOptions) => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
         setCategoriesPost(selectedValues);
-        console.log(selectedValues);
+         
     };
 
+    console.log(lsAttributeValue);
 
     return ( <>
      <SidebarAdmin />
@@ -159,9 +171,14 @@ const Attribute = () => {
                                                     <td>{index + 1}</td>
                                                     <td>{item.nameAttribute}</td> 
                                                    <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
-                                                     <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a></td>
+                                                     {/* <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a> */}
+                                                     <Button onClick={()=>handleShowAttributeValue(item.id)} className=" ml-2 btn  ">Xem danh sách giá trị </Button>
+                                                    
+                                                     </td>
                                                     <td> <a type="button"  className="btn btn-outline-warning" href= {`attributes/chinh-sua-thuoc-tinh/${item.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</a>
-                                                    <button onClick={()=>handleDelete(item.id) } className="btn btn-outline-danger ml-2"><i className="fa fa-trash"></i> Xoá</button> </td>
+                                                    <button onClick={()=>handleDelete(item.id) } className="btn btn-outline-danger ml-2"><i className="fa fa-trash"></i> Xoá</button> 
+                                                   
+                                                    </td>
                                                 </tr>
                                             ))
                                             }
@@ -222,6 +239,43 @@ const Attribute = () => {
                 </Button>
             </Modal.Footer>
         </Modal> 
+        {/* xem giá trị thuộc tính */}
+        <Modal show={ShowAttributeValue} onHide={handleCloseAttributeValue}>
+            <Modal.Header >
+                <Modal.Title>Modal heading</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tên thuộc tính</th> 
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            lsAttributeValue.map((item,index)=>{
+                                return(
+                                    <tr key={index}>
+                                    <td>{index +1 }</td>
+                                    <td>{item.nameValue}</td> 
+                                    <td><Button className="btn">Xóa</Button></td> 
+                                </tr>
+                                )
+                            })
+                        }
+                      
+ 
+                    </tbody>
+                </Table>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseAttributeValue}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
 
     </> );
 }

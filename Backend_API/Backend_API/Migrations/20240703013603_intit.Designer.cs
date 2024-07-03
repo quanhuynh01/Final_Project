@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend_API.Migrations
 {
     [DbContext(typeof(MiniStoredentity_Context))]
-    [Migration("20240628070612_init")]
-    partial class init
+    [Migration("20240703013603_intit")]
+    partial class intit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -401,6 +401,9 @@ namespace Backend_API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttributeValueId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Form, InputGroup, Modal, Tab, Tabs } from "react-bootstrap";
 import Select from 'react-select';
+import Swal from "sweetalert2";
 
 const ProductsEdit = () => {
     const { id } = useParams();
@@ -29,6 +30,7 @@ const ProductsEdit = () => {
     const [Categories, setCategories] = useState([]); // Hiển thị danh mục
     const [Catepost, setCatepost] = useState([]); // Sản phẩm theo danh mục
     const [Attributevalues, setAttributevalues] = useState([]);
+  
     useEffect(() => {
         axios.get(`https://localhost:7201/getProduct/${id}`).then(res => {
              console.log(res.data); 
@@ -69,6 +71,7 @@ const ProductsEdit = () => {
         const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
         setCatepost(selectedValues);
     }; 
+
     const categoryOptions = Categories.map(item => ({
         value: item.id,
         label: item.nameCategory
@@ -98,17 +101,56 @@ const ProductsEdit = () => {
             }
         }
         );
-    }
-    // console.log(Attributevalues);
+    } 
     const hanleClickSaveHandleAttributeValue = (idAttributeValue) => {
         console.log(idAttributeValue);
         axios.post(`https://localhost:7201/api/Attributevalues/saveAttributeValueForProduct/${idAttributeValue}?idPro=${id}`).then(res => {
+            console.log(res);
             if (res.status === 200) {
-                alert("Thêm thuộc tính thành công");
+                alert("Thêm thuộc tính thành công"); 
+                    // Lấy thông tin được trả về từ server
+                    const { id,nameAttribute, nameValue } = res.data; 
+                    // Cập nhật lại state AttributeViewHave
+                    setAttributeViewHave(prevState => [
+                        ...prevState,
+                        { id,nameAttribute, attributeValue: nameValue } // Có thể điều chỉnh cấu trúc dữ liệu tùy vào yêu cầu của bạn
+                    ]);
+                    setShow(false);
             }
         });
     }
-   console.log(AttributeViewHave);
+    const HandleSubmit= (e )=>{
+        e.preventDefault();
+        const formData = new FormData();
+        Object.entries(productDetail).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+        Catepost.forEach((id) => {
+            formData.append("CateId[]", id);
+        });
+
+        axios.put(`https://localhost:7201/api/Products/${id}`, formData)
+        .then(res => {
+            console.log(res);
+            if (res.status === 200) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Chỉnh sửa sản phẩm thành công",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                // navigate(`/admin/products/edit/${res.data.id}`);
+            } else {
+                console.log('Lỗi server');
+            }
+        })
+        .catch(error => {
+            console.log('Lỗi khi thêm sản phẩm:', error);
+        });
+    }
+    
+    console.log(Catepost);
     return (
         <>
             <SidebarAdmin />
@@ -223,7 +265,7 @@ const ProductsEdit = () => {
                         </Form.Group>
                         <hr></hr>
                        
-                        <Button className="col-1 btn btn-success" type="button">
+                        <Button className="col-1 btn btn-success" onClick={(e)=>HandleSubmit(e)} type="button">
                             <i className="fa fa-check text-white">Chỉnh sửa</i>
                         </Button>
                     </Form>
@@ -259,9 +301,7 @@ const ProductsEdit = () => {
                         </Form.Group>
                         </Form>  
                     </Tab>
-                    <Tab eventKey={3} title="Tab 3" disabled>
-                        Tab 3 content
-                    </Tab>
+                   
                 </Tabs>
             </div>
 
@@ -272,12 +312,16 @@ const ProductsEdit = () => {
                 </Modal.Header>
                 <Modal.Body className="">
                     <Form.Group className="col-12">
-                        {Array.isArray(Attributevalues) && Attributevalues.map((item, index) => (
-                            <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
-                                <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
-                                <Button onClick={()=>hanleClickSaveHandleAttributeValue(item.id)} className="w-25">Chọn</Button>
-                            </div>
-                        ))}
+                        {Array.isArray(Attributevalues) && Attributevalues.map((item, index) =>
+                        {
+                            return (
+                                <div className="col-12 mb-3 d-flex justify-content-between align-items-center" key={index}>
+                                    <Form.Label className="mb-0 w-75"><h5>{item.nameValue}</h5></Form.Label>
+                                    <Button onClick={()=>hanleClickSaveHandleAttributeValue(item.id)} className="w-25">Chọn</Button>
+                                </div>
+                            )
+                        }
+                       )}
                     </Form.Group>
                 </Modal.Body>
 
