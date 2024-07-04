@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
 import './Home.css'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Button, Card, Tab, Tabs } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; 
 import Swal from 'sweetalert2'
 import { jwtDecode } from 'jwt-decode';
-
+import $ from 'jquery'
+import { Button, Modal } from 'react-bootstrap';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [Categories, setCategories] = useState([]);
   const [User, setUser] = useState(null);
-  
+  const [show, setShow] = useState(false);
 
-  useEffect(() => {
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  useEffect(() => { 
     axios.get('https://localhost:7201/api/Products')
       .then(res => setProducts(res.data.slice(0, 10)));//slice(0, 15) lấy ra 15 sản phẩm đầu
     axios.get(`https://localhost:7201/api/Categories`)
@@ -34,23 +37,27 @@ const Home = () => {
 
   //thêm vào giỏ hàng
   const addToCart = (item) => {
-    console.log(item);
-    console.log(User);
-    axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
+    if (item !== null && User !== null) {
+      axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
         .then(res => {
           console.log(res.data);
-            if (res.status === 200) {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Thêm vào giỏ hàng",
-                    showConfirmButton: false,
-                    timer: 1000
-                });
-            }
+          if (res.status === 200) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Thêm vào giỏ hàng",
+              showConfirmButton: false,
+              timer: 1000
+            });
+          }
         })
         .catch(error => console.error(error));
-};
+    }
+    else{
+       setShow(true);
+    }
+
+  };
 
   //chuyển đổi tiền
   function convertToVND(price) { 
@@ -224,6 +231,27 @@ const Home = () => {
   </div>
 </div>
 
+    <Modal show={show} onHide={handleClose} centered>
+      <div className='row justify-content-center mt-4'>
+        <h1 className='text-danger'>ShopMember</h1>
+      </div> 
+      <Modal.Body>
+        <div className='row justify-content-center'>
+          <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:80/q:90/plain/https://cellphones.com.vn/media/wysiwyg/chibi2.png" height={80} alt="cps-smember-icon" />
+        </div>
+        <div className='mt-3'>
+          <h6 style={{ textAlign: 'center' }}>Vui lòng đăng nhập tài khoản Shopmember để xem ưu đãi và thanh toán dễ dàng hơn.</h6>
+        </div>
+      </Modal.Body>
+      <div className='row justify-content-center p-2'>
+        <Button className='m-2 btn-outline-primary'   onClick={handleClose}>
+          Đăng ký
+        </Button>
+        <Button className='m-2' variant="primary " onClick={handleClose}>
+          Đăng nhập
+        </Button>
+      </div>
+    </Modal> 
  
   </>);
 }

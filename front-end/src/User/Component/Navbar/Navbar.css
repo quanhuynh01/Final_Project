@@ -1,4 +1,14 @@
-.nav-item.dropdown:hover .dropdown-menu {
+/* .nav-item.dropdown:hover .dropdown-menu {
     display: block;
-  }
+  } */
   
+ .dropmenu {
+  top: 0;
+  position: relative;
+  width: 900px;
+  height: 500px;
+}
+.nav-item-cate{
+  left: 15px ;
+  position: absolute;
+} 

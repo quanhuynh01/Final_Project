@@ -169,9 +169,13 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
- 
-         
-        private bool CategoryExists(int id)
+        [HttpGet("/categoriresBrand")]
+        public async Task<ActionResult<IEnumerable<CategoriesBrand>>> categoriresBrand()
+        {
+            var data = _context.CategoriesBrands.Include(b => b.Brand).Include(c => c.Category).ToList();
+            return data;
+        } 
+            private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.Id == id);
         }

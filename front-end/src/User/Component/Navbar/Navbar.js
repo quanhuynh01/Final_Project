@@ -2,15 +2,32 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import './Navbar.css';
-
+import $ from 'jquery'
 const Navbar = () => {
   const [Categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://localhost:7201/api/Categories`)
-      .then(res => setCategories(res.data));
-  }, []);
+    axios.get(`https://localhost:7201/categoriresBrand`)
+      .then(res => {
+        setCategories(res.data);
+        console.log(res.data);
+      });
 
+  }, []);
+  
+  //sự kiện khi hover
+  const handleMouseEnter = (event, id) => {
+    if (event.currentTarget && event.currentTarget.querySelector) {
+      console.log(id);  
+      event.currentTarget.querySelector('.dropdown-menu').classList.add('show');
+    }
+  };
+
+  const handleMouseLeave = (event) => {
+    // Handle mouse leave logic here
+    event.currentTarget.querySelector('.dropdown-menu').classList.remove('show');
+  };
+  console.log(Categories);
   return (
     <div className="container-fluid bg-dark">
       <div className="row px-xl-5 mb-30">
@@ -20,20 +37,43 @@ const Navbar = () => {
             <i className="fa fa-angle-down text-dark" />
           </a>
           <nav className="position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light collapse" id="navbar-vertical" style={{ width: 'calc(100% - 30px)', zIndex: 999 }}>
-          <div className="navbar-nav w-100" style={{ paddingLeft: '8%' }}>
-      {Categories.filter(category => category.show).map((item) => (
-        <div key={item.id} className="nav-item dropdown dropright">
-          <Link to={`/danh-muc/${item.id}`} className="nav-link">
-            {item.nameCategory} <i className="fa fa-angle-right float-right mt-1" />
-          </Link>
-          <div className="dropdown-menu position-absolute rounded-0 border-0 m-0">
-            <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
-            <Link to="/path-to-office" className="dropdown-item">Laptop văn phòng</Link>
-            <Link to="/path-to-graphics" className="dropdown-item">Laptop đồ họa</Link>
-          </div>
-        </div>
-      ))}
-    </div>
+            <div className="navbar-nav w-100" style={{ paddingLeft: '8%' }}>
+              {Categories.filter(category => category.category.show).map((item) => (
+                <div key={item.id} className="nav-item dropdown dropright" onMouseEnter={(event) => handleMouseEnter(event, item.id)} onMouseLeave={handleMouseLeave}>
+                  <Link to={`/danh-muc/${item.id}`} className="nav-link">
+                    {item.category.nameCategory} <i className="fa fa-angle-right float-right mt-1" />
+                  </Link>
+                  <div className="dropdown-menu position-absolute rounded-0 border-0 m-0  dropmenu"   >
+                    <div className="row nav-item-cate">
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Đồ họa</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Văn phòng</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                      <div className="card">
+                        <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </nav>
         </div>
         <div className="col-lg-9 pt-10" style={{ padding: '10px' }}>
