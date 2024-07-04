@@ -14,6 +14,7 @@ import ProductsCreate from '../Admin/Component/Products/ProductsCreate';
 import ProductsEdit from '../Admin/Component/Products/ProductsEdit';
 import Email from '../Admin/Component/Email/Email';
 import Order from '../Admin/Component/Order/Order';
+import Discount from '../Admin/Component/Discount/Discount';
  
  
 
@@ -50,7 +51,9 @@ const PrivateRouter = () => {
                     <Route path="order">
                         <Route index element={<Order />}></Route>   
                     </Route>
-                   
+                    <Route path="discount">
+                        <Route index element={<Discount />}></Route>   
+                    </Route>
                 </Route>
 
                 {/* login admin*/}

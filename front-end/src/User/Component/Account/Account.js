@@ -153,7 +153,7 @@ const Account = () => {
                                     <li className="nav-item">
                                         <a href="#profile-tab" className="nav-link active" data-toggle="tab">
                                             <i className="anticon anticon-inbox" />
-                                            <span>Thông tin tài khoản</span>
+                                            <span className="text-black">Thông tin tài khoản</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
