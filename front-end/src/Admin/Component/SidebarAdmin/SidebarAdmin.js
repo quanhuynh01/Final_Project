@@ -25,8 +25,7 @@ const SidebarAdmin = () => {
                             <a className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-laptop" />Sản phẩm</a>
                             <ul className="sub-menu children dropdown-menu">
                                 <li><i className="fa fa-bars" /><Link to={`${adminPath}/products`}>Danh sách sản phẩm</Link></li>
-                                <li><i className="fa fa-id-badge" /><Link to={`${adminPath}/attributes`}>Thuộc tính sản phẩm</Link></li>
-                                <li><i className="fa fa-bars" /><a href="ui-tabs.html">Danh mục sản phẩm</a></li>
+                                <li><i className="fa fa-id-badge" /><Link to={`${adminPath}/attributes`}>Thuộc tính sản phẩm</Link></li> 
                                 <li><i className="fa fa-share-square-o" /><Link to={`${adminPath}/categories`}>Danh mục sản phẩm</Link></li>
                                 <li><i className="fa fa-indent" /><Link to={`${adminPath}/brand`}>Thương hiệu</Link></li>
                             </ul>

@@ -4,20 +4,26 @@ import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
- 
+import Select from 'react-select';
+import $ from 'jquery'
 const Attribute = () => {
     const [Attribute, setAttribute] = useState([]);
-    useEffect(() => {
-        axios.get(`https://localhost:7201/api/Attributes`)
-            .then( res=>setAttribute(res.data));
-       
-    }, []);
+  
     const [lsAttributeValue, setlsAttributeValue] = useState([]);    
     const [AttributeCreate, setAttributeCreate] = useState({});
     const [AttributeValue, setAttributeValue] = useState({AttributeId:null});
  
+
+    const [Categories , setCategories] = useState([]);//view Categories
     const [CategoriesPost , setCategoriesPost] = useState([]);
 
+    useEffect(() => {
+        axios.get(`https://localhost:7201/api/Attributes`)
+            .then( res=>setAttribute(res.data));
+        axios.get(`https://localhost:7201/api/Categories`).then(res=>{
+        setCategories(res.data);
+       })
+    }, []);
         //modal bootstrap
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
@@ -60,10 +66,10 @@ const Attribute = () => {
     const handleDelete =(id)=>{
 
     }; 
-    // const categoryOptions = Categories.map(item => ({
-    //     value: item.id,
-    //     label: item.nameCategory
-    // }));
+    const categoryOptions = Categories.map(item => ({
+        value: item.id,
+        label: item.nameCategory
+    }));
     const handleSubmit = (e) => { 
         e.preventDefault();
         const formData = new FormData();
@@ -205,6 +211,20 @@ const Attribute = () => {
                         <Form.Label>Tên thuộc tính</Form.Label>
                         <Form.Control name="NameAttribute" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập tên thuộc tính" />
                     </Form.Group>  
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Chọn danh mục sản phẩm</Form.Label>
+                        <Select
+                            name="CateId"
+                            options={categoryOptions}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            onChange={handleMultiSelectChange}
+                            placeholder="Chọn danh mục..."
+                            isMulti
+                            value={categoryOptions.filter(option => CategoriesPost.includes(option.value))}
+                        />
+
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -228,6 +248,7 @@ const Attribute = () => {
                         <Form.Label>Tên thuộc tính</Form.Label>
                         <Form.Control name="NameValue" onChange={handleChangeAttr}  type="text" placeholder="Nhập giá trị" />
                     </Form.Group> 
+           
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -264,9 +285,7 @@ const Attribute = () => {
                                 </tr>
                                 )
                             })
-                        }
-                      
- 
+                        } 
                     </tbody>
                 </Table>
             </Modal.Body>

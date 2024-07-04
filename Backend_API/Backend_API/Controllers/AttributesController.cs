@@ -78,16 +78,17 @@ namespace Backend_API.Controllers
         // POST: api/Attributes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Attribute>> PostAttribute([FromForm] Attribute attribute, [FromForm] List<int>CateId)
-            {
+        public async Task<ActionResult<Attribute>> PostAttribute([FromForm] Attribute attribute, [FromForm] List<int> CateId)
+        {
             Attribute a = new Attribute();
-            a.NameAttribute = attribute.NameAttribute; 
-            _context.Attributes.Add(a);  
+            a.NameAttribute = attribute.NameAttribute;
+            foreach (var item in CateId)
+            {
+                a.CategoryId = item;
+            }
+            _context.Attributes.Add(a);
             await _context.SaveChangesAsync();
- 
-           
-
-            return CreatedAtAction("GetAttribute", new { id = a.Id }, a); // Trả về đối tượng a thay vì attribute
+            return CreatedAtAction("GetAttribute", new { id = a.Id }, a); 
         }
 
 
