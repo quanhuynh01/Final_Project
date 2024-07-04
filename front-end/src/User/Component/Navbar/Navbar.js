@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import './Navbar.css';
 
 const Navbar = () => {
@@ -12,7 +12,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="bg-dark">
+    <div className="container-fluid bg-dark">
       <div className="row px-xl-5 mb-30">
         <div className="col-lg-3 d-none d-lg-block" style={{ justifyContent: 'center' }}>
           <a className="btn d-flex align-items-center justify-content-between bg-warning w-100 collapsed" data-toggle="collapse" href="#navbar-vertical" style={{ height: "100%", padding: '0 30px' }} aria-expanded="false">
@@ -20,18 +20,20 @@ const Navbar = () => {
             <i className="fa fa-angle-down text-dark" />
           </a>
           <nav className="position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light collapse" id="navbar-vertical" style={{ width: 'calc(100% - 30px)', zIndex: 999 }}>
-            <div className="navbar-nav w-100" style={{ paddingLeft: '8%' }}>
-              {Categories.filter(category => category.show).map((item) => (
-                <div key={item.id} className="nav-item dropdown dropright">
-                  <a href="#" className="nav-link" data-toggle="dropdown" aria-expanded="false">{item.nameCategory} <i className="fa fa-angle-right float-right mt-1" /></a>
-                  <div className="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                    <a href="#" className="dropdown-item">Laptop Gamming</a>
-                    <a href="#" className="dropdown-item">Laptop văn phòng</a>
-                    <a href="#" className="dropdown-item">Laptop đồ họa</a>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="navbar-nav w-100" style={{ paddingLeft: '8%' }}>
+      {Categories.filter(category => category.show).map((item) => (
+        <div key={item.id} className="nav-item dropdown dropright">
+          <Link to={`/danh-muc/${item.id}`} className="nav-link">
+            {item.nameCategory} <i className="fa fa-angle-right float-right mt-1" />
+          </Link>
+          <div className="dropdown-menu position-absolute rounded-0 border-0 m-0">
+            <Link to="/path-to-gaming" className="dropdown-item">Laptop Gaming</Link>
+            <Link to="/path-to-office" className="dropdown-item">Laptop văn phòng</Link>
+            <Link to="/path-to-graphics" className="dropdown-item">Laptop đồ họa</Link>
+          </div>
+        </div>
+      ))}
+    </div>
           </nav>
         </div>
         <div className="col-lg-9 pt-10" style={{ padding: '10px' }}>

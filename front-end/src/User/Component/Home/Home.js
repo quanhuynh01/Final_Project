@@ -161,7 +161,7 @@ const Home = () => {
       <div className="row px-xl-5">
         <div className="col-md-6">
           <div className="product-offer mb-30" style={{ height: 300 }}>
-            <img className="img-fluid" src="img/offer-1.jpg" alt='' />
+            <img className="img-fluid" src="https://us.v-cdn.net/cdn-cgi/image/fit=scale-down,width=1600/https://us.v-cdn.net/6036147/uploads/G7NETX2PGYWO/ai-powered-customer-service-enhancing-the-user-experience.jpg" alt='' />
             <div className="offer-text">
               <h6 className="text-white text-uppercase">Save 20%</h6>
               <h3 className="text-white mb-3">Special Offer</h3>
@@ -171,7 +171,7 @@ const Home = () => {
         </div>
         <div className="col-md-6">
           <div className="product-offer mb-30" style={{ height: 300 }}>
-            <img className="img-fluid" src="img/offer-2.jpg" alt='' />
+            <img className="img-fluid" src="https://static-ecapac.acer.com/media/wysiwyg/vn-2023-laptop_gaming-532x332.jpg" alt='' />
             <div className="offer-text">
               <h6 className="text-white text-uppercase">Save 20%</h6>
               <h3 className="text-white mb-3">Special Offer</h3>

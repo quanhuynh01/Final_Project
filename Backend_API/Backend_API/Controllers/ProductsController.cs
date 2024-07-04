@@ -96,19 +96,16 @@ namespace Backend_API.Controllers
                                         .ToList()
                 })
                 .FirstOrDefaultAsync();
+            var reviewProduct = _context.Review.Where(p => p.ProductId == id).ToList();
 
             if (productDetails == null)
             {
                 return NotFound();
             }
 
-            return Ok(productDetails);
+            return Ok( new { productDetails = productDetails, Reviews = reviewProduct });
         }
-
-
-
-
-
+         
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

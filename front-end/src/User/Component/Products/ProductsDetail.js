@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import './ProductsDetail.css'
 import { Button, Tab, Table, Tabs } from "react-bootstrap";
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import Swal from "sweetalert2";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
- 
- 
+
+
 const ProductsDetail = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -19,14 +19,14 @@ const ProductsDetail = () => {
     const [Attribute, setAttribute] = useState([]);
     const [ViewReview, setViewReview] = useState([]);//danh sách đánh giá
     const [IdUser, setIdUser] = useState(null);
-    const [Review, setReview] = useState({ rating: 0, UserId: "", Content: "", Name: "", Email: "" }); 
+    const [Review, setReview] = useState({ rating: 0, UserId: "", Content: "", Name: "", Email: "" });
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Products/${id}`).then(res => {
-            console.log(res.data);
+           
             if (res.status === 200) {
-                setAttribute(res.data.attributes);
-                setproductDetail(res.data); 
-                setViewReview(res.data.review);
+                setAttribute(res.data.productDetails.attributes);
+                setproductDetail(res.data.productDetails);
+                setViewReview(res.data.reviews);
             }
         });
         axios.get(`https://localhost:7201/api/ProductThumbs/hinhsp/${id}`).then(res => setImage(res.data));
@@ -74,7 +74,7 @@ const ProductsDetail = () => {
     const handleRatingClick = (rating) => {
         setReview(prev => ({ ...prev, rating }));
     };
- 
+
     const handleSubmitReview = (e) => {
         e.preventDefault();
         const { UserId, rating, Content, Name, Email, ProductId } = Review;
@@ -92,16 +92,15 @@ const ProductsDetail = () => {
                 if (res.data.status === 204) {
                     navigate("/login");
                 }
-                if(res.status ===200)
-                { 
+                if (res.status === 200) {
                     alert("Đánh giá thành công");
                     window.location.reload();
                 }
 
             })
-        .catch(error => console.error('There was an error!', error));
+            .catch(error => console.error('There was an error!', error));
     };
-    
+
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
@@ -119,17 +118,17 @@ const ProductsDetail = () => {
         for (let i = stars.length; i < 5; i++) {
             stars.push(<i key={`empty-${i}`} className="fa fa-star-o" />);
         }
-        
+
         return stars;
     };
-     //hàm lấy ngày và giờ  
-        const formatDateTime = (dateTimeStr) => {
-            const date = new Date(dateTimeStr);
-            const formattedDate = date.toLocaleDateString();
-            const formattedTime = date.toLocaleTimeString();
-            return `${formattedDate} - ${formattedTime}`;
-        };
-        console.log(productDetail);
+    //hàm lấy ngày và giờ  
+    const formatDateTime = (dateTimeStr) => {
+        const date = new Date(dateTimeStr);
+        const formattedDate = date.toLocaleDateString();
+        const formattedTime = date.toLocaleTimeString();
+        return `${formattedDate} - ${formattedTime}`;
+    };
+    console.log(Review);
     return (
         <>
             <Header />
@@ -147,7 +146,7 @@ const ProductsDetail = () => {
             <div className="container-fluid pb-5">
                 <div className="row px-xl-5">
                     <div className="col-lg-5 mb-30">
-                        <img src={`https://localhost:7201${productDetail.avatar}`} alt=""/>
+                        <img src={`https://localhost:7201${productDetail.avatar}`} alt="" />
                     </div>
                     <div className="col-lg-7 h-auto mb-30">
                         <div className="h-100 bg-light p-30 p-5">
@@ -178,42 +177,31 @@ const ProductsDetail = () => {
                                         </button>
                                     </div>
                                 </div>
-                                   <button onClick={() => addToCart(productDetail)}className="btn btn-outline-warning px-3 mr-3"><i className="	fa fa-credit-card" />  Mua ngay</button>
+                                <button onClick={() => addToCart(productDetail)} className="btn btn-outline-warning px-3 mr-3"><i className="	fa fa-credit-card" />  Mua ngay</button>
                                 <button onClick={() => addToCart(productDetail)} className="btn btn-warning px-3 text-white"><i className="fa fa-shopping-cart mr-1" />Thêm vào giỏ</button>
                             </div>
                             <div className="square-trade d-flex align-items-center">
                                 <div className="square-trade-content" style={{ color: '#222', fontSize: 13 }}>
                                     <div className="ribbon ribbon-top-left"><span><i className="fa fa-gift" />
-                                         Quà tặng và ưu đãi kèm theo
-                                    </span></div> 
+                                        Quà tặng và ưu đãi kèm theo
+                                    </span></div>
                                     <div className="km-title">KHUYẾN MẠI TẶNG BẢO HÀNH</div>
                                     <ul>
                                         <li><a href="#" target="_blank">Ưu đãi tặng thêm 06 tháng BẢO HÀNH tại ĐQ áp dụng từ 04.04-30.06.24 (BHMR005)</a></li>
-                                    </ul>
-                                   
-                                    <div className="km-title">BỘ QUÀ TẶNG TRỊ GIÁ 3.000.000Đ</div>
-                                    <ul>
-                                        <li>Balo Acer Gaming SUV trị giá <span style={{ color: 'red', fontWeight: 'bold' }}>2.000.000đ</span> (BALO497)</li>
-                                        <li>Tặng phiếu vệ sinh bảo dưỡng Laptop, PC miễn phí trọn đời trị giá 999.000đ (THEK417)</li>
-                                    </ul>
+                                    </ul> 
                                     <div className="km-title">ƯU ĐÃI HẤP DẪN MUA KÈM LAPTOP</div>
                                     <ul>
                                         <li>Giảm ngay <span style={{ color: 'red', fontWeight: 'bold' }}>50.000đ</span> khi mua Balo, Cặp, Túi chống sốc cao cấp thương hiệu WIWU (https://hacom.vn/tim?q=wiwu&amp;scat_id=62)</li>
                                         <li>Giảm ngay <span style={{ color: 'red', fontWeight: 'bold' }}>100.000đ</span> khi mua Balo Laptop Gaming   </li>
                                         <li>Giảm ngay 100.000đ khi mua Ram Laptop thương hiệu KINGSTON&lt; LEXAR</li>
                                         <li>Giảm ngay 200.000đ khi mua Ghế công thái học thương hiệu LEGION</li>
-                                    </ul>
-                                    <div className="km-title">KHUYẾN MẠI KHÁC</div>
-                                    <ul>
-                                        <li><a href="https://hacom.vn/mua-loa-hivi-swan-tai-hacom-san-sang-cho-trai-nghiem-moi "> Ưu đãi lớn khi mua kèm Loa Swan chính hãng do ĐQ phân phối</a></li>
-                                    </ul>
-                                   
- 
+                                    </ul> 
+                                    
                                     <div className="km-title km-title-addcode"><i className="fa fa-gift" /> Khuyến Mãi Office</div>
                                     <ul>
                                         👉 Từ 05/04/2024 đến 30/06/2024: Giảm thêm 100.000đ cho Microsoft Office khi mua kèm Laptop !!!
                                     </ul>
-                                    
+
                                     <p className="lien-he-gia-tot"><i className="fa fa-phone fa-flip-horizontal" style={{ color: '#243a76' }} /> Cam kết giá tốt nhất thị trường, liên hệ 19001903
                                         hoặc đến tận nơi để có giá tốt nhất!
                                     </p>
@@ -246,7 +234,7 @@ const ProductsDetail = () => {
                             <div className="nav nav-tabs mb-4">
                                 <a className="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
                                 <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Thông số kỹ thuật</a>
-                                {/* <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá ({ViewReview.length})</a> */}
+                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá ({ViewReview.length})</a>
                             </div>
                             <div className="tab-content">
                                 <div className="tab-pane fade show active p-3" id="tab-pane-1">
@@ -256,8 +244,8 @@ const ProductsDetail = () => {
                                 </div>
                                 <div className="tab-pane fade" id="tab-pane-2">
                                     <h4 className="mb-3 text-center">Thông số kỹ thuật</h4>
-                                    <Table className="container"  bordered hover>
-                                        <tbody>
+                                    <Table className="container">
+                                        <tbody className="">
                                             {Attribute.map((item, index) => (
                                                 <tr key={index}>
                                                     <td>{item.nameAttribute}</td>
@@ -270,22 +258,28 @@ const ProductsDetail = () => {
                                 <div className="tab-pane fade" id="tab-pane-3">
                                     <div className="row">
                                         <div className="col-md-6 ">
-                                            {/* <h4 className="mb-4 ml-2 text-primary">{ViewReview.length} đánh giá</h4> 
-                                                {
-                                                   ViewReview.length > 0 && ViewReview.map((item, index) => {
-                                                        return (  
-                                                            <div key={index}  className="media mb-4 ">
-                                                            <div className="media-body ml-2">
-                                                                <h6>{item.name}<small> - <i>{formatDateTime(item.dateComment)}</i></small></h6>
-                                                                <div className="text-warning mb-2">
-                                                                    {renderStars(item.rating)}
+                                            {Array.isArray(ViewReview) && ViewReview.length > 0 ? (
+                                                <div>
+                                                    <h4 className="mb-4 ml-2 text-info">Đánh giá ({ViewReview.length} đánh giá)</h4>
+                                                    {
+                                                        ViewReview.map((item, index) => {
+                                                            return (
+                                                                <div key={index} className="media mb-4">
+                                                                    <div className="media-body ml-2">
+                                                                        <h6>{item.name}<small> - <i>{formatDateTime(item.dateComment)}</i></small></h6>
+                                                                        <div className="text-warning mb-2">
+                                                                            {renderStars(item.rating)}
+                                                                        </div>
+                                                                        <p>{item.content}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p> {item.content}</p>
-                                                            </div> 
-                                                            </div>
-                                                        )
-                                                    })
-                                                }  */}
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            ) : (
+                                                <p>Không có đánh giá nào</p>
+                                            )} 
                                         </div>
                                         <div className="col-md-6">
                                             <h4 className="mb-4">Để lại nhận xét</h4>
@@ -319,7 +313,7 @@ const ProductsDetail = () => {
                                                     <input type="email" className="form-control" id="email" name="Email" onChange={handleChangeReview} />
                                                 </div>
                                                 <div className="form-group mb-0">
-                                                    <button type="button" defaultValue="Leave Your Review" className="btn btn-primary px-3" onClick={handleSubmitReview}>Gửi</button>  
+                                                    <button type="button" defaultValue="Leave Your Review" className="btn btn-primary px-3" onClick={handleSubmitReview}>Gửi</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -331,7 +325,7 @@ const ProductsDetail = () => {
                 </div>
             </div >
             {/* Shop Detail End */}
-            <Footer/>
+            <Footer />
         </>
     );
 };

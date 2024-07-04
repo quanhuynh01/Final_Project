@@ -52,14 +52,14 @@ const SidebarAdmin = () => {
                         </li>
 
 
-                        {/* <h3 className="menu-title">Icons</h3>
+                        <h3 className="menu-title">CSKH</h3>
                         <li className="menu-item-has-children dropdown">
-                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-tasks" />Icons</a>
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa  fa-indent" />Chương trình</a>
                             <ul className="sub-menu children dropdown-menu">
-                                <li><i className="menu-icon fa fa-fort-awesome" /><a href="font-fontawesome.html">Font Awesome</a></li>
-                                <li><i className="menu-icon ti-themify-logo" /><a href="font-themify.html">Themefy Icons</a></li>
+                                <li><i className="menu-icon fa fa-gift" /><Link to={`${adminPath}/discount`}>Discount</Link></li>
+                                <li><i className="menu-icon fa  fa-qrcode" /><a href="font-themify.html">Discount CODE</a></li>
                             </ul>
-                        </li>
+                        </li> {/*
                         <li>
                             <a href="widgets.html"> <i className="menu-icon ti-email" />Widgets </a>
                         </li>
