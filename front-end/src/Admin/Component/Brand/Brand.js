@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import { Button, Form, Modal, Pagination } from "react-bootstrap"; 
-import $ from 'jquery'
+
 import axios from "axios";
 import ReactPaginate from "react-paginate";
-
+import Select from 'react-select';
 
 const Brand = () => {
     //modal bootstrap
@@ -17,6 +17,25 @@ const Brand = () => {
     active: true, 
     imageFile: null
 });//state lưu trữ thêm thương hiệu
+const [Categories , setCategories] = useState([]);//view Categories
+const [CategoriesPost , setCategoriesPost] = useState([]);
+useEffect(() => { 
+    axios.get(`https://localhost:7201/api/Categories`).then(res=>{
+    setCategories(res.data);
+   })
+}, []);
+const categoryOptions = Categories.map(item => ({
+    value: item.id,
+    label: item.nameCategory
+}));
+     // Xử lý chọn nhiều danh mục
+     const handleMultiSelectChange = (selectedOptions) => {
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        setCategoriesPost(selectedValues);
+         
+    };
+
+
 
 //state phân trang
 const [currentPage, setCurrentPage] = useState(0);
@@ -53,6 +72,10 @@ const itemsPerPage = 10;
                 formData.append(key, value);
 
             });
+            CategoriesPost.forEach((id) => {
+                formData.append("CateId[]", id);
+            }); 
+
             axios.post(`https://localhost:7201/api/Brands`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -159,11 +182,7 @@ const itemsPerPage = 10;
                                             ))
                                             }
                                         </tbody>
-                                        <ReactPaginate
-                                        pageCount={totalPages}
-                                        onPageChange={handlePageChange}
-                                        forcePage={currentPage}
-                                    />
+                                        
  
                                     </table> 
                                    
@@ -195,6 +214,20 @@ const itemsPerPage = 10;
                         <Form.Label>Mô tả</Form.Label>
                         <Form.Control name="Description" onChange={(e) => handleChange(e)} as="textarea" rows={3} />
                     </Form.Group>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Chọn danh mục sản phẩm</Form.Label>
+                        <Select
+                            name="CateId"
+                            options={categoryOptions}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            onChange={handleMultiSelectChange}
+                            placeholder="Chọn danh mục..."
+                            isMulti
+                            value={categoryOptions.filter(option => CategoriesPost.includes(option.value))}
+                        />
+
+                    </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Check // prettier-ignore
                             type="switch"
@@ -203,7 +236,7 @@ const itemsPerPage = 10;
                             name="Active"
                             onChange={(e) => handleCheck(e)}
                         />
-                    </Form.Group>
+                    </Form.Group> 
                 </Form>
             </Modal.Body>
             <Modal.Footer>

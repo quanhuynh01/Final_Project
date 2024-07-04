@@ -104,13 +104,14 @@ namespace Backend_API.Controllers
         // POST: api/Brands
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand([FromForm] Brand b)
+        public async Task<ActionResult<Brand>> PostBrand([FromForm] Brand b, [FromForm] List<int> CateId )
         {
             Brand brand = new Brand();
             brand.BrandName = b.BrandName;
             brand.Active =  b.Active;
             brand.Description = b.Description;
-            IFormFile file =  b.ImageFile;
+            IFormFile file =  b.ImageFile; 
+           
             if (file != null && file.Length > 0)
             {
                 var fileName = $"{ brand.BrandName}{Path.GetExtension(file.FileName)}";//lưu tên file
@@ -132,9 +133,20 @@ namespace Backend_API.Controllers
                 brand.ImageBrand = "";
             }
             if(b!=null)
-            {
+            { 
                 _context.Brands.Add(brand);
                 _context.SaveChanges();
+                if (CateId.Count > 0)
+                {
+                    foreach (var item in CateId)
+                    {
+                        CategoriesBrand br = new CategoriesBrand();
+                        br.BrandId = brand.Id;
+                        br.CategoryId = item;
+                        _context.CategoriesBrands.Add(br);
+                        _context.SaveChanges();
+                    }
+                }
             }
             return CreatedAtAction("GetBrand", new { id =brand.Id }, brand);
         }

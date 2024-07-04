@@ -9,28 +9,25 @@ import Footer from "../Footer/Footer";
 const ProductsCategories = () => {
     const { id } = useParams();
     const [Products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
     const [brands, setBrands] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [NameCate, setNameCate] = useState(null);
     const [selectedBrands, setSelectedBrands] = useState([]); // State để lưu trữ hãng được chọn
     const [FilteredProducts, setFilteredProducts] = useState([]); // Lưu trữ sản phẩm được lọc
-    const [Attribute, setAttribute] = useState([]); // Lưu trữ sản phẩm được lọc
+    const [Attribute, setAttribute] = useState([]); // view danh sách thuộc tính cho người dùng lọc
 
+    const [selectedValues, setSelectedValues] = useState([]);//  thuộc tính người dùng chọn
     useEffect(() => {
         axios.get(`https://localhost:7201/danh-muc/${id}`)
             .then(res => {
+                 //console.log(res.data.data);
                 setProducts(res.data.data);
                 setNameCate(res.data.nameCategories);
+                setAttribute(res.data.attributeValue);
             });
         axios.get(`https://localhost:7201/api/Brands`)
-            .then(res => setBrands(res.data));
-        axios.get(`https://localhost:7201/api/Attributes`)
-            .then(res => setAttribute(res.data));
-        axios.get(`https://localhost:7201/api/Categories`)
-            .then(res => setCategories(res.data));
+            .then(res => setBrands(res.data)); 
     }, [id]);
-
+   
     // Convert price to VND
     function convertToVND(price) {
         const priceInVND = price * 1000;
@@ -53,30 +50,38 @@ const ProductsCategories = () => {
         if (selectedBrands.length > 0) {
             const filteredProducts = Products.filter(item => selectedBrands.includes(item.product.brandId));
             setFilteredProducts(filteredProducts);
-        } else {
+        } 
+        else {
             setFilteredProducts(Products); // Nếu không có hãng nào được chọn, hiển thị tất cả sản phẩm
         }
     }, [selectedBrands, Products]);
  
-    const addToCart = (item) => { 
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];   
-        const existingItem = cartItems.find(product => product.sku === item.sku);
+    //lọc sản phẩm theo thuộc tính
+    const handleValueChange = (e) => {
+        const valueId = e.target.value; 
+        setSelectedValues((prevSelectedValues) => { 
+            if (e.target.checked) {
+                return [...prevSelectedValues, valueId];
+            } else {
+                return prevSelectedValues.filter(id => id !== valueId);
+            }
+        });
+    };
+   // console.log(Products);
+    const filteredProducts = Products.filter(product => {
+        return selectedValues.every(selectedId => {
+            const a = product.attributes.map(attr =>  
+                attr.attributeValue.idvalue === selectedId
+             )
+            
+        });
+    });
     
-        if (existingItem) {
-            // Nếu sản phẩm đã tồn tại, bạn có thể cập nhật số lượng hoặc thông tin khác của sản phẩm tại đây
-            // Ví dụ: cập nhật số lượng
-            existingItem.quantity += 1;
-        } else {
-            // Nếu sản phẩm chưa có trong giỏ hàng, thêm vào mảng cartItems
-            cartItems.push({ ...item, quantity: 1 }); // Thêm trường quantity vào để đếm số lượng sản phẩm trong giỏ hàng
-        }
-    
-        // Lưu lại danh sách sản phẩm vào localStorage
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    
-        console.log( existingItem);
-    }
-    
+    console.log(filteredProducts);
+   // console.log(selectedValues);
+    // const addToCart = (item) => {  
+    // }
+
 
     return (
         <>
@@ -102,13 +107,19 @@ const ProductsCategories = () => {
                     </Form>
                     <h5>Theo thuộc tính</h5>
                     <Form>
-                        {Attribute.map((a, index) => (
-                            <Form.Check
-                                key={index}
-                                type="checkbox"
-                                label={a.value}
-                                value={a.id}
-                            />
+                        {Attribute.map((attributeItem, index) => (
+                            <div key={index}>
+                                <label>{attributeItem.nameAttribute}</label>
+                                {attributeItem.attributeValues.map((value, idx) => (
+                                    <Form.Check
+                                        key={idx}
+                                        type="checkbox"
+                                        label={value.nameValue}
+                                        value={value.id}
+                                        onChange={(e) => handleValueChange(e)}
+                                    />
+                                ))}
+                            </div>
                         ))}
                     </Form>
                 </div>
@@ -132,7 +143,7 @@ const ProductsCategories = () => {
                                     </Link>
                                 </Card.Body>
                                 <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                                    <Button onClick={()=>addToCart(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+                                    <Button variant="primary"><i className="fa fa-shopping-cart"></i></Button>
                                 </div>
                             </Card>
                         </div>

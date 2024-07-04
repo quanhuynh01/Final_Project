@@ -342,17 +342,63 @@ namespace Backend_API.Controllers
 
         //lấy sản phẩm theo danh mục
         [HttpGet("/danh-muc/{id}")]
-        public async Task<IActionResult> GetProductsByCateId(int id)
+        public async Task<IActionResult> GetProductsByCateId(int id)//id của Categories
         {
-            var data = _context.ProductCategories.Include(p=>p.Product).Include(c=>c.Category).Where(p => p.CategoryId == id);
-            var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault() ;
+            // var data = _context.ProductCategories.Include(p=>p.Product).Include(c=>c.Category).Where(p => p.CategoryId == id);
+
+
+            var data = await _context.ProductCategories
+                                                 .Where(pc => pc.CategoryId == id) // Lọc các sản phẩm thuộc danh mục có Id = id
+                                                 .Select(pc => new
+                                                 {
+                                                     Id = pc.ProductId, // Lấy Id của sản phẩm
+                                                     Product = _context.Products
+                                                                 .Where(p => p.Id == pc.ProductId)
+                                                                 .FirstOrDefault(), // Lấy thông tin chi tiết của sản phẩm (nếu cần)
+                                                     Attributes = _context.ProductAttributes
+                                                                     .Where(pa => pa.ProductId == pc.ProductId)
+                                                                     .Select(pa => new
+                                                                     { 
+                                                                         NameAttribute = _context.Attributes
+                                                                                             .Where(a => a.Id == pa.AttributeId)
+                                                                                             .Select(a => a.NameAttribute)
+                                                                                             .FirstOrDefault(), // Lấy tên thuộc tính
+                                                                         AttributeValue = _context.Attributevalues
+                                                                                             .Where(av => av.Id == pa.AttributeValueId)
+                                                                                             .Select(av =>new {
+                                                                                                 Idvalue= av.Id,
+                                                                                                 NameValue= av.NameValue, 
+                                                                                             })
+                                                                                             .FirstOrDefault() // Lấy giá trị của thuộc tính
+                                                                     })
+                                                                     .ToList() // Chuyển thành List các thuộc tính và giá trị tương ứng
+                                                 })
+                                                 .ToListAsync(); // Chuyển kết quả thành List và thực thi truy vấn
+
+
+
+            var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault();
+            var attributeValues = _context.Attributes
+                                                   .Where(a => a.CategoryId == id)
+                                                   .Select(a => new
+                                                   { 
+                                                       NameAttribute = a.NameAttribute,
+                                                       AttributeValues = _context.Attributevalues
+                                                                                 .Where(b => b.AttributeId == a.Id)
+                                                                                 .Select(a => new {
+                                                                                     Id= a.Id,
+                                                                                     NameValue = a.NameValue 
+                                                                                 } )
+                                                                                 .ToList()
+                                                   })
+                                                   .ToList();
             if (data !=null)
             {
-                return Ok( new { data, nameCategories = NameCate.NameCategory });
+                return Ok( new { data, nameCategories = NameCate.NameCategory , AttributeValue = attributeValues });
             }
             else
             {
-                return Ok(new { message = "Không có dữ liệu" });
+                return BadRequest(new { message = "Không có dữ liệu" });
             } 
         }
         

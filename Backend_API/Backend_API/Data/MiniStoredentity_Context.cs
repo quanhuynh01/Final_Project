@@ -23,7 +23,7 @@ namespace Backend_API.Model
         public DbSet<ProductAttribute> ProductAttributes { get; set; } 
         //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
         public DbSet<Backend_API.Model.CustomerSupplier> CustomerSupplier { get; set; }
-        //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
+         public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
         public DbSet<Backend_API.Model.Cart> Cart { get; set; }
         //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
         public DbSet<Backend_API.Model.Order> Order { get; set; }
