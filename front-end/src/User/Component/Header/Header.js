@@ -191,10 +191,10 @@ const Header = ({ soluong }) => {
   </div>
   <div className="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
     <div className="col-lg-4">
-      <a href='/' className="text-decoration-none">
+      <Link to={`/`}   className="text-decoration-none">
         <span className="h1 text-uppercase text-warning bg-dark px-2">QUAN</span>
         <span className="h1 text-uppercase text-dark bg-warning px-2 ml-n1">Shop</span>
-      </a>
+      </Link>
     </div>
     <div className="col-lg-4 col-6 text-left" style={{position:"relative"}}>
       <form >

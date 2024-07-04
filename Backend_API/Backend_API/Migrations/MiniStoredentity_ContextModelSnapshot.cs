@@ -188,6 +188,39 @@ namespace Backend_API.Migrations
                     b.ToTable("DeliveryStatuses");
                 });
 
+            modelBuilder.Entity("Backend_API.Model.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Show")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TimeCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Discounts");
+                });
+
             modelBuilder.Entity("Backend_API.Model.Log", b =>
                 {
                     b.Property<int>("Id")
@@ -764,6 +797,17 @@ namespace Backend_API.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Discount", b =>
+                {
+                    b.HasOne("Backend_API.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Backend_API.Model.Order", b =>
