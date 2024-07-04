@@ -27,8 +27,8 @@ const LayoutAdmin = () => {
     return total + parseFloat(order.totalMoney); // Đảm bảo chuyển đổi TotalMoney sang số nếu không phải số
   }, 0);
 
-//   // Đếm tổng số đơn hàng
-//   const totalOrders = lsOrder.length;
+  //   // Đếm tổng số đơn hàng
+  //   const totalOrders = lsOrder.length;
 
   // Đếm số đơn hàng theo từng trạng thái khác nhau (ví dụ: đang xử lý, đã hủy, ...)
   const orderStatusCounts = lsOrder.reduce((statusCounts, order) => {
@@ -181,10 +181,10 @@ const LayoutAdmin = () => {
               </button>
             </div>
           </div>
-         
+
           <div className="row">
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-light " style={{backgroundColor:"#01dbfd"}}>
+              <div className="card text-light " style={{ backgroundColor: "#01dbfd" }}>
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{Account.length}</span>
@@ -194,7 +194,7 @@ const LayoutAdmin = () => {
               </div>
             </div>
             <div className="col-sm-6 col-lg-3">
-              <div className="card text-white  " style={{backgroundColor:"rgb(255 72 72)"}}  >
+              <div className="card text-white  " style={{ backgroundColor: "rgb(255 72 72)" }}  >
                 <div className="card-body pb-0">
                   <h4 className="mb-0">
                     <span className="count">{Product.length}</span>
@@ -223,27 +223,89 @@ const LayoutAdmin = () => {
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
+          <div className="col-sm-12 mb-4">
+            <div className="card-group"> 
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-2">
+                  <div className="h1 text-muted text-right mb-4">
+                    <i className="fa fa-user-plus text-light" />
+                  </div>
+                  <div className="h4 mb-0 text-light">
+                    <span className="count">385</span>
+                  </div>
+                  <small className="text-uppercase font-weight-bold text-light">New Clients</small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-3">
+                  <div className="h1 text-right mb-4">
+                    <i className="fa fa-cart-plus text-light" />
+                  </div>
+                  <div className="h4 mb-0 text-light">
+                    <span className="count">1238</span>
+                  </div>
+                  <small className="text-light text-uppercase font-weight-bold">Products sold</small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-5">
+                  <div className="h1 text-right text-light mb-4">
+                    <i className="fa fa-pie-chart" />
+                  </div>
+                  <div className="h4 mb-0 text-light">
+                    <span className="count">28</span>%
+                  </div>
+                  <small className="text-uppercase font-weight-bold text-light">Returning Visitors</small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-4">
+                  <div className="h1 text-light text-right mb-4">
+                    <i className="fa fa-clock-o" />
+                  </div>
+                  <div className="h4 mb-0 text-light">5:34:11</div>
+                  <small className="text-light text-uppercase font-weight-bold">Avg. Time</small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-1">
+                  <div className="h1 text-light text-right mb-4">
+                    <i className="fa fa-comments-o" />
+                  </div>
+                  <div className="h4 mb-0 text-light">
+                    <span className="count">972</span>
+                  </div>
+                  <small className="text-light text-uppercase font-weight-bold">COMMENTS</small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="row">
-          <div className="content mt-3 col-6">
-            <h4>Biểu đồ doanh thu theo đơn hàng</h4>
-            <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-              <Bar data={chartData} options={chartOptions} />
+            <div className="content mt-3 col-6">
+              <h4>Biểu đồ doanh thu theo đơn hàng</h4>
+              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
+                <Bar data={chartData} options={chartOptions} />
+              </div>
+            </div>
+            <div className="content mt-3 col-6">
+              <h4>Biểu đồ doanh thu hàng ngày</h4>
+              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
+                <Bar data={dailyChartData} options={chartOptions} />
+              </div>
+            </div>
+            <div className="content mt-3 col-6">
+              <h4>Biểu đồ doanh thu hàng tháng</h4>
+              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
+                <Bar data={monthlyChartData} options={chartOptions} />
+              </div>
             </div>
           </div>
-          <div className="content mt-3 col-6">
-            <h4>Biểu đồ doanh thu hàng ngày</h4>
-            <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-              <Bar data={dailyChartData} options={chartOptions} />
-            </div>
-          </div>
-          <div className="content mt-3 col-6">
-            <h4>Biểu đồ doanh thu hàng tháng</h4>
-            <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-              <Bar data={monthlyChartData} options={chartOptions} />
-            </div>
-          </div>
-          </div> 
         </div>{" "}
         {/* .content */}
       </div>
