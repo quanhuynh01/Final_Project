@@ -2,7 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import Swal from 'sweetalert2'
 import './Login.css' 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
  
@@ -13,12 +15,41 @@ const Login = () => {
     let value = e.target.value;
     setLogin(prev => ({ ...prev, [name]: value }));
   } 
-  const HandelSubmitGoogle =()=>{
-      alert('123');
-  }
+  const [Error, setError] = useState();
+  const navigate = useNavigate();
+  
+  const handleGoogleSuccess = (response) => { 
+    if (response) {
+        try {
+            const decoded = jwtDecode(response.credential);
+            //console.log("Decoded Token: ", decoded);
+            if (decoded && decoded.email) {
+                const newAccGoogle = {
+                    Email: decoded.email,
+                    Fullname: decoded.name
+                }; 
+                // Your axios post request here
+                axios.post(`https://localhost:7201/api/Users/LoginGoogle`, newAccGoogle)
+                    .then(res => { 
+                        localStorage.setItem("token", res.data);
+                        if (res.status === 200) {
+                            navigate("/");
+                        }
+                    })
+                    .catch(error => {
+                        console.log("Đăng nhập bằng Google thất bại. Vui lòng thử lại!");
+                        console.log(error);
+                    });
+            } else {
+                console.log("Email not found in the decoded token");
+            }
+        } catch (error) {
+            console.error("Error decoding token: ", error);
+        }
+    }
+};
 
-  const HandelSubmit = (e) => { 
-    
+  const HandelSubmit = (e) => {  
     if (Login == null) {
       alert('Nhập đầy đủ thông tin');
     }
@@ -26,7 +57,7 @@ const Login = () => {
       e.preventDefault();
       //console.log(Login);
       axios.post(`https://localhost:7201/api/Users/login`, Login)
-        .then(res => {
+        .then(res => { 
           if (res.data.token) {
             // console.log(res.data.token)
             localStorage.setItem('token', res.data.token);
@@ -96,17 +127,17 @@ const Login = () => {
             <button type="button" className="btn btn-success btn-flat m-b-30 m-t-30" onClick={HandelSubmit}>Sign in</button>
             <div className="social-login-content">
               <div className="social-button">
-                <button type="button"  className="btn social facebook btn-flat btn-addon mb-3"><i className="ti-facebook" />Sign in with facebook</button>
-
-                {/* <GoogleLogin
-                  onSuccess={credentialResponse => {
-                    console.log(credentialResponse);
-                  }}
-                  onError={() => {
-                    console.log('Login Failed');
-                  }}
-/> */}
-                <button type="button" onClick={HandelSubmitGoogle} className="btn btn-warning social google btn-flat btn-addon mt-2"><i className="ti-google" />Sign in with Google</button>
+                <button type="button"  className="btn social facebook btn-flat btn-addon mb-3"><i className="ti-facebook" />Sign in with facebook</button> 
+                <div className="d-flex justify-content-center">
+                  <GoogleLogin onClick={handleGoogleSuccess}
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => {
+                      console.log('Login Failed');
+                    }}
+                  />
+                </div>
+                
+                {/* <button type="button" onClick={HandelSubmitGoogle} className="btn btn-warning social google btn-flat btn-addon mt-2"><i className="ti-google" />Sign in with Google</button> */}
               </div>
             </div>
             <div className="register-link m-t-15 text-center">

@@ -8,7 +8,11 @@ import ProductsCategories from "../User/Component/Products/ProductsCategories";
 import Register from "../User/Component/Login/Register";
 import Account from "../User/Component/Account/Account";
 import AccountForgot from "../User/Component/Login/AccountForgot";
-import Contact from "../User/Contact/Contact";
+ 
+import ProductAttibute from "../User/Component/Products/ProductAttribute";
+import PaySuccess from "../User/PaySuccess/PaySuccess";
+import WistList from "../User/Component/WistList/WistList";
+import Contact from "../User/Component/Contact/Contact";
 
 const PublishRouter = () => {
     return (<>
@@ -23,7 +27,7 @@ const PublishRouter = () => {
                 <Route path="/register" element={<Register />}>
                     <Route index element={<Register />} /> 
                 </Route>
-                <Route path="/san-pham" element={<ProductsList />}>
+                <Route path="/shop.html" element={<ProductsList />}>
                     <Route index element={<ProductsList />} /> 
                 </Route>
                 <Route path="/tai-khoan" element={<Account />}>
@@ -34,11 +38,22 @@ const PublishRouter = () => {
                 </Route>
                 <Route path="/chi-tiet-san-pham/:id" element={<ProductsDetail />} />
                 <Route path="/danh-muc/:id" element={<ProductsCategories />} />
+                
+                <Route path="/filteValue/:id" element={<ProductAttibute />} /> 
+
                 <Route path="/cart" element={<Cart />}>
                     <Route index element={<Cart />} />
                 </Route>
+
+                <Route path="/wishList" element={<WistList />}>
+                    <Route index element={<WistList />} />
+                </Route>
+
                 <Route path="/contact.html" element={<Contact />}>
                     <Route index element={<Contact />} />
+                </Route>
+                <Route path="/paysucces.html" element={<PaySuccess />}>
+                    <Route index element={<PaySuccess />} />
                 </Route>
             </Routes>
         </BrowserRouter>

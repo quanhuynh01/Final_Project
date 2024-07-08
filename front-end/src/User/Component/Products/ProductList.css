@@ -1,0 +1,33 @@
+div#nz-div {
+    border-bottom: 2px solid #ffc107;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: block;
+}
+#nz-div h5.tde {
+    margin: 0;
+    font-size: 27px;
+    line-height: 21px;
+    display: inline-block;
+    text-transform: capitalize;
+}
+#nz-div h5.tde span {
+    background: #ffc107;
+    padding: 10px 20px 8px 20px;
+    color: white;
+    position: relative;
+    display: inline-block;
+    margin: 0;
+}
+#nz-div h5.tde :after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 40px solid transparent;
+    border-left: 20px solid #ffc107;
+    border-bottom: 0px solid transparent;
+    border-right: 0 solid transparent;
+    position: absolute;
+    top: 0px;
+    right: -20px;
+}

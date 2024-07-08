@@ -11,4 +11,40 @@
 .nav-item-cate{
   left: 15px ;
   position: absolute;
+  justify-content: center;
 } 
+.header-cart-hover {
+  z-index: 999;
+  position: absolute;
+  border-radius: 10px;
+  color: #222;
+  box-shadow: 0px 3px 8px 1px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  width: 400px;
+  right: 0;
+  padding: 10px 0 0 0;
+  text-align: left;
+  margin-top: 5px;
+  transition: 0.2s all; 
+  opacity: 0;
+  visibility: hidden;
+}
+
+.header-cart-hover .cart-items-holder {
+  max-height: 330px;
+  overflow: auto;
+  margin: 0 0 12px 0;
+}
+
+.header-cart-hover .cart-empty {
+  margin: 24px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn:hover + .header-cart-hover,
+.header-cart-hover:hover {
+  opacity: 1;
+  visibility: visible;
+}

@@ -15,8 +15,8 @@ const SlideShow = () => {
     <div className="col-lg-8">
       <div id="header-carousel" className="carousel slide carousel-fade mb-20 mb-lg-0" data-ride="carousel">
         <ol className="carousel-indicators">
-          <li data-target="#header-carousel" data-slide-to={0} className />
-          <li data-target="#header-carousel" data-slide-to={1} className />
+          <li data-target="#header-carousel" data-slide-to={0} className='' />
+          <li data-target="#header-carousel" data-slide-to={1} className='' />
           <li data-target="#header-carousel" data-slide-to={2} className="active" />
         </ol>
         <div className="carousel-inner">

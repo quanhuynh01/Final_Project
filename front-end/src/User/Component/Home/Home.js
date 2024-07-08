@@ -11,10 +11,11 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [Categories, setCategories] = useState([]);
   const [User, setUser] = useState(null);
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+  const [show, setShowLogin] = useState(false); 
+  const handleCloseLogin = () => setShowLogin(false);
+  const handleShowLogin = () => setShowLogin(true);
 
   useEffect(() => { 
     axios.get('https://localhost:7201/api/Products')
@@ -45,7 +46,7 @@ const Home = () => {
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Thêm vào giỏ hàng",
+              title: "Add to cart successfully",
               showConfirmButton: false,
               timer: 1000
             });
@@ -54,7 +55,7 @@ const Home = () => {
         .catch(error => console.error(error));
     }
     else{
-       setShow(true);
+      handleShowLogin(true);
     }
 
   };
@@ -66,6 +67,27 @@ const Home = () => {
     return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   } 
  
+  const addWistList= (id)=>{ 
+    var object = {
+      UserId: User,
+      ProductId: id
+    }
+      axios.post(`https://localhost:7201/api/WistLists`,object).then(res=>{
+          if(res.data.status ===200)
+          {
+            alert(res.data.message);
+          }
+          if(res.data.status ===201)
+            {
+              alert(res.data.message);
+            }
+      })
+  }
+
+     // Filter and sort products by creation date
+     const filteredProducts = products.filter(p => p.softDelete === false);
+     const sortedProducts = filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+   
   return (<>
 <div className="container-fluid pt-5">
   <div className="row px-xl-5 pb-3">
@@ -126,14 +148,14 @@ const Home = () => {
   <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Featured Products</span></h2>
   <div className="row px-xl-5">
     {
-      products.map((item,index)=>{
+      products.filter(p=>p.softDelete == false).map((item,index)=>{
         return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
           <div className="product-item bg-light mb-4">
             <div className="product-img position-relative overflow-hidden">
               <img className="img-fluid w-100" src={`https://localhost:7201${item.avatar}`} alt='' />
               <div className="product-action">
                 <a onClick={()=>addToCart(item)} className="btn btn-outline-dark btn-square"  ><i className="fa fa-shopping-cart" /></a>
-                <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-heart" /></a> 
+                <a  onClick={()=>addWistList(item.id)}  className="btn btn-outline-dark btn-square" ><i className="fa fa-heart" /></a> 
                 <Link  className="btn btn-outline-dark btn-square" to={`/chi-tiet-san-pham/${item.id}`}><i className="fa fa-search" /></Link>  
               </div>
             </div>
@@ -193,7 +215,7 @@ const Home = () => {
   <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Recent Products</span></h2>
   <div className="row px-xl-5">
   {
-      products.map((item,index)=>{
+      sortedProducts.filter(p=>p.softDelete == false).map((item,index)=>{
         return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
           <div className="product-item bg-light mb-4">
             <div className="product-img position-relative overflow-hidden">
@@ -231,7 +253,7 @@ const Home = () => {
   </div>
 </div>
 
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleCloseLogin} centered>
       <div className='row justify-content-center mt-4'>
         <h1 className='text-danger'>ShopMember</h1>
       </div> 
@@ -244,12 +266,12 @@ const Home = () => {
         </div>
       </Modal.Body>
       <div className='row justify-content-center p-2'>
-        <Button className='m-2 btn-outline-primary'   onClick={handleClose}>
+        <Link to={`/register`} className='m-2 btn btn-outline-primary'    >
           Đăng ký
-        </Button>
-        <Button className='m-2' variant="primary " onClick={handleClose}>
+        </Link>
+        <Link to={`/login`} className='m-2 btn btn-warning'    >
           Đăng nhập
-        </Button>
+        </Link>
       </div>
     </Modal> 
  

@@ -10,5 +10,6 @@
         public string Name { get; set; }
         public DateTime DateComment { get; set; }
         public int Rating { get; set; }
+        public bool Seen { get; set; }
     }
 }

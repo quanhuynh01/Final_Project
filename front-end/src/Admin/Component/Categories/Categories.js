@@ -1,99 +1,63 @@
-import { useEffect, useState } from "react";
-import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
-import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
-import axios from "axios";
-import { Button, Form, Modal } from "react-bootstrap";
-import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import HeaderAdmin from '../HeaderAdmin/HeaderAdmin';
+import SidebarAdmin from '../SidebarAdmin/SidebarAdmin';
+import { Button, Form, Modal } from 'react-bootstrap';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode, FilterService } from 'primereact/api';
 
-
+// Đăng ký filter tùy chỉnh cho activity
+FilterService.register('custom_activity', (value, filters) => {
+    const [from, to] = filters ?? [null, null];
+    if (from === null && to === null) return true;
+    if (from !== null && to === null) return from <= value;
+    if (from === null && to !== null) return value <= to;
+    return from <= value && value <= to;
+});
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
     const [CateCreate, setCateCreate] = useState({ Show: false });
+    const [filters, setFilters] = useState({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        nameCategory: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        description: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        show: { value: null, matchMode: FilterMatchMode.EQUALS }
+    });
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
 
     useEffect(() => {
         axios.get('https://localhost:7201/api/Categories')
             .then(res => setCategories(res.data));
     }, []);
 
-    const columnDefs = [
-        { headerName: "Tên danh mục", field: "nameCategory", sortable: true, filter: true },
-        { headerName: "Mô tả", field: "description", sortable: true, filter: true },
-        { headerName: "Trạng thái", field: "show", sortable: true, filter: true },
-        {
-            headerName: "Ảnh",
-            field: "iconCate",
-            cellRendererFramework: (params) => {
-                const imageUrl = `https://localhost:7201${params.value}`;
-                return imageUrl ? <img src={imageUrl} alt={params.data.nameCategory} className="w-25 h-25" /> : null;
-            },
-            sortable: false,
-            filter: false
-        },
-        {
-            headerName: "Chức năng",
-            cellRendererFramework: (params) => (
-                <a type="button" className="btn btn-outline-warning" href={`/admin/categories/chinh-sua-danh-muc/${params.data.id}`}>
-                    <i className="fa fa-edit"></i> Chỉnh sửa
-                </a>
-            ),
-            sortable: false,
-            filter: false
-        },{
-            headerName: " ",
-            cellRendererFramework: (params) => (
-                <a type="button" className="btn btn-outline-warning" href={`/admin/categories/chinh-sua-danh-muc/${params.data.id}`}>
-                    <i className="fa fa-edit"></i> Chỉnh sửa
-                </a>
-            ),
-            sortable: false,
-            filter: false
-        },
-        {
-            headerName: " ",
-            cellRendererFramework: (params) => (
-                <a type="button" className="btn btn-outline-warning" href={`/admin/categories/chinh-sua-danh-muc/${params.data.id}`}>
-                    <i className="fa fa-edit"></i> Chỉnh sửa
-                </a>
-            ),
-            sortable: false,
-            filter: false
-        } 
-        
-    ];
-
-   // console.log(columnDefs);
-
-    //handle
     const handleChange = (e) => {
         let name = e.target.name;
         let value = e.target.value;
         setCateCreate(prev => ({ ...prev, [name]: value }));
     }
+
     const handleCheck = (e) => {
         let name = e.target.name;
-        let value = e.target.checked
+        let value = e.target.checked;
         setCateCreate(prev => ({ ...prev, [name]: value }));
     }
+
     const handleImageChange = (e) => {
         setCateCreate(prev => ({ ...prev, ImageCateFile: e.target.files[0] }));
     }
 
     const handleSubmit = (e) => {
-        // console.log(CateCreate);
         if (CateCreate.NameCategory == null) {
             alert('Bạn chưa nhập đủ thông tin');
             return;
-        }
-        else {
+        } else {
             e.preventDefault();
             const formData = new FormData();
             Object.entries(CateCreate).forEach(([key, value]) => {
-                console.log(key, value);
                 formData.append(key, value);
-
             });
             axios.post(`https://localhost:7201/api/Categories`, formData, {
                 headers: {
@@ -101,24 +65,56 @@ const Categories = () => {
                 },
             })
                 .then((res) => {
-                    console.log(res);
                     if (res.status === 201) {
                         alert(`Thêm danh mục ${res.data.nameCategory} thành công`);
                         window.location.reload();
                     }
                 })
                 .catch(() => {
-                    alert("Thêm thất bại!!!")
-                })
+                    alert("Thêm thất bại!!!");
+                });
         }
-
     }
 
+    const onGlobalFilterChange = (e) => {
+        const value = e.target.value;
+        let _filters = { ...filters };
+        _filters['global'].value = value;
+        setFilters(_filters);
+        setGlobalFilterValue(value);
+    };
 
-    //modal bootstrap
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-content-end">
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Tìm kiếm" />
+                </span>
+            </div>
+        );
+    };
+
+    const imageBodyTemplate = (rowData) => {
+        const imageUrl = `https://localhost:7201${rowData.iconCate}`;
+        return <img src={imageUrl} alt={rowData.nameCategory} className="w-25 h-25" />;
+    };
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <a type="button" className="btn btn-outline-warning" href={`/admin/categories/chinh-sua-danh-muc/${rowData.id}`}>
+                <i className="fa fa-edit"></i> Chỉnh sửa
+            </a>
+        );
+    };
+
+    const statusBodyTemplate = (rowData) => {
+        const row = rowData.show ? <p className='text-success'>Hiển thị</p> : <p className='text-danger'>Ẩn</p>
+        return row;
+    };
+
+    const header = renderHeader();
+
     return (
         <>
             <SidebarAdmin />
@@ -156,14 +152,13 @@ const Categories = () => {
                                         <strong className="card-title">Danh sách danh mục sản phẩm</strong>
                                     </div>
                                     <div className="card-body">
-                                        <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
-                                            <AgGridReact 
-                                                rowData={categories}
-                                                columnDefs={columnDefs}
-                                                pagination={true}
-                                                paginationPageSize={10}
-                                            />
-                                        </div>
+                                        <DataTable value={categories} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={false}
+                                            globalFilterFields={['nameCategory', 'description']} header={header} emptyMessage="Không tìm thấy danh mục.">
+                                            <Column field="nameCategory" header="Tên danh mục" filter filterPlaceholder="Tìm theo tên" style={{ minWidth: '12rem' }} /> 
+                                            <Column field="show" header="Trạng thái" body={statusBodyTemplate} filter filterPlaceholder="Tìm theo trạng thái" style={{ minWidth: '12rem' }} />
+                                            <Column header="Ảnh" body={imageBodyTemplate} style={{ minWidth: '12rem' }} />
+                                            <Column header="Chức năng" body={actionBodyTemplate} style={{ minWidth: '12rem' }} />
+                                        </DataTable>
                                     </div>
                                 </div>
                             </div>
@@ -172,13 +167,13 @@ const Categories = () => {
                 </div>
             </div>
             <Modal show={CateCreate.Show} onHide={() => setCateCreate({ Show: false })}>
-                <Modal.Header >
+                <Modal.Header>
                     <Modal.Title>Tạo mới danh mục sản phẩm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Tên danh mục </Form.Label>
+                            <Form.Label>Tên danh mục</Form.Label>
                             <Form.Control name="NameCategory" onChange={(e) => handleChange(e)} type="text" placeholder="Nhập tên danh mục" />
                         </Form.Group>
                         <Form.Group controlId="formFile" className="mb-3">

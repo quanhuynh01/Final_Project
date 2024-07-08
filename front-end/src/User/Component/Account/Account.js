@@ -11,11 +11,18 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { FormControl, Modal, Table } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
+import Navbar from "../Navbar/Navbar";
 
 const Account = () => {
     const [Id, setId] = useState(null);
     const navigate = useNavigate();
-    
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+
+
     const [User, setUser] = useState({
         userName: "",
         fullName: "",
@@ -31,14 +38,14 @@ const Account = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = (id) => {
-        console.log(id);
-        axios.get(`https://localhost:7201/orderDetailByOderId/${id}`).then(res =>{
+
+        axios.get(`https://localhost:7201/orderDetailByOderId/${id}`).then(res => {
             setShow(true);
             setlsOrderDetail(res.data.data);
             console.log(res.data);
         });
-        
-    } 
+
+    }
 
     useEffect(() => {
         const jwt = localStorage.getItem('token'); // Lấy mã JWT từ localStorage 
@@ -126,20 +133,66 @@ const Account = () => {
             }
         })
     }
-    const handleChangePassWord=(e)=>{
+    const handleTrahang = (id) => {
+        axios.get(`https://localhost:7201/trahang/${id}`).then(res => {
+            if (res.status === 200) {
+                alert("Gửi yêu cầu thành công, người bán sẽ liên hệ với bạn sao ít phút nữa ");
+            }
+        })
+    }
+
+
+    const handleChangePassword = async (e) => {
         e.preventDefault();
 
-    }
-    //console.log(lsOrder); 
+        if (newPassword !== confirmPassword) {
+            setError('Mật khẩu mới không khớp');
+            return;
+        }
+
+        try {
+            const response = await axios.post(`https://localhost:7201/api/Users/ChangePass/${User.userName}`, {
+                currentPassword,
+                newPassword
+            });
+
+            if (response.data.status === 200) {
+                setSuccess(response.data.message);
+                setError(null);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thay đổi mật khẩu thành công',
+                    text: response.data.message,
+                });
+            } else {
+                setError(response.data.message);
+                setSuccess(null);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thay đổi mật khẩu thất bại',
+                    text: response.data.message,
+                });
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Lỗi khi thay đổi mật khẩu');
+            setSuccess(null);
+            Swal.fire({
+                icon: 'error',
+                title: 'Thay đổi mật khẩu thất bại',
+                text: err.response?.data?.message || 'Lỗi khi thay đổi mật khẩu',
+            });
+        }
+    };
     return (
         <>
             <Header />
+            <Navbar/>
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
-                            <a className="breadcrumb-item text-dark" href="/">Trang chủ</a>
-                            <span className="breadcrumb-item active">Tài khoản</span>
+                            <Link to={'/'} className="breadcrumb-item text-dark" >Home</Link>
+                            <span className="breadcrumb-item active">Account</span>
                         </nav>
                     </div>
                 </div>
@@ -153,19 +206,20 @@ const Account = () => {
                                     <li className="nav-item">
                                         <a href="#profile-tab" className="nav-link active" data-toggle="tab">
                                             <i className="anticon anticon-inbox" />
-                                            <span className="text-black">Thông tin tài khoản</span>
+                                            <span className="text-black">
+                                                Account information</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href="#orders-tab" className="nav-link" data-toggle="tab">
                                             <i className="anticon anticon-mail" />
-                                            <span>Xem đơn hàng</span>
+                                            <span>My order</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href="#password-tab" className="nav-link" data-toggle="tab">
                                             <i className="anticon anticon-star" />
-                                            <span>Thay đổi mật khẩu</span>
+                                            <span>Change Password</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -177,36 +231,37 @@ const Account = () => {
                             <div id="profile-tab" className="tab-pane active show">
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021 p-3">
-                                        <h4 className="text-center mb-2">Thông tin chung</h4>
+                                        <h4 className="text-center mb-2">
+                                            General information</h4>
                                         <Form>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Họ và tên </Form.Label>
+                                                <Form.Label>Full name</Form.Label>
                                                 <Form.Control
                                                     name="fullName"
                                                     value={User.fullName}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Tài khoản"
+                                                    placeholder="Full name"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Số điện thoại</Form.Label>
+                                                <Form.Label>Phone number</Form.Label>
                                                 <Form.Control
                                                     name="phoneNumber"
                                                     value={User.phoneNumber}
                                                     onChange={handleInputChange}
                                                     type="number"
-                                                    placeholder="Số điện thoại"
+                                                    placeholder="Phone number"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Tài khoản</Form.Label>
+                                                <Form.Label>Accout name</Form.Label>
                                                 <Form.Control
                                                     name="userName"
                                                     value={User.userName}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Tài khoản"
+                                                    placeholder="Accout name"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
@@ -220,28 +275,32 @@ const Account = () => {
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Địa chỉ</Form.Label>
+                                                <Form.Label>Address</Form.Label>
                                                 <Form.Control
                                                     name="address"
                                                     value={User.address}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Địa chỉ"
+                                                    placeholder="Address"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Lần đăng nhập cuối cùng</Form.Label>
+                                                <Form.Label>Last login</Form.Label>
                                                 <Form.Control
                                                     readOnly
                                                     name="text"
                                                     value={User.lastLogin}
                                                 />
                                             </Form.Group>
+                                            <Form.Group className="mb-3 col-6" >
+                                                <Button onClick={handleSubmit} variant="success" type="button">
+                                                    <i className="fa fa-check"></i> Change
+                                                </Button>
+                                            </Form.Group>
+
                                         </Form>
+
                                     </div>
-                                    <Button onClick={handleSubmit} variant="success" type="button">
-                                        <i className="fa fa-check"></i> Chỉnh sửa
-                                    </Button>
                                 </div>
 
                             </div>
@@ -249,81 +308,105 @@ const Account = () => {
                             <div id="orders-tab" className="tab-pane">
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021">
-                                        <div className="title-ac-2021"> <h2 className="text-center">Đơn hàng của bạn</h2></div>
+                                        <div className="title-ac-2021"> <h2 className="text-center">My order</h2></div>
                                         <div className="box-cus-info-2021">
                                             <div className="table-responsive" style={{ padding: 12 }}>
-                                                {
-                                                    lsOrder.length > 0 ? (<>
-                                                        <table className="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col"><b>Mã đơn hàng</b></th>
-                                                                    <th scope="col"><b>Ngày mua</b></th>
-                                                                    <th scope="col"><b>Tổng tiền</b></th>
-                                                                    <th scope="col"><b>Thanh toán</b></th>
-                                                                    <th scope="col"><b>Trạng thái</b></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-                                                                    lsOrder.map((item, index) => {
-                                                                        return (<tr key={index}>
+                                                <div>
+                                                    {lsOrder.length > 0 ? (
+                                                        <div style={{ maxHeight: "315px", overflowY: "scroll" }}>
+                                                            <table className="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col"><b>Order code</b></th>
+                                                                        <th scope="col"><b>Purchase date</b></th>
+                                                                        <th scope="col"><b>Total Price</b></th>
+                                                                        <th scope="col"><b>Pay</b></th>
+                                                                        <th scope="col"><b>Status</b></th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {lsOrder.map((item, index) => (
+                                                                        <tr key={index}>
                                                                             <td>{item.code}</td>
                                                                             <td>{formatDateTime(item.dateShip)}</td>
                                                                             <td>{convertToVND(item.totalMoney)}</td>
                                                                             <td>
-                                                                                {item.paid ? <p className='text-success'>Đã thanh toán</p> : <p className='text-danger'>Chưa thanh toán</p>}
+                                                                                {item.paid ? <p className="text-success">Completely payment</p> : <p className="text-danger">Unpaid</p>}
                                                                             </td>
                                                                             <td className={getStatusClass(item.deliveryStatus)}>{item.deliveryStatus.status}</td>
                                                                             <td>
-                                                                                {
-                                                                                    item.deliveryStatus.id === 3 ? (
-                                                                                        null
-                                                                                    ) : (
-                                                                                        <button onClick={() => handleShow(item.id)} className="btn btn-success"><i className="fa fa-eye text-white"></i>
-                                                                                        </button>)
-                                                                                }
-
-                                                                                {
-                                                                                    item.deliveryStatus.id === 1 ? (
-                                                                                        <Button className="ml-2" variant="danger" onClick={() => handleCancelOrder(item.id)}>
-                                                                                            Hủy đơn
-                                                                                        </Button>
-                                                                                    ) : null
-                                                                                }
+                                                                                <button onClick={() => handleShow(item.id)} className="btn btn-success">
+                                                                                    <i className="fa fa-eye text-white"></i>
+                                                                                </button>
+                                                                                {!item.paid && (item.deliveryStatus.id === 1 || item.deliveryStatus.id === 2) && (
+                                                                                    <Button className="ml-2" variant="danger" onClick={() => handleCancelOrder(item.id)}>
+                                                                                        Cancel order
+                                                                                    </Button>
+                                                                                )}
+                                                                                {item.deliveryStatus.id === 8 && (
+                                                                                    <Button className="ml-2" variant="info" onClick={() => handleTrahang(item.id)}>
+                                                                                        Returns
+                                                                                    </Button>
+                                                                                )}
                                                                             </td>
                                                                         </tr>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </>) : (<>
-                                                        <Link className="text-primary d-flex justify-content-center" to={"/"}>Mua sắm ngay</Link>
-                                                    </>)
-                                                }
+                                                                    ))}
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    ) : (
+                                                        <Link className="text-primary d-flex justify-content-center" to={"/"}>Shopping now</Link>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div id="password-tab" className="tab-pane">
-                                <h5 className="text-center">Thay đổi mật khẩu</h5>
-                                <Form className="mt-5">
+                                <h5 className="text-center">Change Password</h5>
+                                <Form className="mt-5" onSubmit={handleChangePassword}>
                                     <Form.Group className="col-6">
-                                        <FormCheckLabel>Mật khẩu cũ</FormCheckLabel>
-                                        <FormControl type="password" placeholder="Nhập mật khẩu cũ" />
+                                        <FormCheckLabel>Old password</FormCheckLabel>
+                                        <FormControl
+                                            type="password"
+                                            placeholder="Old password"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                            required
+                                        />
                                     </Form.Group>
                                     <Form.Group className="col-6">
-                                        <FormCheckLabel>Mật khẩu mới</FormCheckLabel>
-                                        <FormControl  type="password" placeholder="Nhập mật khẩu mới" />
+                                        <FormCheckLabel>New password</FormCheckLabel>
+                                        <FormControl
+                                            type="password"
+                                            placeholder="New password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="col-6">
+                                        <FormCheckLabel>
+                                        Confirm new password</FormCheckLabel>
+                                        <FormControl
+                                            type="password"
+                                            placeholder="Confirm new password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
+                                        />
                                     </Form.Group>
                                     <Form.Group className="col-6 mt-5">
-                                        <Button onClick={(e)=>handleChangePassWord(e)} className="btn btn-success"><i className="fa fa-check"></i>Thay đổi</Button>
+                                    <Button type="submit" className="btn btn-success">
+                                            <i className="fa fa-check"></i> Edit
+                                        </Button>
                                     </Form.Group> 
                                 </Form>
-                                {/* Nội dung của tab Mật khẩu */}
+                                {error && <p style={{ color: 'red' }}>{error}</p>}
+                                {success && <p style={{ color: 'green' }}>{success}</p>}
                             </div>
                         </div>
                     </div>
@@ -334,9 +417,9 @@ const Account = () => {
 
 
             {/* Modal */}
-            <Modal  show={show} onHide={handleClose}size="lg">
+            <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Header >
-                    <Modal.Title>Chi tiết đơn hàng của bạn</Modal.Title>
+                    <Modal.Title>Detail</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Table striped bordered hover>
@@ -347,7 +430,7 @@ const Account = () => {
                                 <th>Ảnh</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
-                                <th>Tổng tiền</th> 
+                                <th>Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -355,9 +438,9 @@ const Account = () => {
                                 lsOrderDetail.map((item, index) => {
                                     return (
                                         <tr className="" key={index}>
-                                            <td>{index +1}</td>
+                                            <td>{index + 1}</td>
                                             <td><Link className="text-primary" to={`/chi-tiet-san-pham/${item.product.id}`}>{item.product.productName}</Link></td>
-                                            <td className=" "><img className="w-50 " src={`https://localhost:7201${item.product.avatar}`}/></td>
+                                            <td className=" "><img className="w-50 " src={`https://localhost:7201${item.product.avatar}`} /></td>
                                             <td>{convertToVND(item.product.price)}</td>
                                             <td>{item.amount}</td>
                                             <td>{convertToVND(item.totalMoney)} </td>

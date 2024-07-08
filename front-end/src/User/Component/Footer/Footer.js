@@ -96,7 +96,7 @@ window.addEventListener('scroll', handleScroll);
   </div>
   {/* Footer End */}
   {/* Back to Top */}
-  <button style={{position:"fixed",right:"5px",bottom:"0"}}  onClick={scrollToTop} href="#" className="btn btn-warning back-to-top"><i className="fa fa-angle-double-up" /></button>
+  <button style={{display:"block"}}  onClick={scrollToTop}className="btn btn-warning back-to-top"><i className="fa fa-angle-double-up" /></button>
 </div>
 
     </>)

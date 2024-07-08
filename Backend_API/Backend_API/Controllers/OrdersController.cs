@@ -44,32 +44,29 @@ namespace Backend_API.Controllers
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutOrder(int id, string code)
         {
-            if (id != order.Id)
+            if (id == 0)
             {
                 return BadRequest();
             }
-
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
+            else
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(id))
+                var data = _context.Order.Where(o => o.Id == id).FirstOrDefault(); 
+                if (data == null)
                 {
-                    return NotFound();
+                    return BadRequest(); 
                 }
                 else
                 {
-                    throw;
+                    data.Paid = true;
+                    data.Code = code;
+                    data.DeliveryStatusId = 2;
+                    _context.Order.Update(data);
+                    _context.SaveChanges();
+                    return Ok(data);
                 }
-            }
-
-            return NoContent();
+            } 
         }
 
         // POST: api/Orders
@@ -88,6 +85,7 @@ namespace Backend_API.Controllers
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var order = await _context.Order.FindAsync(id);
+            
             if (order == null)
             {
                 return NotFound();
@@ -98,6 +96,27 @@ namespace Backend_API.Controllers
 
             return NoContent();
         }
+
+
+        // DELETE: api/Orders/5 
+        [HttpDelete("HanleDelete/{id}")]
+        public async Task<IActionResult> HanleDelete(int id)
+        {
+            //lấy ra order deltail thuộc id order
+            var lsOrderDetail =_context.OrderDetails.Where(x => x.OrderId == id).ToList();
+            foreach(var item in lsOrderDetail)
+            {
+                var product = _context.Products.Where(p => p.Id == item.ProductId).FirstOrDefault();
+                product.Stock += item.Amount;
+                _context.Update(product);
+                _context.SaveChanges();
+            }
+            var order = await _context.Order.FindAsync(id);
+            _context.Order.Remove(order);
+            _context.SaveChanges();
+            return Ok();
+        }
+
 
         [HttpPost("addOrder")]
         public async Task<IActionResult> addOrder([FromBody] Order order)
@@ -165,7 +184,7 @@ namespace Backend_API.Controllers
                         if (existingProduct != null)
                         {
                             // Nếu đã có, sử dụng đối tượng đã được theo dõi
-                            item.Product = existingProduct;
+                            item.Product = existingProduct; 
                         }
                         else
                         {
@@ -180,7 +199,7 @@ namespace Backend_API.Controllers
                 }
 
 
-                return Ok(new { success = true, status = 1 }); // Đặt hàng thành công
+                return Ok(new { success = true, status = 1 ,IdOrder = o.Id}); // Đặt hàng thành công    
             }
             catch (Exception ex)
             {
@@ -237,7 +256,7 @@ namespace Backend_API.Controllers
             if (id != null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId = 4; 
+                data.DeliveryStatusId = 3; 
                 _context.Order.Update(data);
                 _context.SaveChanges();
                 return Ok();
@@ -252,7 +271,7 @@ namespace Backend_API.Controllers
             if(id!=null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId = 3;//hủy đơn
+                data.DeliveryStatusId = 5;//hủy đơn
                 _context.Order.Update(data);
                 _context.SaveChanges();
                 return Ok();
@@ -267,7 +286,8 @@ namespace Backend_API.Controllers
             if (id != null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId =5;
+                data.DeliveryStatusId =8;
+                data.Paid = true;
                 _context.Order.Update(data);
                 _context.SaveChanges();
                 return Ok();
@@ -276,6 +296,29 @@ namespace Backend_API.Controllers
             return BadRequest();
         }
 
+        //xác nhận giao đơn hàng
+        [HttpGet("/trahang/{id}")]
+        public async Task<IActionResult> trahang(int id)
+        {
+            if (id != null)
+            {
+                var data = _context.Order.Find(id);
+                data.DeliveryStatusId = 7;
+                _context.Order.Update(data);
+                _context.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("/getOrderDetailByOrderId/{id}")]
+        public async Task<IActionResult> getOrderDetailByOrderId(int id)
+        {
+            var data = _context.OrderDetails.Include(o=>o.Order).Include(p=>p.Product).Where(o => o.OrderId == id).ToList();
+
+            return Ok(data);
+        }
 
         private bool OrderExists(int id)
         {

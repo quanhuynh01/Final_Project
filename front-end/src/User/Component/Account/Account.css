@@ -1,0 +1,5 @@
+.scrollable-tbody {
+    display: block;
+    max-height: 100px;
+    overflow-y: scroll;
+}

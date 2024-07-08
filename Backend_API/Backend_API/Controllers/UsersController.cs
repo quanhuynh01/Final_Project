@@ -85,27 +85,42 @@ namespace API_Server.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
+            try
             {
-                return Ok(new { success = false, status = 0 });//status = 0 tên người dùng tồn tại
-            }
-            User user = new User()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                FullName = model.Fullname,
-                PhoneNumber = model.Phone
-            };
+                var userExists = await _userManager.FindByNameAsync(model.Username);
+                if (userExists != null)
+                {
+                    return Ok(new { success = false, status = 0 });//status = 0 tên người dùng tồn tại
+                }
+                User user = new User()
+                {
+                    Email = model.Email,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    FullName = model.Fullname,
+                    PhoneNumber = model.Phone
+                };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-            {
-                return Ok(new { success = false, status = 1 });//status = 1 mật khẩu không đúng định dạng
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                {
+                    return Ok(new { success = false, status = 1 });//status = 1 mật khẩu không đúng định dạng
+                }
+                _ = SendMail(user.Email, user.FullName);
+                Customer cus = new Customer()
+                {
+                    Name = user.Name,
+                    Email = model.Email,
+                    Phone = model.Phone
+                };
+                _context.Customer.Add(cus);
+                _context.SaveChanges();
+                return Ok(new { success = true });
             }
-            _ = SendMail(user.Email, user.FullName);
-            return Ok(new { success = true });
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -165,7 +180,7 @@ namespace API_Server.Controllers
         {
             var users = await _userManager.GetUsersInRoleAsync("admin");
             var nonAdminUsers = await _userManager.Users.Where(u => !users.Contains(u)).ToListAsync();
-            return Ok(nonAdminUsers); 
+            return Ok(nonAdminUsers);
         }
 
         [HttpGet]
@@ -265,7 +280,7 @@ namespace API_Server.Controllers
             }
 
             // Gửi email cho người dùng với mật khẩu mới
-            if (await SendMailPass(newPass, user.FullName, user.Email,username))
+            if (await SendMailPass(newPass, user.FullName, user.Email, username))
             {
                 return Ok(new { status = 200, message = "Password reset successfully. Check your email for the new password." });
             }
@@ -275,8 +290,38 @@ namespace API_Server.Controllers
             }
         }
 
+        [HttpPost("ChangePass/{username}")]
+        public async Task<IActionResult> ChangePass(string username, [FromBody] ChangePasswordModel model)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return Ok(new { status = 400, message = "User not found." });
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                var errors = changePasswordResult.Errors.Select(e => e.Description).ToList();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Error changing password.", errors });
+            }
+            Log log = new Log()
+            {
+                NameAction = "Thay đổi mật khẩu thành " + model.NewPassword,
+                DescriptionAction = "Nguời dùng" + username + "Thay đổi mật khẩu vào " + DateTime.Now.ToString(),
+                DateAction = DateTime.Now,
+
+            };
+            _context.Logs.Add(log);
+            _context.SaveChanges();
+
+            return Ok(new { status = 200, message = "Password changed successfully." });
+        }
+
+
+
         //gửi mail kèm theo password mới cho người dùng
-        private async Task<bool> SendMailPass(string pass, string fullname, string emailUser,string username)
+        private async Task<bool> SendMailPass(string pass, string fullname, string emailUser, string username)
         {
 
             var systemW = _context.MailConfigs.FirstOrDefault();
@@ -289,9 +334,9 @@ namespace API_Server.Controllers
                 smtp.Authenticate(systemW.EmailSmtp, systemW.PassSmtp);
                 try
                 {
-                    var text = "<div class=\"textarea-pseudo\"><br> Hi <b>"+fullname+"</b>, " +
-                        "<p>You recently requested to reset the password for your "+username+" \r\n  account. " +
-                        "The password is: <b>"+pass+"</b></p><p>If you did not request a password reset, please ignore " +
+                    var text = "<div class=\"textarea-pseudo\"><br> Hi <b>" + fullname + "</b>, " +
+                        "<p>You recently requested to reset the password for your " + username + " \r\n  account. " +
+                        "The password is: <b>" + pass + "</b></p><p>If you did not request a password reset, please ignore " +
                         "this email or reply to let us know. \r\n  </p><p>Thanks, the DQ STORE team </p><p></p></div>";
                     email.Bcc.Add(MailboxAddress.Parse(systemW.EmailSend));
                     email.To.Add(MailboxAddress.Parse(emailUser));
@@ -303,16 +348,69 @@ namespace API_Server.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString()); 
+                    Console.WriteLine(ex.ToString());
                 }
             }
             catch (Exception e)
-            { 
-            } 
+            {
+            }
             return false;
         }
-        
+
+
+        [HttpPost]
+        [Route("LoginGoogle")]
+        public async Task<string> GoogleLoginAsync([FromBody] GoogleLoginModel account)
+        {
+            var user = await _userManager.FindByEmailAsync(account.Email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Email = account.Email,
+                    FullName = account.Fullname,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName= account.Email
+                    
+                };
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                    return null;
+
+                if (await _roleManager.RoleExistsAsync("User"))
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                }
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+     {
+         new Claim(ClaimTypes.Name, user.UserName),
+         new Claim(ClaimTypes.NameIdentifier, user.Id),
+         new Claim(ClaimTypes.GivenName, user.FullName),
+         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+     };
+
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddHours(3),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 
 }
- 
+

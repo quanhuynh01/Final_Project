@@ -298,7 +298,7 @@ const ProductsCreate = () => {
                                     {
                                         Attribute.map((item, index) => {
                                             return (<div className="card p-2 col-6" key={index}>
-                                                <Button className="btn " onClick={() => handleClickShowAttributeValue(item.id)} key={index} >{item.nameAttribute}</Button>
+                                                <Button className="btn btn-secondary" onClick={() => handleClickShowAttributeValue(item.id)} key={index} >{item.nameAttribute}</Button>
                                             </div>
                                             )
                                         })

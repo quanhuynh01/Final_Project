@@ -26,6 +26,8 @@ namespace Backend_API.Model
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
         public DateTime DateCreate { get; set; }
+        //public int DiscountId { get; set; } 
+        //public Discount Discount { get; set; }
         public Boolean Active { get; set; }
         public Boolean SoftDelete { get; set; }
 

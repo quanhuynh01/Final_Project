@@ -75,13 +75,13 @@ namespace Backend_API.Controllers
         // POST: api/Attributevalues
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Attributevalue>> PostAttributevalue( Attributevalue attributevalue)
+        public async Task<ActionResult<Attributevalue>> PostAttributevalue(Attributevalue attributevalue)
         {
-            Attributevalue a= new Attributevalue();
+            Attributevalue a = new Attributevalue();
             a.NameValue = attributevalue.NameValue;
             a.AttributeId = attributevalue.AttributeId;
             _context.Attributevalues.Add(a);
-            _context.SaveChanges(); 
+            _context.SaveChanges();
             return CreatedAtAction("GetAttributevalue", new { id = a.Id }, a);
         }
 
@@ -101,40 +101,66 @@ namespace Backend_API.Controllers
             return NoContent();
         }
 
-            [HttpGet("lsAttributeValue/{idAttr}")]
-            public async Task<IActionResult> GetAttributeValuesByAttributeId(int idAttr)
+        [HttpGet("lsAttributeValue/{idAttr}")]
+        public async Task<IActionResult> GetAttributeValuesByAttributeId(int idAttr)
+        {
+            var attributeValues = await _context.Attributevalues
+                                            .Where(av => av.AttributeId == idAttr)
+                                            .ToListAsync();
+            if (attributeValues == null || attributeValues.Count == 0)
             {
-                var attributeValues = await _context.Attributevalues
-                                                .Where(av => av.AttributeId == idAttr)
-                                                .ToListAsync();
-                if (attributeValues == null || attributeValues.Count == 0)
-                {
-                    return Ok(new {success = false});
-                }
-
-                return Ok(new { success = true ,data = attributeValues });
+                return Ok(new { success = false });
             }
+
+            return Ok(new { success = true, data = attributeValues });
+        }
+        [HttpGet("lsAttributeAndValue/{idCategories}")]
+        public async Task<IActionResult> lsAttributeAndValue(int idCategories)
+        {
+            // Lấy danh sách thuộc tính theo idCategories
+            var attributes = await _context.Attributes
+                .Where(a => a.CategoryId == idCategories)
+                .ToListAsync();
+
+            // Lấy danh sách giá trị thuộc tính theo AttributeId
+            var attributeValues = await _context.Attributevalues
+                .Where(av => attributes.Select(a => a.Id).Contains(av.AttributeId))
+                .ToListAsync();
+
+            // Tạo một đối tượng để trả về danh sách thuộc tính và các giá trị tương ứng
+            var result = attributes.Select(attribute => new
+            {   
+                attribute.Id,
+                attribute.NameAttribute,
+                Values = attributeValues.Where(av => av.AttributeId == attribute.Id).ToList()
+            });
+
+            return Ok(result);
+        }
+
+
+
         [HttpPost("saveAttributeValueForProduct/{id}")]
 
-        public async Task<IActionResult> saveAttributeValueForProduct(int id,int idPro)
+        public async Task<IActionResult> saveAttributeValueForProduct(int id, int idPro)
         {
-            var AttributeId = _context.Attributevalues.Include(a=>a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
- 
+            var AttributeId = _context.Attributevalues.Include(a => a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
+
             ProductAttribute pro = new ProductAttribute()
             {
                 ProductId = idPro,
                 AttributeId = AttributeId.AttributeId,
-                AttributeValueId =id  
+                AttributeValueId = id
                 // Gán các thuộc tính cho p từ attributeValue nếu cần
             };
             var nameAttribute = AttributeId.Attribute.NameAttribute;
             var attributevalue = await _context.Attributevalues.FindAsync(id);
             _context.ProductAttributes.Add(pro);
             _context.SaveChanges();
-            return Ok(new {Id = pro.Id,nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
+            return Ok(new { Id = pro.Id, nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
         }
-         
-            private bool AttributevalueExists(int id)
+
+        private bool AttributevalueExists(int id)
         {
             return _context.Attributevalues.Any(e => e.Id == id);
         }

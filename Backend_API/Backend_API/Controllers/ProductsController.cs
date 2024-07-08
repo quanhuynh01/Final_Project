@@ -29,7 +29,7 @@ namespace Backend_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.Include(b=>b.Brand).ToListAsync();
+            return await _context.Products.Include(b => b.Brand).ToListAsync();
         }
         // GET: api/Products/5
         [HttpGet("/getProduct/{id}")]
@@ -39,7 +39,7 @@ namespace Backend_API.Controllers
                .Where(p => p.Id == id)
                .Select(p => new
                {
-                   Product =p, 
+                   Product = p,
                    Attributes = _context.ProductAttributes
                                        .Where(pa => pa.ProductId == p.Id)
                                        .Select(pa => new
@@ -74,10 +74,10 @@ namespace Backend_API.Controllers
                 .Where(p => p.Id == id)
                 .Select(p => new
                 {
-                    Id= p.Id,   
+                    Id = p.Id,
                     ProductName = p.ProductName,
                     Price = p.Price,
-                    SalePrice= p.SalePrice,
+                    SalePrice = p.SalePrice,
                     Avatar = p.Avatar,
 
                     Attributes = _context.ProductAttributes
@@ -103,9 +103,9 @@ namespace Backend_API.Controllers
                 return NotFound();
             }
 
-            return Ok( new { productDetails = productDetails, Reviews = reviewProduct });
+            return Ok(new { productDetails = productDetails, Reviews = reviewProduct });
         }
-         
+
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -114,7 +114,7 @@ namespace Backend_API.Controllers
             if (id != null)
             {
                 var data = _context.Products.Find(id);
-                if(data !=null)
+                if (data != null)
                 {
                     data.ProductName = product.ProductName;
                     data.Price = product.Price;
@@ -125,7 +125,8 @@ namespace Backend_API.Controllers
                     data.BestSeller = product.BestSeller;
                     data.BrandId = product.BrandId;
                     data.Description = product.Description;
-                    data.SKU= product.SKU;
+                    data.SKU = product.SKU;
+                    data.Stock= product.Stock;
                     _context.Products.Update(data);
                     _context.SaveChanges();
                     if (CateId.Count > 0)
@@ -152,9 +153,9 @@ namespace Backend_API.Controllers
                         await _context.SaveChangesAsync();
                     }
                     return Ok();
-                }    
-             
-            }    
+                }
+
+            }
             return Ok();
         }
 
@@ -165,8 +166,8 @@ namespace Backend_API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromForm] Product product, [FromForm] List<IFormFile> AvatarFiles
-            ,[FromForm] List<int> CateId, [FromForm] List<int> AttributevalueId)
-        {   
+            , [FromForm] List<int> CateId, [FromForm] List<int> AttributevalueId)
+        {
             try
             {
                 var p = new Product();
@@ -182,20 +183,21 @@ namespace Backend_API.Controllers
                 p.DateCreate = DateTime.Now;
                 p.Stock = product.Stock;
                 p.SoftDelete = false;
+        
                 if (p != null)
-                { 
+                {
                     _context.Products.Add(p);
                     _context.SaveChanges();
-                    if(p!=null)
+                    if (p != null)
                     {
-                        if(AvatarFiles!=null && AvatarFiles.Count >0)
+                        if (AvatarFiles != null && AvatarFiles.Count > 0)
                         {
                             var dem = 0;
                             foreach (var file in AvatarFiles)
-                            {   
-                                if(dem ==0)//ảnh thứ 1 làm ảnh đại diện 
+                            {
+                                if (dem == 0)//ảnh thứ 1 làm ảnh đại diện 
                                 {
-                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}"; 
+                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
                                     var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
                                     if (!Directory.Exists(imagePath))
                                     {
@@ -209,9 +211,9 @@ namespace Backend_API.Controllers
                                     var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
                                     p.Avatar = "/" + relativePath.Replace("\\", "/");
                                     _context.Products.Update(p);
-                                    _context.SaveChanges() ;
+                                    _context.SaveChanges();
                                 }
-                                if(dem>0)
+                                if (dem >= 0)
                                 {
                                     ProductThumb pt = new ProductThumb();
                                     pt.ProductId = p.Id;
@@ -232,9 +234,9 @@ namespace Backend_API.Controllers
                                     _context.SaveChanges();
 
                                 }
-                                dem ++; 
-                            } 
-                        } 
+                                dem++;
+                            }
+                        }
                         if (CateId.Count > 0)
                         {
                             foreach (var item in CateId)
@@ -250,7 +252,7 @@ namespace Backend_API.Controllers
                         {
                             foreach (var item in AttributevalueId)
                             {
-                                var idThuocTinhtheogiatri = _context.Attributevalues.Where(i => i.Id== item).FirstOrDefault();
+                                var idThuocTinhtheogiatri = _context.Attributevalues.Where(i => i.Id == item).FirstOrDefault();
                                 ProductAttribute pa = new ProductAttribute();
                                 pa.ProductId = p.Id;
                                 pa.AttributeValueId = item;
@@ -260,7 +262,7 @@ namespace Backend_API.Controllers
                             }
                         }
                     }
-                    return Ok(new { data = product ,id = p.Id });
+                    return Ok(new { data = product, id = p.Id });
                 }
                 else
                 {
@@ -269,9 +271,9 @@ namespace Backend_API.Controllers
             }
             catch (Exception ex)
             {
-                 
+
             }
-            return  Ok(); 
+            return Ok();
         }
 
         // DELETE: api/Products/5
@@ -304,7 +306,7 @@ namespace Backend_API.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { id = product.Id });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -326,17 +328,17 @@ namespace Backend_API.Controllers
                 _context.ProductAttributes.Remove(data);
                 _context.SaveChanges();
                 return Ok();
-            } 
+            }
         }
-            //[HttpPost("addAttribute/{idAttribute}")]
-            //public async Task<IActionResult> PostProductAttribute(int id)
-            //{
+        //[HttpPost("addAttribute/{idAttribute}")]
+        //public async Task<IActionResult> PostProductAttribute(int id)
+        //{
 
-            //    return NoContent();
-            //}
-            [HttpPost("addToCart")]
-        public async Task<IActionResult> addToCart([FromForm] string IdUser , [FromForm] Product Product)
-        { 
+        //    return NoContent();
+        //}
+        [HttpPost("addToCart")]
+        public async Task<IActionResult> addToCart([FromForm] string IdUser, [FromForm] Product Product)
+        {
             return NoContent();
         }
 
@@ -348,65 +350,65 @@ namespace Backend_API.Controllers
 
 
             var data = await _context.ProductCategories
-                                                 .Where(pc => pc.CategoryId == id) // Lọc các sản phẩm thuộc danh mục có Id = id
-                                                 .Select(pc => new
-                                                 {
-                                                     Id = pc.ProductId, // Lấy Id của sản phẩm
-                                                     Product = _context.Products
-                                                                 .Where(p => p.Id == pc.ProductId)
-                                                                 .FirstOrDefault(), // Lấy thông tin chi tiết của sản phẩm (nếu cần)
-                                                     Attributes = _context.ProductAttributes
-                                                                     .Where(pa => pa.ProductId == pc.ProductId)
-                                                                     .Select(pa => new
-                                                                     { 
-                                                                         NameAttribute = _context.Attributes
-                                                                                             .Where(a => a.Id == pa.AttributeId)
-                                                                                             .Select(a => a.NameAttribute)
-                                                                                             .FirstOrDefault(), // Lấy tên thuộc tính
-                                                                         AttributeValue = _context.Attributevalues
-                                                                                             .Where(av => av.Id == pa.AttributeValueId)
-                                                                                             .Select(av =>new {
-                                                                                                 Idvalue= av.Id,
-                                                                                                 NameValue= av.NameValue, 
-                                                                                             })
-                                                                                             .FirstOrDefault() // Lấy giá trị của thuộc tính
+                                                     .Where(pc => pc.CategoryId == id && pc.Product.SoftDelete == false) // Lọc các sản phẩm thuộc danh mục có Id = id và có SoftDelete = false
+                                                     .Select(pc => new
+                                                     {
+                                                         Id = pc.ProductId, // Lấy Id của sản phẩm
+                                                         Product = _context.Products
+                                                             .Where(p => p.Id == pc.ProductId && p.SoftDelete == false) // Lọc sản phẩm theo Id và SoftDelete = false
+                                                             .FirstOrDefault(), // Lấy thông tin chi tiết của sản phẩm (nếu cần)
+                                                         Attributes = _context.ProductAttributes
+                                                             .Where(pa => pa.ProductId == pc.ProductId)
+                                                             .Select(pa => new
+                                                             {
+                                                                 NameAttribute = _context.Attributes
+                                                                     .Where(a => a.Id == pa.AttributeId)
+                                                                     .Select(a => a.NameAttribute)
+                                                                     .FirstOrDefault(), // Lấy tên thuộc tính
+                                                                 AttributeValue = _context.Attributevalues
+                                                                     .Where(av => av.Id == pa.AttributeValueId)
+                                                                     .Select(av => new
+                                                                     {
+                                                                         Idvalue = av.Id,
+                                                                         NameValue = av.NameValue,
                                                                      })
-                                                                     .ToList() // Chuyển thành List các thuộc tính và giá trị tương ứng
-                                                 })
-                                                 .ToListAsync(); // Chuyển kết quả thành List và thực thi truy vấn
-
-
-
+                                                                     .FirstOrDefault() // Lấy giá trị của thuộc tính
+                                                             })
+                                                             .ToList() // Chuyển thành List các thuộc tính và giá trị tương ứng
+                                                     })
+                                                     .ToListAsync(); // Chuyển kết quả thành List và thực thi truy vấn
+              
             var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault();
             var attributeValues = _context.Attributes
                                                    .Where(a => a.CategoryId == id)
                                                    .Select(a => new
-                                                   { 
+                                                   {
                                                        NameAttribute = a.NameAttribute,
                                                        AttributeValues = _context.Attributevalues
                                                                                  .Where(b => b.AttributeId == a.Id)
-                                                                                 .Select(a => new {
-                                                                                     Id= a.Id,
-                                                                                     NameValue = a.NameValue 
-                                                                                 } )
+                                                                                 .Select(a => new
+                                                                                 {
+                                                                                     Id = a.Id,
+                                                                                     NameValue = a.NameValue
+                                                                                 })
                                                                                  .ToList()
                                                    })
                                                    .ToList();
-            if (data !=null)
+            if (data != null)
             {
-                return Ok( new { data, nameCategories = NameCate.NameCategory , AttributeValue = attributeValues });
+                return Ok(new { data, nameCategories = NameCate.NameCategory, AttributeValue = attributeValues });
             }
             else
             {
                 return BadRequest(new { message = "Không có dữ liệu" });
-            } 
+            }
         }
-        
+
         //tìm kiếm sản phẩm
         [HttpGet("/Search/{text}")]
         public async Task<IActionResult> searchProducts(string text)
         {
-            var data = await _context.Products.Where(p => p.ProductName.Contains(text))  .ToListAsync();
+            var data = await _context.Products.Where(p => p.ProductName.Contains(text)).ToListAsync();
             if (data != null)
             {
                 return Ok(data);
@@ -415,6 +417,39 @@ namespace Backend_API.Controllers
             {
                 return Ok(new { message = "Không có dữ liệu" });
             }
+        }
+        [HttpGet("/AttributeId/{Id}")]
+        public async Task<IActionResult> AttributeId(int Id)
+        {
+
+            var data = _context.ProductAttributes
+                   .Include(p => p.Product)
+                    .Where(p => p.AttributeValueId == Id && p.Product.SoftDelete == false)
+                   .ToList();
+
+            if (data.Count > 0)
+            {
+                return Ok(data);
+            }
+            else
+            {
+                return Ok(new { message = "Không có sản phẩm liên kết" });
+            }
+        }
+        [HttpGet("/lsProduct")]
+        public async Task<IActionResult> lsProduct() //ds sản phẩm có kèm theo danh mục 
+        {
+            var data = _context.ProductCategories.Include(p => p.Product).Include(c => c.Category).ToList();
+            // Nhóm sản phẩm theo từng danh mục
+            var groupedProducts = data.GroupBy(pc => pc.Category)
+                .Select(group => new
+                {
+                    CateId= group.Key.Id,
+                    CategoryName = group.Key.NameCategory,
+                    Products = group.Where(p => p.Product.SoftDelete == false).Select(pc => pc.Product).ToList()
+                })
+                .ToList();
+            return Ok(groupedProducts);
         }
         [HttpPost("ImportExcel")]
         public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)

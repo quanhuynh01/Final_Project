@@ -78,9 +78,6 @@ namespace Backend_API.Migrations
                     b.Property<string>("BrandName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageBrand")
                         .HasColumnType("nvarchar(max)");
 
@@ -166,6 +163,28 @@ namespace Backend_API.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Backend_API.Model.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customer");
+                });
+
             modelBuilder.Entity("Backend_API.Model.CustomerSupplier", b =>
                 {
                     b.Property<int>("Id")
@@ -227,9 +246,6 @@ namespace Backend_API.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Show")
                         .HasColumnType("bit");
 
@@ -243,8 +259,6 @@ namespace Backend_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -370,6 +384,19 @@ namespace Backend_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("Backend_API.Model.Pay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pay");
                 });
 
             modelBuilder.Entity("Backend_API.Model.PayMethod", b =>
@@ -552,6 +579,9 @@ namespace Backend_API.Migrations
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Seen")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -855,17 +885,6 @@ namespace Backend_API.Migrations
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Backend_API.Model.Discount", b =>
-                {
-                    b.HasOne("Backend_API.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Backend_API.Model.Order", b =>

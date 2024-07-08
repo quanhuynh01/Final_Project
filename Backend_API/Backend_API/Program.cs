@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using StackExchange.Redis;
+using CodeMegaVNPay.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MiniStoredentity_Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MiniStoredentity_Context") ?? throw new InvalidOperationException("Connection string 'MiniStoredentity_Context' not found.")));
@@ -24,6 +25,14 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+ //config google
+ .AddGoogle(googleOptions =>
+ {
+     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+     googleOptions.CallbackPath = "/signin-google";
+ })
+
 //config cho jwt
 .AddJwtBearer(options =>
 {
@@ -38,6 +47,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };  
 });
+
 builder.Services.AddControllers();
 //config CORS
 builder.Services.AddCors(option =>
@@ -49,6 +59,10 @@ builder.Services.AddCors(option =>
         .AllowAnyMethod(); 
     });
 });
+
+//config VNPAY 
+builder.Services.AddScoped<IVnPayService, VnPayService>();
+
 //config Redis  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,12 +77,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAuthorization();
-app.UseCors();
+
 app.UseAuthentication();
 
 

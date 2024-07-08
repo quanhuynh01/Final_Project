@@ -2,64 +2,91 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import Header from "../Header/Header";
-import { Breadcrumb, Button, Card, Form } from "react-bootstrap";
+import { Breadcrumb, Button, Card, Form, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Footer from "../Footer/Footer";
+import Navbar from "../Navbar/Navbar";
+import {jwtDecode} from "jwt-decode";
+import Swal from "sweetalert2";
 
 const ProductsCategories = () => {
     const { id } = useParams();
     const [Products, setProducts] = useState([]);
     const [brands, setBrands] = useState([]);
     const [NameCate, setNameCate] = useState(null);
-    const [selectedBrands, setSelectedBrands] = useState([]); // State để lưu trữ hãng được chọn
-    const [FilteredProducts, setFilteredProducts] = useState([]); // Lưu trữ sản phẩm được lọc
-    const [Attribute, setAttribute] = useState([]); // view danh sách thuộc tính cho người dùng lọc
+    const [selectedBrands, setSelectedBrands] = useState([]);
+    const [FilteredProducts, setFilteredProducts] = useState([]);
+    const [Attribute, setAttribute] = useState([]);
+    const [User, setUser] = useState(null);
+    const [selectedValues, setSelectedValues] = useState([]);
+    const [show, setShowLogin] = useState(false);
+    const [priceRange, setPriceRange] = useState([0, 10000000]); // Khoảng giá mặc định
 
-    const [selectedValues, setSelectedValues] = useState([]);//  thuộc tính người dùng chọn
+    const handleCloseLogin = () => setShowLogin(false);
+    const handleShowLogin = () => setShowLogin(true);
+
     useEffect(() => {
         axios.get(`https://localhost:7201/danh-muc/${id}`)
             .then(res => {
-                 //console.log(res.data.data);
                 setProducts(res.data.data);
                 setNameCate(res.data.nameCategories);
                 setAttribute(res.data.attributeValue);
             });
         axios.get(`https://localhost:7201/api/Brands`)
-            .then(res => setBrands(res.data)); 
+            .then(res => setBrands(res.data));
     }, [id]);
-   
-    // Convert price to VND
+
+    useEffect(() => {
+        let token = localStorage.getItem('token');
+        if (token != null) {
+            const decode = jwtDecode(token);
+            const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+            setUser(userId);
+        }
+    }, []);
+
+    const addToCart = (item) => {
+        if (item !== null && User !== null) {
+            axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
+                .then(res => {
+                    if (res.status === 200) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Add to cart successfully",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }
+                })
+                .catch(error => console.error(error));
+        } else {
+            handleShowLogin(true);
+        }
+    };
+
     function convertToVND(price) {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
 
-    // Xử lý khi chọn hoặc bỏ chọn hãng
     const handleBrandChange = (e) => {
-        const brandId = parseInt(e.target.value); // Lấy id hãng từ sự kiện
+        const brandId = parseInt(e.target.value);
         if (e.target.checked) {
-            setSelectedBrands([...selectedBrands, brandId]); // Thêm hãng vào danh sách được chọn
+            setSelectedBrands([...selectedBrands, brandId]);
         } else {
-            const updatedBrands = selectedBrands.filter(id => id !== brandId); // Xóa hãng khỏi danh sách được chọn
+            const updatedBrands = selectedBrands.filter(id => id !== brandId);
             setSelectedBrands(updatedBrands);
         }
     };
 
-    // Lọc sản phẩm theo hãng
     useEffect(() => {
-        if (selectedBrands.length > 0) {
-            const filteredProducts = Products.filter(item => selectedBrands.includes(item.product.brandId));
-            setFilteredProducts(filteredProducts);
-        } 
-        else {
-            setFilteredProducts(Products); // Nếu không có hãng nào được chọn, hiển thị tất cả sản phẩm
-        }
-    }, [selectedBrands, Products]);
- 
-    //lọc sản phẩm theo thuộc tính
+        filterProducts();
+    }, [selectedBrands, selectedValues, priceRange, Products]);
+
     const handleValueChange = (e) => {
-        const valueId = e.target.value; 
-        setSelectedValues((prevSelectedValues) => { 
+        const valueId = e.target.value;
+        setSelectedValues((prevSelectedValues) => {
             if (e.target.checked) {
                 return [...prevSelectedValues, valueId];
             } else {
@@ -67,32 +94,48 @@ const ProductsCategories = () => {
             }
         });
     };
-   // console.log(Products);
-    const filteredProducts = Products.filter(product => {
-        return selectedValues.every(selectedId => {
-            const a = product.attributes.map(attr =>  
-                attr.attributeValue.idvalue === selectedId
-             )
-            
-        });
-    });
-    
-    console.log(filteredProducts);
-   // console.log(selectedValues);
-    // const addToCart = (item) => {  
-    // }
 
+    const handlePriceChange = (e) => { 
+        setPriceRange([0, e.target.value]);
+    };
+
+    const filterProducts = () => {
+        let filteredProducts = Products;
+
+        if (selectedBrands.length > 0) {
+            filteredProducts = filteredProducts.filter(item => selectedBrands.includes(item.product.brandId));
+        }
+
+        if (selectedValues.length > 0) {
+            filteredProducts = filteredProducts.filter(product => {
+                return selectedValues.every(selectedId => {
+                    return product.attributes.some(attr => attr.attributeValue.idvalue === parseInt(selectedId));
+                });
+            });
+        }
+
+        filteredProducts = filteredProducts.filter(item => item.product.price <= priceRange[1]);
+
+        setFilteredProducts(filteredProducts);
+    };
 
     return (
         <>
             <Header />
-            <Breadcrumb>
-                <Breadcrumb.Item className="ml-5" href="/">Trang chủ</Breadcrumb.Item>
-                <Breadcrumb.Item active>{NameCate}</Breadcrumb.Item>
-            </Breadcrumb>
+            <Navbar />
+            <div className="container-fluid">
+                <div className="row px-xl-5">
+                    <div className="col-12">
+                        <nav className="breadcrumb bg-light mb-30">
+                            <Link to={'/'} className="breadcrumb-item text-dark" >Home</Link>
+                            <span className="breadcrumb-item active">{NameCate}</span>
+                        </nav>
+                    </div>
+                </div>
+            </div>
             <div className="d-flex" style={{ width: "90%", margin: "auto" }}>
                 <div className="left card p-4" style={{ width: "25%", marginTop: "10px" }}>
-                    <h5>Theo hãng</h5>
+                    <h5><b>Brand</b></h5>
                     <Form>
                         {brands.map((b, index) => (
                             <Form.Check
@@ -101,15 +144,27 @@ const ProductsCategories = () => {
                                 label={b.brandName}
                                 value={b.id}
                                 onChange={handleBrandChange}
-                                checked={selectedBrands.includes(b.id)} // Đánh dấu hãng đã được chọn
+                                checked={selectedBrands.includes(b.id)}
                             />
                         ))}
                     </Form>
-                    <h5>Theo thuộc tính</h5>
+                    <h5 className="mt-2"><b>Price</b></h5>
+                    <Form>
+                        <input
+                            type="range"
+                            min="0"
+                            max="50000000"
+                            step="100000"
+                            value={priceRange[1]}
+                            onChange={handlePriceChange}
+                        />
+                        <p>Giá tối đa: {convertToVND(priceRange[1] / 1000)}</p>
+                    </Form>
+                    <h5 className="mt-2"><b>Attribute</b></h5>
                     <Form>
                         {Attribute.map((attributeItem, index) => (
                             <div key={index}>
-                                <label>{attributeItem.nameAttribute}</label>
+                                <label><b>{attributeItem.nameAttribute}</b></label>
                                 {attributeItem.attributeValues.map((value, idx) => (
                                     <Form.Check
                                         key={idx}
@@ -131,25 +186,46 @@ const ProductsCategories = () => {
                                 <Card.Body style={{ position: "relative" }}>
                                     <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.product.id}`}>
                                         <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                            <Card.Text>Mã SP:{item.product.sku}</Card.Text>
+                                            <Card.Text>SKU :{item.product.sku}</Card.Text>
                                             <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>
-                                                {item.product.stock > 0 ? <><i className='fa fa-check'></i> Còn hàng</> : "Hết hàng"}
+                                                {item.product.stock > 0 ? <><i className='fa fa-check'></i>In stock</> : "Out stock"}
                                             </Card.Text>
                                         </div>
                                         <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
                                             {item.product.productName}
                                         </Card.Title>
-                                        <Card.Text>Giá: {convertToVND(item.product.price)}</Card.Text>
+                                        <Card.Text>Price: {convertToVND(item.product.price)}</Card.Text>
                                     </Link>
                                 </Card.Body>
-                                <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                                    <Button variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+                                <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}> 
+                                    <Button onClick={() => addToCart(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
                                 </div>
                             </Card>
                         </div>
                     ))}
                 </div>
             </div>
+            <Modal show={show} onHide={handleCloseLogin} centered>
+                <div className='row justify-content-center mt-4'>
+                    <h1 className='text-danger'>ShopMember</h1>
+                </div>
+                <Modal.Body>
+                    <div className='row justify-content-center'>
+                        <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:80/q:90/plain/https://cellphones.com.vn/media/wysiwyg/chibi2.png" height={80} alt="cps-smember-icon" />
+                    </div>
+                    <div className='mt-3'>
+                        <h6 style={{ textAlign: 'center' }}>Vui lòng đăng nhập tài khoản Shopmember để xem ưu đãi và thanh toán dễ dàng hơn.</h6>
+                    </div>
+                </Modal.Body>
+                <div className='row justify-content-center p-2'>
+                    <Link to={`/register`} className='m-2 btn btn-outline-primary'>
+                        Đăng ký
+                    </Link>
+                    <Link to={`/login`} className='m-2 btn btn-warning'>
+                        Đăng nhập
+                    </Link>
+                </div>
+            </Modal>
             <Footer />
         </>
     );

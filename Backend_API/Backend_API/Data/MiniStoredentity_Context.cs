@@ -32,8 +32,9 @@ namespace Backend_API.Model
  
         public DbSet<DeliveryStatus> DeliveryStatuses { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<Customer> Customer { get; set; }
         public DbSet<Backend_API.Model.Review> Review { get; set; }
-
+        public DbSet<Backend_API.Model.Pay> Pay { get; set; } 
 
     }
 }
