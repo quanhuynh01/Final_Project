@@ -207,19 +207,19 @@ const Account = () => {
                                         <a href="#profile-tab" className="nav-link active" data-toggle="tab">
                                             <i className="anticon anticon-inbox" />
                                             <span className="text-black">
-                                                Account information</span>
+                                                Thông tin tài khoản</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href="#orders-tab" className="nav-link" data-toggle="tab">
                                             <i className="anticon anticon-mail" />
-                                            <span>My order</span>
+                                            <span>Lịch sử mua hàng</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href="#password-tab" className="nav-link" data-toggle="tab">
                                             <i className="anticon anticon-star" />
-                                            <span>Change Password</span>
+                                            <span>Thay đổi mật khẩu</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -232,36 +232,36 @@ const Account = () => {
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021 p-3">
                                         <h4 className="text-center mb-2">
-                                            General information</h4>
+                                            Thông tin chung</h4>
                                         <Form>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Full name</Form.Label>
+                                                <Form.Label>Họ và Tên</Form.Label>
                                                 <Form.Control
                                                     name="fullName"
                                                     value={User.fullName}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Full name"
+                                                    placeholder="Họ và Tên"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Phone number</Form.Label>
+                                                <Form.Label>Số điện thoại</Form.Label>
                                                 <Form.Control
                                                     name="phoneNumber"
                                                     value={User.phoneNumber}
                                                     onChange={handleInputChange}
                                                     type="number"
-                                                    placeholder="Phone number"
+                                                    placeholder="Số điện thoại"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Accout name</Form.Label>
+                                                <Form.Label>Tên tài khoản</Form.Label>
                                                 <Form.Control
                                                     name="userName"
                                                     value={User.userName}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Accout name"
+                                                    placeholder="Tên tài khoản"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
@@ -275,17 +275,17 @@ const Account = () => {
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Address</Form.Label>
+                                                <Form.Label>Địa chỉ</Form.Label>
                                                 <Form.Control
                                                     name="address"
                                                     value={User.address}
                                                     onChange={handleInputChange}
                                                     type="text"
-                                                    placeholder="Address"
+                                                    placeholder="Địa chỉ"
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-3 col-6" >
-                                                <Form.Label>Last login</Form.Label>
+                                                <Form.Label>Lần đăng nhập cuối cùng</Form.Label>
                                                 <Form.Control
                                                     readOnly
                                                     name="text"
@@ -308,7 +308,7 @@ const Account = () => {
                             <div id="orders-tab" className="tab-pane">
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021">
-                                        <div className="title-ac-2021"> <h2 className="text-center">My order</h2></div>
+                                        <div className="title-ac-2021"> <h2 className="text-center">Đơn hàng của bạn</h2></div>
                                         <div className="box-cus-info-2021">
                                             <div className="table-responsive" style={{ padding: 12 }}>
                                                 <div>
@@ -317,11 +317,11 @@ const Account = () => {
                                                             <table className="table">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col"><b>Order code</b></th>
-                                                                        <th scope="col"><b>Purchase date</b></th>
-                                                                        <th scope="col"><b>Total Price</b></th>
-                                                                        <th scope="col"><b>Pay</b></th>
-                                                                        <th scope="col"><b>Status</b></th>
+                                                                        <th scope="col"><b>Mã hóa đơn</b></th>
+                                                                        <th scope="col"><b>Thời gian đặt hàng</b></th>
+                                                                        <th scope="col"><b>Tổng giá tiền</b></th>
+                                                                        <th scope="col"><b>Thanh toán</b></th>
+                                                                        <th scope="col"><b>Trạng thái đơn hàng</b></th>
                                                                         <th></th>
                                                                     </tr>
                                                                 </thead>
@@ -332,7 +332,7 @@ const Account = () => {
                                                                             <td>{formatDateTime(item.dateShip)}</td>
                                                                             <td>{convertToVND(item.totalMoney)}</td>
                                                                             <td>
-                                                                                {item.paid ? <p className="text-success">Completely payment</p> : <p className="text-danger">Unpaid</p>}
+                                                                                {item.paid ? <p className="text-success">Đã thanh toán</p> : <p className="text-danger">Chưa thanh toán</p>}
                                                                             </td>
                                                                             <td className={getStatusClass(item.deliveryStatus)}>{item.deliveryStatus.status}</td>
                                                                             <td>
@@ -341,12 +341,12 @@ const Account = () => {
                                                                                 </button>
                                                                                 {!item.paid && (item.deliveryStatus.id === 1 || item.deliveryStatus.id === 2) && (
                                                                                     <Button className="ml-2" variant="danger" onClick={() => handleCancelOrder(item.id)}>
-                                                                                        Cancel order
+                                                                                        Hủy đơn
                                                                                     </Button>
                                                                                 )}
-                                                                                {item.deliveryStatus.id === 8 && (
+                                                                                {item.deliveryStatus.id === 7 && (
                                                                                     <Button className="ml-2" variant="info" onClick={() => handleTrahang(item.id)}>
-                                                                                        Returns
+                                                                                        Trả hàng
                                                                                     </Button>
                                                                                 )}
                                                                             </td>
@@ -366,23 +366,23 @@ const Account = () => {
                                 </div>
                             </div>
                             <div id="password-tab" className="tab-pane">
-                                <h5 className="text-center">Change Password</h5>
+                                <h5 className="text-center">Thay đổi mật khẩu</h5>
                                 <Form className="mt-5" onSubmit={handleChangePassword}>
                                     <Form.Group className="col-6">
-                                        <FormCheckLabel>Old password</FormCheckLabel>
+                                        <FormCheckLabel>Mật khẩu cũ</FormCheckLabel>
                                         <FormControl
                                             type="password"
-                                            placeholder="Old password"
+                                            placeholder="Nhập mật khẩu cũ"
                                             value={currentPassword}
                                             onChange={(e) => setCurrentPassword(e.target.value)}
                                             required
                                         />
                                     </Form.Group>
                                     <Form.Group className="col-6">
-                                        <FormCheckLabel>New password</FormCheckLabel>
+                                        <FormCheckLabel>Mật khẩu mới</FormCheckLabel>
                                         <FormControl
                                             type="password"
-                                            placeholder="New password"
+                                            placeholder="Nhập mật khẩu mới"
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             required
@@ -390,10 +390,10 @@ const Account = () => {
                                     </Form.Group>
                                     <Form.Group className="col-6">
                                         <FormCheckLabel>
-                                        Confirm new password</FormCheckLabel>
+                                        Nhập lại mật khẩu mới</FormCheckLabel>
                                         <FormControl
                                             type="password"
-                                            placeholder="Confirm new password"
+                                            placeholder="Nhập lại mật khẩu mới"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             required

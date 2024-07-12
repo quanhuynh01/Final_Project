@@ -35,75 +35,104 @@ namespace Backend_API.Controllers
         [HttpGet("/getProduct/{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var productDetails = await _context.Products
-               .Where(p => p.Id == id)
-               .Select(p => new
-               {
-                   Product = p,
-                   Attributes = _context.ProductAttributes
-                                       .Where(pa => pa.ProductId == p.Id)
-                                       .Select(pa => new
-                                       {
-                                           Id = pa.Id,
-                                           NameAttribute = _context.Attributes
-                                                               .Where(a => a.Id == pa.AttributeId)
-                                                               .Select(a => a.NameAttribute)
-                                                               .FirstOrDefault(),
-                                           AttributeValue = _context.Attributevalues
-                                                               .Where(al => al.AttributeId == pa.AttributeId)
-                                                               .Select(al => al.NameValue)
-                                                               .FirstOrDefault()
-                                       })
-                                       .ToList()
-               })
-               .FirstOrDefaultAsync();
-
-            if (productDetails == null)
+            try
             {
-                return NotFound();
+                var productDetails = await _context.Products
+                               .Where(p => p.Id == id)
+                               .Select(p => new
+                               {
+                                   Product = p,
+                                   Attributes = _context.ProductAttributes
+                                                       .Where(pa => pa.ProductId == p.Id)
+                                                       .Select(pa => new
+                                                       {
+                                                           Id = pa.Id,
+                                                           NameAttribute = _context.Attributes
+                                                                               .Where(a => a.Id == pa.AttributeId)
+                                                                               .Select(a => a.NameAttribute)
+                                                                               .FirstOrDefault(),
+
+                                                           AttributeValue = _context.Attributevalues
+                                                                               .Where(al => al.AttributeId == pa.AttributeId && al.Id ==pa.AttributeValueId)
+                                                                               .Select(al => al.NameValue)
+                                                                               .FirstOrDefault()
+                                                       })
+                                                       .ToList()
+                                                       })
+                                                       .FirstOrDefaultAsync(); 
+                if (productDetails == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(productDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return Ok(productDetails);
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<object>>> GetProductDetails(int id)
         {
-            var productDetails = await _context.Products
-                .Where(p => p.Id == id)
-                .Select(p => new
-                {
-                    Id = p.Id,
-                    ProductName = p.ProductName,
-                    Price = p.Price,
-                    SalePrice = p.SalePrice,
-                    Avatar = p.Avatar,
-
-                    Attributes = _context.ProductAttributes
-                                        .Where(pa => pa.ProductId == p.Id)
-                                        .Select(pa => new
-                                        {
-                                            NameAttribute = _context.Attributes
-                                                                .Where(a => a.Id == pa.AttributeId)
-                                                                .Select(a => a.NameAttribute)
-                                                                .FirstOrDefault(),
-                                            AttributeValue = _context.Attributevalues
-                                                                .Where(al => al.AttributeId == pa.AttributeId)
-                                                                .Select(al => al.NameValue)
-                                                                .FirstOrDefault()
-                                        })
-                                        .ToList()
-                })
-                .FirstOrDefaultAsync();
-            var reviewProduct = _context.Review.Where(p => p.ProductId == id).ToList();
-
-            if (productDetails == null)
+            try
             {
-                return NotFound();
-            }
+                var StartNumber = _context.Review.Where(p => p.ProductId == id).Select(a => a.Rating).ToList();
+                double avg = 0;
+                if (StartNumber.Count <= 0)
+                {
+                    avg = 0;
+                }
+                else
+                {
+                    avg = Convert.ToDouble(StartNumber.Average());
+                }
 
-            return Ok(new { productDetails = productDetails, Reviews = reviewProduct });
+                var productDetails = _context.Products
+                    .Where(p => p.Id == id)
+                    .Select(p => new
+                    {
+                        Id = p.Id,
+                        Sku = p.SKU,
+                        ProductName = p.ProductName,
+                        Price = p.Price,
+                        SalePrice = p.SalePrice,
+                        Avatar = p.Avatar,
+                        Start = avg,
+                        Description = p.Description,
+                        Brand = _context.Brands.FirstOrDefault(b => b.Id == p.BrandId),
+                        Attributes = _context.ProductAttributes
+                                            .Where(pa => pa.ProductId == p.Id)
+                                            .Select(pa => new
+                                            {
+                                                NameAttribute = _context.Attributes
+                                                                    .Where(a => a.Id == pa.AttributeId)
+                                                                    .Select(a => a.NameAttribute)
+                                                                    .FirstOrDefault(),
+                                                AttributeValue = _context.Attributevalues
+                                                                    .Where(al => al.AttributeId == pa.AttributeId && al.Id == pa.AttributeValueId)
+                                                                    .Select(al => al.NameValue)
+                                                                    .FirstOrDefault()
+                                            })
+                                            .ToList()
+                    })
+                    .FirstOrDefault();
+                var reviewProduct = _context.Review.Where(p => p.ProductId == id).ToList();
+
+                if (productDetails == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(new { productDetails = productDetails, Reviews = reviewProduct });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/Products/5
@@ -111,52 +140,63 @@ namespace Backend_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, [FromForm] Product product, [FromForm] List<int> CateId)
         {
-            if (id != null)
+            try
             {
-                var data = _context.Products.Find(id);
-                if (data != null)
+                if (id != null)
                 {
-                    data.ProductName = product.ProductName;
-                    data.Price = product.Price;
-                    data.SalePrice = product.SalePrice;
-                    data.Warranty = product.Warranty;
-                    data.WarrantyType = product.WarrantyType;
-                    data.Active = product.Active;
-                    data.BestSeller = product.BestSeller;
-                    data.BrandId = product.BrandId;
-                    data.Description = product.Description;
-                    data.SKU = product.SKU;
-                    data.Stock= product.Stock;
-                    _context.Products.Update(data);
-                    _context.SaveChanges();
-                    if (CateId.Count > 0)
+                    var data = _context.Products.Find(id);
+                    if (data != null)
                     {
-                        // Lấy danh sách danh mục hiện tại của sản phẩm
-                        var currentProductCategories = _context.ProductCategories
-                            .Where(pc => pc.ProductId == id)
-                            .ToList();
-
-                        // Xóa các danh mục hiện tại của sản phẩm
-                        _context.ProductCategories.RemoveRange(currentProductCategories);
-                        await _context.SaveChangesAsync();
-
-                        // Thêm danh mục mới cho sản phẩm
-                        foreach (var cateId in CateId)
+                        data.ProductName = product.ProductName;
+                        data.Price = product.Price;
+                        data.SalePrice = product.SalePrice;
+                        data.Warranty = product.Warranty;
+                        data.WarrantyType = product.WarrantyType;
+                        data.Active = product.Active;
+                        data.BestSeller = product.BestSeller;
+                        data.BrandId = product.BrandId;
+                        data.Description = product.Description;
+                        data.SKU = product.SKU;
+                        data.Stock = product.Stock;
+                        _context.Products.Update(data);
+                        _context.SaveChanges();
+                        if (CateId.Count > 0)
                         {
-                            var productCategory = new ProductCategory
+                            // Lấy danh sách danh mục hiện tại của sản phẩm
+                            var currentProductCategories = _context.ProductCategories
+                                .Where(pc => pc.ProductId == id)
+                                .ToList();
+                            if(currentProductCategories.Count >0 )
                             {
-                                ProductId = id,
-                                CategoryId = cateId
-                            };
-                            _context.ProductCategories.Add(productCategory);
-                        }
-                        await _context.SaveChangesAsync();
+                                // Xóa các danh mục hiện tại của sản phẩm
+                                _context.ProductCategories.RemoveRange(currentProductCategories);
+                                await _context.SaveChangesAsync();
+                            }    
+                            else
+                            {
+                                // Thêm danh mục mới cho sản phẩm
+                                foreach (var cateId in CateId)
+                                {
+                                    var productCategory = new ProductCategory
+                                    {
+                                        ProductId = id,
+                                        CategoryId = cateId
+                                    };
+                                    _context.ProductCategories.Add(productCategory);
+                                }
+                                await _context.SaveChangesAsync();
+                            }                             }
+                        return Ok();
                     }
-                    return Ok();
-                }
 
+                }
+                return Ok();
             }
-            return Ok();
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+         
         }
 
 
@@ -170,104 +210,109 @@ namespace Backend_API.Controllers
         {
             try
             {
-                var p = new Product();
-                p.ProductName = product.ProductName;
-                p.SKU = product.SKU;
-                p.Warranty = product.Warranty;
-                p.WarrantyType = product.WarrantyType;
-                p.SalePrice = product.SalePrice;
-                p.Price = product.Price;
-                p.Active = product.Active;
-                p.BestSeller = product.BestSeller;
-                p.BrandId = product.BrandId;
-                p.DateCreate = DateTime.Now;
-                p.Stock = product.Stock;
-                p.SoftDelete = false;
-        
-                if (p != null)
+                var codeProExist = _context.Products.Any(p => p.SKU == product.SKU);
+                if (codeProExist == false)
                 {
-                    _context.Products.Add(p);
-                    _context.SaveChanges();
+                    var p = new Product();
+                    p.ProductName = product.ProductName;
+                    p.SKU = product.SKU;
+                    p.Warranty = product.Warranty;
+                    p.WarrantyType = product.WarrantyType;
+                    p.SalePrice = product.SalePrice;
+                    p.Price = product.Price;
+                    p.Active = product.Active;
+                    p.BestSeller = product.BestSeller;
+                    p.BrandId = product.BrandId;
+                    p.DateCreate = DateTime.Now;
+                    p.Stock = product.Stock;
+                    p.Description = product.Description;
+                    p.SoftDelete = false; 
                     if (p != null)
                     {
-                        if (AvatarFiles != null && AvatarFiles.Count > 0)
+                        _context.Products.Add(p);
+                        _context.SaveChanges();
+                        if (p != null)
                         {
-                            var dem = 0;
-                            foreach (var file in AvatarFiles)
+                            if (AvatarFiles != null && AvatarFiles.Count > 0)
                             {
-                                if (dem == 0)//ảnh thứ 1 làm ảnh đại diện 
+                                var dem = 0;
+                                foreach (var file in AvatarFiles)
                                 {
-                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
-                                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
-                                    if (!Directory.Exists(imagePath))
+                                    if (dem == 0)//ảnh thứ 1 làm ảnh đại diện 
                                     {
-                                        Directory.CreateDirectory(imagePath);
+                                        var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
+                                        var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
+                                        if (!Directory.Exists(imagePath))
+                                        {
+                                            Directory.CreateDirectory(imagePath);
+                                        }
+                                        var uploadPath = Path.Combine(imagePath, fileName);
+                                        using (var stream = new FileStream(uploadPath, FileMode.Create))
+                                        {
+                                            await file.CopyToAsync(stream);
+                                        }
+                                        var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
+                                        p.Avatar = "/" + relativePath.Replace("\\", "/");
+                                        _context.Products.Update(p);
+                                        _context.SaveChanges();
                                     }
-                                    var uploadPath = Path.Combine(imagePath, fileName);
-                                    using (var stream = new FileStream(uploadPath, FileMode.Create))
+                                    if (dem >= 0)
                                     {
-                                        await file.CopyToAsync(stream);
-                                    }
-                                    var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
-                                    p.Avatar = "/" + relativePath.Replace("\\", "/");
-                                    _context.Products.Update(p);
-                                    _context.SaveChanges();
-                                }
-                                if (dem >= 0)
-                                {
-                                    ProductThumb pt = new ProductThumb();
-                                    pt.ProductId = p.Id;
-                                    var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
-                                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
-                                    if (!Directory.Exists(imagePath))
-                                    {
-                                        Directory.CreateDirectory(imagePath);
-                                    }
-                                    var uploadPath = Path.Combine(imagePath, fileName);
-                                    using (var stream = new FileStream(uploadPath, FileMode.Create))
-                                    {
-                                        await file.CopyToAsync(stream);
-                                    }
-                                    var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
-                                    pt.Image = "/" + relativePath.Replace("\\", "/");
-                                    _context.ProductThumbs.Add(pt);
-                                    _context.SaveChanges();
+                                        ProductThumb pt = new ProductThumb();
+                                        pt.ProductId = p.Id;
+                                        var fileName = $"{dem}{Path.GetExtension(file.FileName)}";
+                                        var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "Product", $"{p.Id}");
+                                        if (!Directory.Exists(imagePath))
+                                        {
+                                            Directory.CreateDirectory(imagePath);
+                                        }
+                                        var uploadPath = Path.Combine(imagePath, fileName);
+                                        using (var stream = new FileStream(uploadPath, FileMode.Create))
+                                        {
+                                            await file.CopyToAsync(stream);
+                                        }
+                                        var relativePath = Path.Combine("images", "Product", $"{p.Id}", fileName);
+                                        pt.Image = "/" + relativePath.Replace("\\", "/");
+                                        _context.ProductThumbs.Add(pt);
+                                        _context.SaveChanges();
 
+                                    }
+                                    dem++;
                                 }
-                                dem++;
                             }
-                        }
-                        if (CateId.Count > 0)
-                        {
-                            foreach (var item in CateId)
+                            if (CateId.Count > 0)
                             {
-                                ProductCategory pc = new ProductCategory();
-                                pc.ProductId = p.Id;
-                                pc.CategoryId = item;
-                                _context.ProductCategories.Add(pc);
-                                _context.SaveChanges();
+                                foreach (var item in CateId)
+                                {
+                                    ProductCategory pc = new ProductCategory();
+                                    pc.ProductId = p.Id;
+                                    pc.CategoryId = item;
+                                    _context.ProductCategories.Add(pc);
+                                    _context.SaveChanges();
+                                }
                             }
-                        }
-                        if (AttributevalueId.Count > 0)
-                        {
-                            foreach (var item in AttributevalueId)
+                            if (AttributevalueId.Count > 0)
                             {
-                                var idThuocTinhtheogiatri = _context.Attributevalues.Where(i => i.Id == item).FirstOrDefault();
-                                ProductAttribute pa = new ProductAttribute();
-                                pa.ProductId = p.Id;
-                                pa.AttributeValueId = item;
-                                pa.AttributeId = idThuocTinhtheogiatri.AttributeId;
-                                _context.ProductAttributes.Add(pa);
-                                _context.SaveChanges();
+                                foreach (var item in AttributevalueId)
+                                {
+                                    var idThuocTinhtheogiatri = _context.Attributevalues.Where(i => i.Id == item).FirstOrDefault();
+                                    ProductAttribute pa = new ProductAttribute();
+                                    pa.ProductId = p.Id;
+                                    pa.AttributeValueId = item;
+                                    pa.AttributeId = idThuocTinhtheogiatri.AttributeId;
+                                    _context.ProductAttributes.Add(pa);
+                                    _context.SaveChanges();
+                                }
                             }
                         }
-                    }
-                    return Ok(new { data = product, id = p.Id });
+                        return Ok(new { status = true, data = product, id = p.Id });
+                    } 
                 }
                 else
                 {
-                    return NoContent();
+                    return Ok(new { status = false ,message = "Mã sản phẩm đã tồn tại"});
                 }
+
             }
             catch (Exception ex)
             {
@@ -317,18 +362,26 @@ namespace Backend_API.Controllers
         [HttpDelete("/deleteAtttributeProduct/{id}")]
         public async Task<IActionResult> deleteAtttributeProduct(int id)
         {
-            var data = _context.ProductAttributes.Find(id);
-            if
-                (data == null)
+            try
             {
-                return BadRequest();
+                var data = _context.ProductAttributes.Find(id);
+                if
+                    (data == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    _context.ProductAttributes.Remove(data);
+                    _context.SaveChanges();
+                    return Ok();
+                }
             }
-            else
-            {
-                _context.ProductAttributes.Remove(data);
-                _context.SaveChanges();
-                return Ok();
+            catch(Exception ex)
+            {    
+
             }
+            return Ok();
         }
         //[HttpPost("addAttribute/{idAttribute}")]
         //public async Task<IActionResult> PostProductAttribute(int id)
@@ -336,72 +389,73 @@ namespace Backend_API.Controllers
 
         //    return NoContent();
         //}
-        [HttpPost("addToCart")]
-        public async Task<IActionResult> addToCart([FromForm] string IdUser, [FromForm] Product Product)
-        {
-            return NoContent();
-        }
+
 
         //lấy sản phẩm theo danh mục
         [HttpGet("/danh-muc/{id}")]
         public async Task<IActionResult> GetProductsByCateId(int id)//id của Categories
         {
-            // var data = _context.ProductCategories.Include(p=>p.Product).Include(c=>c.Category).Where(p => p.CategoryId == id);
-
-
-            var data = await _context.ProductCategories
-                                                     .Where(pc => pc.CategoryId == id && pc.Product.SoftDelete == false) // Lọc các sản phẩm thuộc danh mục có Id = id và có SoftDelete = false
-                                                     .Select(pc => new
-                                                     {
-                                                         Id = pc.ProductId, // Lấy Id của sản phẩm
-                                                         Product = _context.Products
-                                                             .Where(p => p.Id == pc.ProductId && p.SoftDelete == false) // Lọc sản phẩm theo Id và SoftDelete = false
-                                                             .FirstOrDefault(), // Lấy thông tin chi tiết của sản phẩm (nếu cần)
-                                                         Attributes = _context.ProductAttributes
-                                                             .Where(pa => pa.ProductId == pc.ProductId)
-                                                             .Select(pa => new
-                                                             {
-                                                                 NameAttribute = _context.Attributes
-                                                                     .Where(a => a.Id == pa.AttributeId)
-                                                                     .Select(a => a.NameAttribute)
-                                                                     .FirstOrDefault(), // Lấy tên thuộc tính
-                                                                 AttributeValue = _context.Attributevalues
-                                                                     .Where(av => av.Id == pa.AttributeValueId)
-                                                                     .Select(av => new
-                                                                     {
-                                                                         Idvalue = av.Id,
-                                                                         NameValue = av.NameValue,
-                                                                     })
-                                                                     .FirstOrDefault() // Lấy giá trị của thuộc tính
-                                                             })
-                                                             .ToList() // Chuyển thành List các thuộc tính và giá trị tương ứng
-                                                     })
-                                                     .ToListAsync(); // Chuyển kết quả thành List và thực thi truy vấn
-              
-            var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault();
-            var attributeValues = _context.Attributes
-                                                   .Where(a => a.CategoryId == id)
-                                                   .Select(a => new
-                                                   {
-                                                       NameAttribute = a.NameAttribute,
-                                                       AttributeValues = _context.Attributevalues
-                                                                                 .Where(b => b.AttributeId == a.Id)
-                                                                                 .Select(a => new
-                                                                                 {
-                                                                                     Id = a.Id,
-                                                                                     NameValue = a.NameValue
-                                                                                 })
-                                                                                 .ToList()
-                                                   })
-                                                   .ToList();
-            if (data != null)
+            try
             {
-                return Ok(new { data, nameCategories = NameCate.NameCategory, AttributeValue = attributeValues });
+                var data = await _context.ProductCategories
+                                         .Where(pc => pc.CategoryId == id && pc.Product.SoftDelete == false) // Lọc các sản phẩm thuộc danh mục có Id = id và có SoftDelete = false
+                                         .Select(pc => new
+                                         {
+                                             Id = pc.ProductId, // Lấy Id của sản phẩm
+                                             Product = _context.Products
+                                                 .Where(p => p.Id == pc.ProductId && p.SoftDelete == false) // Lọc sản phẩm theo Id và SoftDelete = false
+                                                 .FirstOrDefault(), // Lấy thông tin chi tiết của sản phẩm (nếu cần)
+                                             Attributes = _context.ProductAttributes
+                                                 .Where(pa => pa.ProductId == pc.ProductId)
+                                                 .Select(pa => new
+                                                 {
+                                                     NameAttribute = _context.Attributes
+                                                         .Where(a => a.Id == pa.AttributeId)
+                                                         .Select(a => a.NameAttribute)
+                                                         .FirstOrDefault(), // Lấy tên thuộc tính
+                                                     AttributeValue = _context.Attributevalues
+                                                         .Where(av => av.Id == pa.AttributeValueId)
+                                                         .Select(av => new
+                                                         {
+                                                             Idvalue = av.Id,
+                                                             NameValue = av.NameValue,
+                                                         })
+                                                         .FirstOrDefault() // Lấy giá trị của thuộc tính
+                                                 })
+                                                 .ToList() // Chuyển thành List các thuộc tính và giá trị tương ứng
+                                         })
+                                         .ToListAsync(); // Chuyển kết quả thành List và thực thi truy vấn
+
+                var NameCate = _context.Categories.Where(c => c.Id == id).FirstOrDefault();
+                var attributeValues = _context.Attributes
+                                                       .Where(a => a.CategoryId == id)
+                                                       .Select(a => new
+                                                       {
+                                                           NameAttribute = a.NameAttribute,
+                                                           AttributeValues = _context.Attributevalues
+                                                                                     .Where(b => b.AttributeId == a.Id)
+                                                                                     .Select(a => new
+                                                                                     {
+                                                                                         Id = a.Id,
+                                                                                         NameValue = a.NameValue
+                                                                                     })
+                                                                                     .ToList()
+                                                                                       })
+                                                                                       .ToList();
+                if (data != null)
+                {
+                    return Ok(new { data, nameCategories = NameCate.NameCategory, AttributeValue = attributeValues });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Không có dữ liệu" });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(new { message = "Không có dữ liệu" });
+
             }
+            return Ok();
         }
 
         //tìm kiếm sản phẩm
@@ -451,6 +505,14 @@ namespace Backend_API.Controllers
                 .ToList();
             return Ok(groupedProducts);
         }
+
+        [HttpGet("lspronew")]
+        public async Task<IActionResult> productNew()
+        {
+            var data = _context.Products.OrderBy(p=>p.DateCreate).ToList(); 
+            return Ok(data);
+        }
+
         [HttpPost("ImportExcel")]
         public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)
         {

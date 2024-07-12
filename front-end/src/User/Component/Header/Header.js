@@ -87,7 +87,7 @@ const Header = ({ soluong }) => {
             <div className="btn-group">
               {Name != null ? (
                 <div className="dropdown-container">
-                  <span className='click-show btn '>Hello <b>{Name}</b></span>
+                  <span className='click-show btn '>Xin chào <b>{Name}</b></span>
                   <button type="button" className="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown"><i className='fa fa-cog'></i></button>
                   <div className="dropdown-menu dropdown-menu-right  " style={{ marginTop: "35px" }}>
                     <button className="dropdown-item " type="button"> <Link to={'/tai-khoan'} className='text-dark'><i className='fa fa-user mr-2'></i> Account</Link></button>

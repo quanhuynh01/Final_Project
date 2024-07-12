@@ -12,6 +12,7 @@ const Home = () => {
   const [Categories, setCategories] = useState([]);
   const [User, setUser] = useState(null);
 
+  const [productNew, setproductNew] = useState([]);
 
   const [show, setShowLogin] = useState(false); 
   const handleCloseLogin = () => setShowLogin(false);
@@ -21,10 +22,12 @@ const Home = () => {
     axios.get('https://localhost:7201/api/Products')
       .then(res => setProducts(res.data.slice(0, 10)));//slice(0, 15) lấy ra 15 sản phẩm đầu
     axios.get(`https://localhost:7201/api/Categories`)
-      .then(res => {
-       
+      .then(res => { 
         setCategories(res.data)
       });
+      axios.get(`https://localhost:7201/api/Products/lspronew`).then(res=>{
+        setproductNew(res.data);
+      })
   }, []);
   //khởi chạy khi render để lấy id User
   useEffect(() => {
@@ -46,7 +49,7 @@ const Home = () => {
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Add to cart successfully",
+              title: "Thêm vào giỏ hàng thành công",
               showConfirmButton: false,
               timer: 1000
             });
@@ -88,38 +91,39 @@ const Home = () => {
      const filteredProducts = products.filter(p => p.softDelete === false);
      const sortedProducts = filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
    
+     console.log(filteredProducts);
   return (<>
 <div className="container-fluid pt-5">
   <div className="row px-xl-5 pb-3">
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
         <h1 className="fa fa-check text-primary m-0 mr-3" />
-        <h5 className="font-weight-semi-bold m-0">Quality Product</h5>
+        <h5 className="font-weight-semi-bold m-0">Sản phẩm chất lượng</h5>
       </div>
     </div>
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
         <h1 className="fa fa-truck text-primary m-0 mr-2"></h1>  
-        <h5 className="font-weight-semi-bold m-0">Free Shipping</h5>
+        <h5 className="font-weight-semi-bold m-0">Miễn phí giao hàng</h5>
       </div>
     </div>
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
         <h1 className="fa fa-exchange text-primary m-0 mr-3" />
-        <h5 className="font-weight-semi-bold m-0">14-Day Return</h5>
+        <h5 className="font-weight-semi-bold m-0">14 ngày hoàn trả</h5>
       </div>
     </div>
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="d-flex align-items-center bg-light mb-4" style={{padding: 30}}>
         <h1 className="fa fa-phone text-primary m-0 mr-3" />
-        <h5 className="font-weight-semi-bold m-0">24/7 Support</h5>
+        <h5 className="font-weight-semi-bold m-0">Hỗ trợ 24/7</h5>
       </div>
     </div>
   </div>
 </div>
 
 <div className="container-fluid pt-5">
-      <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Categories</span></h2>
+      <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">DANH MỤC</span></h2>
       <div className="row px-xl-5 pb-3">
         {
           Categories.map((item, index) => {
@@ -145,10 +149,10 @@ const Home = () => {
 
     {/* sản phẩm */}
 <div className="container-fluid pt-5 pb-3">
-  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Featured Products</span></h2>
+  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Sản phẩm nổi bật</span></h2>
   <div className="row px-xl-5">
     {
-      products.filter(p=>p.softDelete == false).map((item,index)=>{
+      products.filter(p=>p.softDelete === false && p.bestSeller === true).map((item,index)=>{
         return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
           <div className="product-item bg-light mb-4">
             <div className="product-img position-relative overflow-hidden">
@@ -192,9 +196,9 @@ const Home = () => {
           <div className="product-offer mb-30" style={{ height: 300 }}>
             <img className="img-fluid" src="https://us.v-cdn.net/cdn-cgi/image/fit=scale-down,width=1600/https://us.v-cdn.net/6036147/uploads/G7NETX2PGYWO/ai-powered-customer-service-enhancing-the-user-experience.jpg" alt='' />
             <div className="offer-text">
-              <h6 className="text-white text-uppercase">Save 20%</h6>
-              <h3 className="text-white mb-3">Special Offer</h3>
-              <a href='' className="btn btn-primary">Shop Now</a>
+            <h6 className="text-white text-uppercase">Tiết kiệm đếm 20%</h6>
+              <h3 className="text-white mb-3">Ưu đãi đặt biệt</h3>
+              <a href='' className="btn btn-primary">Xem ngay</a>
             </div>
           </div>
         </div>
@@ -202,9 +206,9 @@ const Home = () => {
           <div className="product-offer mb-30" style={{ height: 300 }}>
             <img className="img-fluid" src="https://static-ecapac.acer.com/media/wysiwyg/vn-2023-laptop_gaming-532x332.jpg" alt='' />
             <div className="offer-text">
-              <h6 className="text-white text-uppercase">Save 20%</h6>
-              <h3 className="text-white mb-3">Special Offer</h3>
-              <a href='' className="btn btn-primary">Shop Now</a>
+              <h6 className="text-white text-uppercase">Tiết kiệm đếm 20%</h6>
+              <h3 className="text-white mb-3">Ưu đãi đặt biệt</h3>
+              <a href='' className="btn btn-primary">Xem ngay</a>
             </div>
           </div>
         </div>
@@ -212,57 +216,56 @@ const Home = () => {
     </div>
 
 <div className="container-fluid pt-5 pb-3">
-  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Recent Products</span></h2>
+  <h2 className="section-title position-relative text-uppercase mx-xl-5 mb-4"><span className="bg-secondary pr-3">Sản phẩm mới</span></h2>
   <div className="row px-xl-5">
-  {
-      sortedProducts.filter(p=>p.softDelete == false).map((item,index)=>{
-        return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
-          <div className="product-item bg-light mb-4">
-            <div className="product-img position-relative overflow-hidden">
-              <img className="img-fluid w-100" src={`https://localhost:7201${item.avatar}`} alt='' />
-              <div className="product-action">
-                <a onClick={()=>addToCart(item)} className="btn btn-outline-dark btn-square"  ><i className="fa fa-shopping-cart" /></a>
-                <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-heart" /></a> 
-                <Link  className="btn btn-outline-dark btn-square" to={`/chi-tiet-san-pham/${item.id}`}><i className="fa fa-search" /></Link>  
-              </div>
-            </div>
-            <div className="text-center py-4">
-              <Link
-                className="h6 text-decoration-none text-truncate"
-                to={`/chi-tiet-san-pham/${item.id}`}
-              >
-                {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName}
-              </Link>
+        {
+          productNew.map((item, index) => {
+            return (<div key={index} className="col-lg-3 col-md-4 col-sm-6 pb-1">
+              <div className="product-item bg-light mb-4">
+                <div className="product-img position-relative overflow-hidden">
+                  <img className="img-fluid w-100" src={`https://localhost:7201${item.avatar}`} alt='' />
+                  <div className="product-action">
+                    <a onClick={() => addToCart(item)} className="btn btn-outline-dark btn-square"  ><i className="fa fa-shopping-cart" /></a>
+                    <a className="btn btn-outline-dark btn-square" href=""><i className="fa fa-heart" /></a>
+                    <Link className="btn btn-outline-dark btn-square" to={`/chi-tiet-san-pham/${item.id}`}><i className="fa fa-search" /></Link>
+                  </div>
+                </div>
+                <div className="text-center py-4">
+                  <Link
+                    className="h6 text-decoration-none text-truncate"
+                    to={`/chi-tiet-san-pham/${item.id}`}
+                  >
+                    {item.productName.length > 40 ? `${item.productName.slice(0, 40)}` : item.productName}
+                  </Link>
 
-              <div className="d-flex align-items-center justify-content-center mt-2">
-                <h5>{convertToVND(item.salePrice)}</h5><h6 className="text-muted ml-2"><del>{convertToVND(item.price)}</del></h6>
+                  <div className="d-flex align-items-center justify-content-center mt-2">
+                    <h5>{convertToVND(item.salePrice)}</h5><h6 className="text-muted ml-2"><del>{convertToVND(item.price)}</del></h6>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center mb-1">
+                    <small className="fa fa-star text-primary mr-1" />
+                    <small className="fa fa-star text-primary mr-1" />
+                    <small className="fa fa-star text-primary mr-1" />
+                    <small className="fa fa-star text-primary mr-1" />
+                    <small className="fa fa-star text-primary mr-1" />
+                    <small>(99)</small>
+                  </div>
+                </div>
               </div>
-              <div className="d-flex align-items-center justify-content-center mb-1">
-                <small className="fa fa-star text-primary mr-1" />
-                <small className="fa fa-star text-primary mr-1" />
-                <small className="fa fa-star text-primary mr-1" />
-                <small className="fa fa-star text-primary mr-1" />
-                <small className="fa fa-star text-primary mr-1" />
-                <small>(99)</small>
-              </div>
-            </div>
-          </div>
-        </div>)
-      })
-        }  
+            </div>)
+          })
+        }   
   </div>
-</div>
-
+</div> 
     <Modal show={show} onHide={handleCloseLogin} centered>
       <div className='row justify-content-center mt-4'>
-        <h1 className='text-danger'>ShopMember</h1>
+        <h1 className='text-danger'>QT Member</h1>
       </div> 
       <Modal.Body>
         <div className='row justify-content-center'>
           <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:80/q:90/plain/https://cellphones.com.vn/media/wysiwyg/chibi2.png" height={80} alt="cps-smember-icon" />
         </div>
         <div className='mt-3'>
-          <h6 style={{ textAlign: 'center' }}>Vui lòng đăng nhập tài khoản Shopmember để xem ưu đãi và thanh toán dễ dàng hơn.</h6>
+          <h6 style={{ textAlign: 'center' }}>Vui lòng đăng nhập tài khoản QT Member để xem ưu đãi và thanh toán dễ dàng hơn.</h6>
         </div>
       </Modal.Body>
       <div className='row justify-content-center p-2'>

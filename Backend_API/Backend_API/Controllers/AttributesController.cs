@@ -47,32 +47,32 @@ namespace Backend_API.Controllers
         // PUT: api/Attributes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAttribute(int id, Attribute attribute)
+        public async Task<IActionResult> PutAttribute(int id,[FromForm] Attribute attribute, [FromForm] List<int> CateId)
         {
-            if (id != attribute.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(attribute).State = EntityState.Modified;
-
+ 
+            var data = _context.Attributes.Find(id); 
             try
             {
-                await _context.SaveChangesAsync();
+                if (data != null)
+                {
+                    data.NameAttribute = attribute.NameAttribute;
+                    if (CateId.Count > 0 )
+                    {
+                        foreach(var c in CateId)
+                        {
+                            data.CategoryId = c;
+                        } 
+                    }
+                    _context.Attributes.Update(data);
+                    _context.SaveChanges();
+                    return Ok();
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!AttributeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+                
+            } 
+            return Ok();
         }
 
         // POST: api/Attributes
@@ -86,6 +86,7 @@ namespace Backend_API.Controllers
             {
                 a.CategoryId = item;
             }
+            a.Active = true;
             _context.Attributes.Add(a);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetAttribute", new { id = a.Id }, a); 

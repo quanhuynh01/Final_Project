@@ -6,6 +6,8 @@ import axios from "axios";
 import { Button, Form, InputGroup, Modal, Tab, Tabs } from "react-bootstrap";
 import Select from 'react-select';
 import Swal from "sweetalert2";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const ProductsEdit = () => {
     const { id } = useParams();
@@ -30,10 +32,10 @@ const ProductsEdit = () => {
     const [Categories, setCategories] = useState([]); // Hiển thị danh mục
     const [Catepost, setCatepost] = useState([]); // Sản phẩm theo danh mục
     const [Attributevalues, setAttributevalues] = useState([]);
-  
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         axios.get(`https://localhost:7201/getProduct/${id}`).then(res => {
-             console.log(res.data); 
+            setLoading(false);
             setAttributeViewHave(res.data.attributes);
             setProductDetail(res.data.product);  
         });
@@ -150,7 +152,11 @@ const ProductsEdit = () => {
         });
     }
     
-    console.log(Catepost);
+    const btnShow = (row) => {
+        return (<>
+            <Button style={{width:"200px"}} className="btn " onClick={() => handleClickShowAttributeValue(row.id)}   >{row.nameAttribute}</Button>
+        </>)
+    }
     return (
         <>
             <SidebarAdmin />
@@ -282,23 +288,34 @@ const ProductsEdit = () => {
                                     </div>)
                                  })
                             }
-                            </div>
-                            
+                            </div> 
                         </div>
                        
                         <Form className="card p-3">    
                             <h4>Chọn danh sách thuộc tính cho sản phẩm</h4>
-                            <Form.Group className="mb-3 row p-3">
+                            <DataTable
+                                value={Attribute}
+                                loading={loading}
+                                paginator
+                                rows={10}
+                                rowsPerPageOptions={[10, 25, 50]}
+                                className="p-datatable-customers"
+                            >
+                                <Column field="id" header="###" sortable />
+                                <Column body={btnShow} header="Tên thuộc tính" />
+                            </DataTable>
+                            {/* <Form.Group className="mb-3 row p-3">
                                 {
                                     Attribute.map((item,index)=>{
                                         return(<div className="card p-2 col-6" key={index}>
-                                                 {/* <FormLabel key={index} className="  p-2">{item.nameAttribute}</FormLabel> */}
+                                                 <FormLabel key={index} className="  p-2">{item.nameAttribute}</FormLabel>
                                                  <Button className="btn " onClick={()=>handleClickShowAttributeValue(item.id)} key={index} >{item.nameAttribute}</Button>   
                                         </div> 
                                         )
                                     }) 
                                 } 
-                        </Form.Group>
+                                 
+                        </Form.Group> */}
                         </Form>  
                     </Tab>
                    

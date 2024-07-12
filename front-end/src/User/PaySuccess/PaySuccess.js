@@ -5,6 +5,7 @@ import Navbar from "../Component/Navbar/Navbar";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import $ from 'jquery'
+import Footer from "../Component/Footer/Footer";
 const PaySuccess = () => {
     const [queryString, setqueryString] = useState(null);
     const [invoice, setinvoice] = useState({code:""}); 
@@ -53,19 +54,18 @@ const PaySuccess = () => {
         }
         //lấy order 
 
-    }, [queryString]);
- 
-     console.log(invoice);
+    }, [queryString]); 
     return (<>
         <Header />
         <Navbar/>
         <div className="container card mt-5 p-3 inforpayment d-none" > 
-            <h1 className="text-success text-center"><i className="fa fa-check-circle">Payment success</i></h1>
+            <h1 className="text-success text-center"><i className="fa fa-check-circle">Thanh toán thành công</i></h1>
             <div className="infor-payment d-flex mt-2"  style={{alignItems:"center",flexDirection:"column-reverse"}}>
                 <h5 className="d-flex">Mã đơn hàng của bạn:  <b className="text-success ">{invoice.code}</b></h5>
                  <h5>Xem chi tiết đơn hàng <Link style={{fontSize:"15px" }} to={`/tai-khoan`}>Tại đây</Link></h5>
             </div>
         </div> 
+        <Footer/>
     </>);
 }
  

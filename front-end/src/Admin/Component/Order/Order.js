@@ -6,6 +6,7 @@ import { Column } from 'primereact/column';
 import SidebarAdmin from '../SidebarAdmin/SidebarAdmin';
 import HeaderAdmin from '../HeaderAdmin/HeaderAdmin';
 import { Modal, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Order = () => {
     const [orders, setOrders] = useState([]);
@@ -106,6 +107,7 @@ const Order = () => {
         return (
             <div>
                   <Button onClick={() => handleDetail(rowData.id)} className="btn btn-info" >Xem chi tiết </Button>
+                  <Link to={`edit/${rowData.id}`} className='btn btn-warning ml-2' ><i className='fa fa-edit'></i></Link>
             </div>
         );
     }
@@ -120,6 +122,16 @@ const Order = () => {
                 setlsOrderDetail(res.data);
             }
          });
+    } 
+    const paid= (row)=>{
+        return(<>
+            {row.paid === true && (
+                <p className='text-success'>Đã thanh toán</p>
+            )} 
+             {row.paid === false && (
+                <p className='text-danger'>Chưa thanh toán</p>
+            )} 
+        </>)
     }
     return (<>
 
@@ -130,7 +142,7 @@ const Order = () => {
                     <div className="col-sm-4">
                         <div className="page-header float-left">
                             <div className="page-title">
-                                <h1>Danh mục sản phẩm</h1>
+                                <h1>Danh sách đơn hàng</h1>
                             </div>
                         </div>
                     </div>
@@ -138,7 +150,7 @@ const Order = () => {
                         <div className="page-header float-right">
                             <div className="page-title">
                                 <ol className="breadcrumb text-right">
-                                    <li className="breadcrumb-item active">Danh mục sản phẩm</li>
+                                    <li className="breadcrumb-item active">Danh sách đơn hàng</li>
                                 </ol>
                             </div>
                         </div>
@@ -150,13 +162,14 @@ const Order = () => {
                             <div className="col-lg-12">
                                 <div className="card">
                                     <div className="card-header">
-                                        <strong className="card-title">Danh sách danh mục sản phẩm</strong>
+                                        <strong className="card-title">Danh sách đơn hàng</strong>
                                     </div>
                                     <div className="card-body">
                                     <DataTable value={orders} loading={loading} paginator rows={10} rowsPerPageOptions={[10, 25, 50]} className="p-datatable-customers">
                                         <Column field="dateShip" header="Ngày tạo" sortable />
                                         <Column field="user.fullName" header="Tên khách hàng" sortable />
                                         <Column field="deliveryStatus" header="Trạng thái" body={statusBodyTemplate} sortable />
+                                        <Column header="Trạng thái" body={paid} sortable />
                                         <Column header="Chức năng" body={actionBodyTemplate} />
                                         <Column header="Xem chi tiết" body={deltail} />
                                     </DataTable>

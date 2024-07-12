@@ -15,6 +15,7 @@ namespace Backend_API.Model
         public string Address { get; set; }
 
         public DateTime LastLogin { get; set; }
+        public bool Active { get; set; }
 
 
     }

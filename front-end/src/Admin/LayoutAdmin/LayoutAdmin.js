@@ -16,25 +16,25 @@ const LayoutAdmin = () => {
     axios.get(`https://localhost:7201/api/Orders`).then((res) => setLsOrder(res.data));
   }, []);
 
-  const deliveredOrdersCount = lsOrder.filter((order) => order.deliveryStatusId === 8).length;
+  const deliveredOrdersCount = lsOrder.filter((order) => order.deliveryStatusId === 4).length;
 
-  const totalRevenue = lsOrder.reduce((total, order) => {
-    if (order.deliveryStatusId === 8) {
-      return total + parseFloat(order.totalMoney);
-    }
-    return total;
-  }, 0);
+  // const totalRevenue = lsOrder.reduce((total, order) => {
+  //   if (order.deliveryStatusId === 7) {
+  //     return total + parseFloat(order.totalMoney);
+  //   }
+  //   return total;
+  // }, 0);
 
   const convertToVND = (price) => {
     const priceInVND = price * 1000;
     return priceInVND.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
   };
 
-  const deliveredOrders = lsOrder.filter((order) => order.deliveryStatusId === 8);
+  const deliveredOrders = lsOrder.filter((order) => order.deliveryStatusId ===4);
 
   const labels = deliveredOrders.map((order) => order.code || `Order ${order.id}`);
 
-  const data = deliveredOrders.map((order) => order.totalMoney); 
+  const data = deliveredOrders.map((order) => order.totalMoney * 1000); 
   const chartData = {
     labels: labels,
     datasets: [
@@ -74,69 +74,69 @@ const LayoutAdmin = () => {
 
   // Tính toán doanh thu theo ngày cho tháng hiện tại
   const currentMonth = moment().month();
-  const dailyRevenue = lsOrder.filter(order => order.deliveryStatusId === 8 && moment(order.date).month() === currentMonth)
+  const dailyRevenue = lsOrder.filter(order => order.deliveryStatusId === 4&& moment(order.date).month() === currentMonth)
     .reduce((acc, order) => {
       const date = moment(order.date).format('YYYY-MM-DD');
       if (!acc[date]) {
         acc[date] = 0;
       }
-      acc[date] += parseFloat(order.totalMoney);
+      acc[date] += parseFloat(order.totalMoney *1000);
       return acc;
     }, {});
 
   const dailyLabels = Object.keys(dailyRevenue).sort();
   const dailyData = dailyLabels.map(label => dailyRevenue[label]);
 
-  const dailyChartData = {
-    labels: dailyLabels,
-    datasets: [
-      {
-        label: "Doanh thu theo ngày",
-        backgroundColor: "rgba(153,102,255,0.2)",
-        borderColor: "rgba(153,102,255,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(153,102,255,0.4)",
-        hoverBorderColor: "rgba(153,102,255,1)",
-        data: dailyData,
-      },
-    ],
-  };
+  // const dailyChartData = {
+  //   labels: dailyLabels,
+  //   datasets: [
+  //     {
+  //       label: "Doanh thu theo ngày",
+  //       backgroundColor: "rgba(153,102,255,0.2)",
+  //       borderColor: "rgba(153,102,255,1)",
+  //       borderWidth: 1,
+  //       hoverBackgroundColor: "rgba(153,102,255,0.4)",
+  //       hoverBorderColor: "rgba(153,102,255,1)",
+  //       data: dailyData,
+  //     },
+  //   ],
+  // };
 
-  const monthlyRevenue = Array(12).fill(0); 
-  lsOrder.filter(order => order.deliveryStatusId === 8).forEach((order) => {
-    const month = moment(order.date).month(); 
-    monthlyRevenue[month] += parseFloat(order.totalMoney);
-  });
+  // const monthlyRevenue = Array(12).fill(0); 
+  // lsOrder.filter(order => order.deliveryStatusId === 4).forEach((order) => {
+  //   const month = moment(order.date).month(); 
+  //   monthlyRevenue[month] += parseFloat(order.totalMoney * 1000 );
+  // });
 
-  const monthlyLabels = [
-    "Tháng 1",
-    "Tháng 2",
-    "Tháng 3",
-    "Tháng 4",
-    "Tháng 5",
-    "Tháng 6",
-    "Tháng 7",
-    "Tháng 8",
-    "Tháng 9",
-    "Tháng 10",
-    "Tháng 11",
-    "Tháng 12"
-  ];
+  // const monthlyLabels = [
+  //   "Tháng 1",
+  //   "Tháng 2",
+  //   "Tháng 3",
+  //   "Tháng 4",
+  //   "Tháng 5",
+  //   "Tháng 6",
+  //   "Tháng 7",
+  //   "Tháng 8",
+  //   "Tháng 9",
+  //   "Tháng 10",
+  //   "Tháng 11",
+  //   "Tháng 12"
+  // ];
 
-  const monthlyChartData = {
-    labels: monthlyLabels,
-    datasets: [
-      {
-        label: "Doanh thu theo tháng",
-        backgroundColor: "rgba(255,159,64,0.2)",
-        borderColor: "rgba(255,159,64,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(255,159,64,0.4)",
-        hoverBorderColor: "rgba(255,159,64,1)",
-        data: monthlyRevenue,
-      },
-    ],
-  };
+  // const monthlyChartData = {
+  //   labels: monthlyLabels,
+  //   datasets: [
+  //     {
+  //       label: "Doanh thu theo tháng",
+  //       backgroundColor: "rgba(255,159,64,0.2)",
+  //       borderColor: "rgba(255,159,64,1)",
+  //       borderWidth: 1,
+  //       hoverBackgroundColor: "rgba(255,159,64,0.4)",
+  //       hoverBorderColor: "rgba(255,159,64,1)",
+  //       data: monthlyRevenue,
+  //     },
+  //   ],
+  // };
 
   return (
     <>
@@ -210,7 +210,7 @@ const LayoutAdmin = () => {
               </div>
             </div>
           </div>
-          <div className="col-xl-6">
+          {/* <div className="col-xl-6">
             <div className="card">
               <div className="card-body">
                 <h4 className="mb-3">Doanh thu theo ngày</h4>
@@ -225,7 +225,7 @@ const LayoutAdmin = () => {
                 <Chart type="bar" data={monthlyChartData} options={chartOptions} />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

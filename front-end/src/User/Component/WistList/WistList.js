@@ -97,8 +97,8 @@ const WistList = () => {
                 <div className="row px-xl-5">
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
-                            <Link to={`/`} className="breadcrumb-item text-dark">Home</Link>
-                            <span className="breadcrumb-item active">Wish List</span>
+                            <Link to={`/`} className="breadcrumb-item text-dark">Trang chủ</Link>
+                            <span className="breadcrumb-item active">Sản phẩm yêu thích</span>
                         </nav>
                     </div>
                 </div>

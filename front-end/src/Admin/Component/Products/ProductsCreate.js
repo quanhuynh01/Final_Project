@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Select from 'react-select';
 import Swal from "sweetalert2";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const ProductsCreate = () => {
     const navigate = useNavigate();
@@ -14,12 +16,15 @@ const ProductsCreate = () => {
     const [Catepost, setCatepost] = useState([]);//sản phẩm theo danh mục
     const [Attribute, setAttribute] = useState([]);//View thuộc tính của sản phẩm 
     const [Attributevalues, setAttributevalues] = useState([]);
-
+    const [loading, setLoading] = useState(true);
     const [AttributevaluesForProduct, setAttributevaluesForProduct] = useState([]);
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`).then(res => setBrand(res.data));
         axios.get(`https://localhost:7201/api/Categories`).then(res => setCategories(res.data));
-        axios.get(`https://localhost:7201/api/Attributes`).then(res => setAttribute(res.data));
+        axios.get(`https://localhost:7201/api/Attributes`).then(res =>{
+            setAttribute(res.data);
+            setLoading(false)
+        } );
     }, []);
 
     const [Products, setProducts] = useState({ avatarFiles: [], Active: false, BestSeller: false });
@@ -83,8 +88,7 @@ const ProductsCreate = () => {
            
         });
     }
-    
-    console.log(AttributevaluesForProduct);
+     
 
     useEffect(() => {
     }, [Products])
@@ -303,6 +307,16 @@ const ProductsCreate = () => {
                                             )
                                         })
                                     }
+                                     <DataTable
+                                        value={Attribute}
+                                        loading={loading}
+                                        paginator
+                                        rows={10}
+                                        rowsPerPageOptions={[10, 25, 50]}
+                                        className="p-datatable-customers"
+                                    >
+                                        <Column field="id" header="###" sortable /> 
+                                    </DataTable>
                                 </Form.Group>
                             </Form>
                         </Tab> 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_API.Model;
+using System.Globalization;
 
 namespace Backend_API.Controllers
 {
@@ -122,18 +123,18 @@ namespace Backend_API.Controllers
         public async Task<IActionResult> addOrder([FromBody] Order order)
         {
             try
-            {
-                // Tạo đơn hàng mới
+            { 
+
                 Order o = new Order
                 {
                     UserId = order.UserId,
-                    DateShip = order.DateShip,
+                    DateShip = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture),
                     PhoneShip = order.PhoneShip,
                     TotalMoney = order.TotalMoney,
                     ShippingAdress = order.ShippingAdress,
-                    DeliveryStatusId =1,
+                    DeliveryStatusId = 1,//chờ xác nhận 
                     Paid = false,
-                    Code= order.Code,
+                    Code = order.Code,
                 };
 
                 _context.Order.Add(o);
@@ -152,7 +153,7 @@ namespace Backend_API.Controllers
                         if (stockProduct < item.Amount)
                         {
                             // Nếu số lượng đặt hàng vượt quá số lượng tồn kho
-                            return BadRequest(new { message = "Sản phẩm vượt quá số lượng tồn kho." });
+                            return Ok(new { success = false, status = 0 });
                         }
 
                         // Tạo chi tiết đơn hàng
@@ -241,7 +242,7 @@ namespace Backend_API.Controllers
             if (id != null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId = 2;
+                data.DeliveryStatusId = 2;//đã xác nhận
                 _context.Order.Update(data);
                 _context.SaveChanges();
                 return Ok();
@@ -286,7 +287,7 @@ namespace Backend_API.Controllers
             if (id != null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId =8;
+                data.DeliveryStatusId =4;
                 data.Paid = true;
                 _context.Order.Update(data);
                 _context.SaveChanges();
@@ -300,14 +301,22 @@ namespace Backend_API.Controllers
         [HttpGet("/trahang/{id}")]
         public async Task<IActionResult> trahang(int id)
         {
-            if (id != null)
+            try
             {
-                var data = _context.Order.Find(id);
-                data.DeliveryStatusId = 7;
-                _context.Order.Update(data);
-                _context.SaveChanges();
-                return Ok();
+                if (id != null)
+                {
+                    var data = _context.Order.Find(id);
+                    data.DeliveryStatusId = 6;
+                    _context.Order.Update(data);
+                    _context.SaveChanges();
+                    return Ok();
+                }
             }
+            catch (Exception ex)
+            {
+
+            }
+            
 
             return BadRequest();
         }

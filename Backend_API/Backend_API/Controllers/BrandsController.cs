@@ -158,8 +158,8 @@ namespace Backend_API.Controllers
             {
                 return NotFound();
             }
-
-            _context.Brands.Remove(brand);
+            brand.Active = false;
+            _context.Brands.Update(brand);
             await _context.SaveChangesAsync();
 
             return NoContent();

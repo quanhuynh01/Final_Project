@@ -12,7 +12,7 @@ const SidebarAdmin = () => {
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
                         <i className="fa fa-bars" />
                     </button>
-                    <a className="navbar-brand" href="/admin"><h4>DQ STORE</h4></a>
+                    <a className="navbar-brand text-white" href="/admin"><h4 style={{color:"white"}}>DT STORE</h4></a>
                     <a className="navbar-brand hidden" href="./"><img src="../images/logo2.png" alt="Logo" /></a>
                 </div>
                 <div id="main-menu" className="main-menu collapse navbar-collapse">
@@ -44,12 +44,17 @@ const SidebarAdmin = () => {
                             </ul>
                         </li>
                         <li className="menu-item-has-children dropdown">
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-cog" />Người dùng</a>
+                            <ul className="sub-menu children dropdown-menu">
+                                <li><i className="fa  fa-users" /><Link to={`${adminPath}/User`}>Tài khoản</Link></li>
+                            </ul>
+                        </li>
+                        <li className="menu-item-has-children dropdown">
                             <a href="#" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="menu-icon fa fa-table" />Cấu hình hệ thống</a>
                             <ul className="sub-menu children dropdown-menu">
                                 <li><i className="fa  fa-envelope" /><Link to={`${adminPath}/email-config`}>Cấu hình Email</Link></li>
                             </ul>
                         </li>
-
 
                         <h3 className="menu-title">CSKH</h3>
                         <li className="menu-item-has-children dropdown">

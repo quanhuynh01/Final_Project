@@ -102,32 +102,32 @@ const Login = () => {
   <> 
       <div className="login-content">
         <div className="login-logo">
-          <a href="index.html">
+          <Link to={`/`}>
             <img style={{width:"100px"}} className="align-content " src="https://img.lovepik.com/free-png/20211206/lovepik-computer-icon-png-image_401346483_wh1200.png" alt="" />
-          </a>
+          </Link>
         </div>
         <div className="login-form">
           <form>
             <div className="form-group">
-              <label>Email address</label>
-              <input type="text" className="form-control" placeholder="Username" name="username" onChange={(e) => handleChange(e)} />
+              <label>Tài khoản</label>
+              <input type="text" className="form-control" placeholder="Nhập tên tài khoản" name="username" onChange={(e) => handleChange(e)} />
             </div>
             <div className="form-group">
-              <label>Password</label>
-              <input type="password" className="form-control" placeholder="Password" name="password" onChange={(e) => handleChange(e)} />
+              <label>Mật khẩu</label>
+              <input type="password" className="form-control" placeholder="Nhập mật khẩu" name="password" onChange={(e) => handleChange(e)} />
             </div>
             <div className="checkbox">
               <label>
-                <input type="checkbox" /> Remember Me
+                <input type="checkbox" /> Ghi nhớ đăng nhập
               </label>
               <label className="pull-right">
-                <Link to={"/quen-mat-khau"}>Forgotten Password?</Link>
+                <Link to={"/quen-mat-khau"}>Quên mật khẩu</Link>
               </label>
             </div>
-            <button type="button" className="btn btn-success btn-flat m-b-30 m-t-30" onClick={HandelSubmit}>Sign in</button>
+            <button type="button" className="btn btn-success btn-flat m-b-30 m-t-30" onClick={HandelSubmit}>Đăng nhập</button>
             <div className="social-login-content">
               <div className="social-button">
-                <button type="button"  className="btn social facebook btn-flat btn-addon mb-3"><i className="ti-facebook" />Sign in with facebook</button> 
+               
                 <div className="d-flex justify-content-center">
                   <GoogleLogin onClick={handleGoogleSuccess}
                     onSuccess={handleGoogleSuccess}
@@ -141,7 +141,7 @@ const Login = () => {
               </div>
             </div>
             <div className="register-link m-t-15 text-center">
-              <p>Don't have account ? <Link to={`/register`}> Sign Up Here</Link></p>
+              <p>Bạn chưa có tài khoản? <Link to={`/register`}> Đăng ký ngay</Link></p>
             </div>
           </form>
         </div>

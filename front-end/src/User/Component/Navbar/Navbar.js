@@ -46,15 +46,11 @@ const Navbar = () => {
     if (event.currentTarget && event.currentTarget.querySelector) {
       event.currentTarget.querySelector('.dropdown-menu-more').classList.add('show');
     }
-  };
-
+  }; 
   const handleShowMoreMouseLeave = (event) => {
     setShowMoreHoveredId(null);
     event.currentTarget.querySelector('.dropdown-menu-more').classList.remove('show');
-  };
-
-
-
+  }; 
   const truncateString = (str, num) => {
     if (str.length <= num) {
       return str;
@@ -81,17 +77,18 @@ const Navbar = () => {
     const priceInVND = price * 1000;
     return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
+  console.log(Attributes);
 
   return (
     <div className="container-fluid bg-dark">
       <div className="row px-xl-5 mb-30">
         <div className="col-lg-3 d-none d-lg-block" style={{ justifyContent: 'center' }}>
           <a className="btn d-flex align-items-center justify-content-between bg-warning w-100 collapsed" data-toggle="collapse" href="#navbar-vertical" style={{ height: "100%", padding: '0 30px' }} aria-expanded="false">
-            <h6 className="text-dark m-0"><i className="fa fa-bars mr-2" />Categories</h6>
+            <h6 className="text-dark m-0"><i className="fa fa-bars mr-2" />Danh mục</h6>
             <i className="fa fa-angle-down text-dark" />
           </a>
-          <nav className="position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light collapse" id="navbar-vertical" style={{ width: 'calc(100% - 30px)', zIndex: 999 }}>
-            <div className="navbar-nav w-100" style={{ paddingLeft: '8%' }}>
+          <nav className="position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light collapse " id="navbar-vertical" style={{ width: 'calc(100% - 30px)', zIndex: 999 }}>
+            <div className="navbar-nav" style={{ paddingLeft: '8%',width:"900px" }}>
               {Categories.filter(category => category.show).map((item) => (
                 <div key={item.id} className="nav-item dropdown dropright" onMouseEnter={(event) => handleMouseEnter(event, item.id)} onMouseLeave={handleMouseLeave}>
                   <Link to={`/danh-muc/${item.id}`} className="nav-link">
@@ -99,10 +96,10 @@ const Navbar = () => {
                   </Link>
                   <div className={`dropdown-menu position-absolute rounded-0 border-0 m-0 dropmenu ${currentHoveredId === item.id ? 'show' : ''}`}>
                     <div className="row nav-item-cate">
-                      {(Attributes[item.id] || []).map(attr => (
-                        <div key={attr.id} className="col">
+                      {(Attributes[item.id] || []).slice(0,11).filter(a=>a.active === false).map(attr => (
+                        <div key={attr.id} className="col-3">
                           <div className="">
-                            <div className="title">
+                            <div className="title text-danger">
                               {attr.nameAttribute}
                             </div>
                             <div className="">
@@ -111,6 +108,7 @@ const Navbar = () => {
                                   {truncateString(value.nameValue, 13)}
                                 </Link>
                               ))}
+                             
                               {attr.values.length > 5 && (
                                 <div className="dropdown-item dropright" onMouseEnter={(event) => handleShowMoreMouseEnter(event, attr.id)} onMouseLeave={handleShowMoreMouseLeave}>
                                   <a >Xem thêm ...</a>
@@ -146,25 +144,25 @@ const Navbar = () => {
                   to="/"
                   className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
                 >
-                  Home
+                  Trang chủ
                 </NavLink>
                 <NavLink
                   to="/shop.html"
                   className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
                 >
-                  Product
+                  Sản phẩm
                 </NavLink>
                 <NavLink
                   to="/detail"
                   className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
                 >
-                  About Us
+                  Về chúng tôi
                 </NavLink>
                 <NavLink
                   to="/contact.html"
                   className={({ isActive }) => (isActive ? 'nav-item nav-link active' : 'nav-item nav-link')}
                 >
-                  Contact
+                  Liên hệ
                 </NavLink>
               </div>
 

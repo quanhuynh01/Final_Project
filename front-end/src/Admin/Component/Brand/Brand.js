@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
 import HeaderAdmin from "../HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
-import { Button, Form, Modal, Pagination } from "react-bootstrap"; 
-
+import { Button, Form, Modal } from "react-bootstrap"; 
 import axios from "axios";
-import ReactPaginate from "react-paginate";
 import Select from 'react-select';
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import "primereact/resources/themes/saga-blue/theme.css"; // Import theme CSS
+import "primereact/resources/primereact.min.css"; // Import PrimeReact CSS
+import { Link } from "react-router-dom";
 
 const Brand = () => {
     //modal bootstrap
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
- 
+    const [loading, setLoading] = useState(true);
     const [Brand, setBrand] = useState({   
-    active: true, 
-    imageFile: null
+    active: true,  imageFile: null
 });//state lưu trữ thêm thương hiệu
 const [Categories , setCategories] = useState([]);//view Categories
 const [CategoriesPost , setCategoriesPost] = useState([]);
@@ -35,12 +37,7 @@ const categoryOptions = Categories.map(item => ({
          
     };
 
-
-
-//state phân trang
-const [currentPage, setCurrentPage] = useState(0);
-const [totalPages, setTotalPages] = useState(0);
-const itemsPerPage = 10;
+ 
 
     const [lsBrand, setlsBrand] = useState([]);
  
@@ -111,19 +108,25 @@ const itemsPerPage = 10;
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Brands`)
             .then((res) => {
-                setlsBrand(res.data);
-                setTotalPages(Math.ceil(res.data.length / itemsPerPage))
-            }) ;
+                setlsBrand(res.data);   
+                setLoading(false);
+              }) ;
            
     }, []);
 
-    //Phân trang
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const subset = lsBrand.slice(startIndex, endIndex);
-    const handlePageChange = (selectedPage) => {
-        setCurrentPage(selectedPage.selected);
-      };
+    const imageBrand = (row) =>{
+        return(<div>
+            <img className="w-25" src={`https://localhost:7201/${row.imageBrand}`} alt={`${row.brandName}`} />
+        </div>)
+    }
+    const Funct=(row)=>{
+        return(<div>
+             <Link type="button"  className="btn btn-outline-warning" to= {`http://localhost:3000/admin/brand/chinh-sua-thuong-hieu/${row.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</Link>
+             <button onClick={()=>handleDelete(row.id) } className="btn btn-outline-danger ml-2"><i className="fa fa-trash"></i> Xoá</button>  
+        </div>)
+    }
+    console.log(lsBrand);
+    
     return (<>
         <SidebarAdmin />
         <div id="right-panel" className="right-panel"> 
@@ -157,7 +160,7 @@ const itemsPerPage = 10;
                                     <strong className="card-title">Danh sách thương hiệu</strong>
                                 </div>
                                 <div className="card-body">
-                                    <table className="table table-striped data-table">
+                                    {/* <table className="table table-striped data-table">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -184,8 +187,20 @@ const itemsPerPage = 10;
                                         </tbody>
                                         
  
-                                    </table> 
-                                   
+                                    </table>  */}
+                                    <DataTable
+                                        value={lsBrand.filter(a=>a.active)}
+                                        loading={loading}
+                                        paginator
+                                        rows={10}
+                                        rowsPerPageOptions={[10, 25, 50]}
+                                        className="p-datatable-customers"
+                                    >
+                                        <Column field="id" header="###" sortable />
+                                        <Column field="brandName" header="Tên thương hiệu" sortable />
+                                        <Column   header="Ảnh thương hiệu " sortable body={imageBrand} />
+                                        <Column   header="Chức năng " body={Funct} /> 
+                                    </DataTable>
                                 </div>
                               
                             </div>

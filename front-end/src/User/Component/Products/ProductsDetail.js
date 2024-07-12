@@ -105,28 +105,34 @@ const ProductsDetail = () => {
     const handleSubmitReview = (e) => {
         e.preventDefault();
         const { UserId, rating, Content, Name, Email, ProductId } = Review;
-        axios.post(`https://localhost:7201/api/Reviews/addReview`, null, {
-            params: {
-                UserId: Review.UserId,
-                ProductId: id, // Id của sản phẩm cần đánh giá
-                Content: Review.Content,
-                Name: Review.Name,
-                Email: Review.Email,
-                Rating: Review.rating
-            }
-        })
-            .then(res => {
-                console.log(res);
-                if (res.data.status === 400) {
-                    alert(res.data.message);
+        if(Review.Name !=="" || Review.Email !=="" || Review.Content !=="" )
+        {
+            axios.post(`https://localhost:7201/api/Reviews/addReview`, null, {
+                params: {
+                    UserId: Review.UserId,
+                    ProductId: id, // Id của sản phẩm cần đánh giá
+                    Content: Review.Content,
+                    Name: Review.Name,
+                    Email: Review.Email,
+                    Rating: Review.rating
                 }
-                if (res.data.status === 200) {
-                    alert("Đánh giá thành công");
-                    window.location.reload();
-                }
-
             })
-            .catch(error => console.error('There was an error!', error));
+                .then(res => { 
+                    if (res.data.status === 400) {
+                        alert(res.data.message);
+                    }
+                    if (res.data.status === 200) {
+                        alert("Đánh giá thành công");
+                        window.location.reload();
+                    }
+    
+                })
+                .catch(error => console.error('There was an error!', error));
+        }
+        else{
+            alert("You have not entered enough information");
+        }
+       
     };
 
     const renderStars = (rating) => {
@@ -157,7 +163,7 @@ const ProductsDetail = () => {
         return `${formattedDate} - ${formattedTime}`;
     };
 
-    console.log(avatar);
+   // console.log(productDetail);
     return (
         <>
             <Header />
@@ -166,8 +172,8 @@ const ProductsDetail = () => {
                 <div className="row px-xl-5">
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
-                            <Link to={`/`} className="breadcrumb-item text-dark"  >Home</Link>
-                            <span className="breadcrumb-item active">Detail</span>
+                            <Link to={`/`} className="breadcrumb-item text-dark">Trang chủ</Link>
+                            <span className="breadcrumb-item active">Chi tiết sản phẩm {productDetail.productName}</span>
                         </nav>
                     </div>
                 </div>
@@ -175,7 +181,7 @@ const ProductsDetail = () => {
             <div className="container-fluid pb-5">
                 <div className="row px-xl-5">
                     <div className="col-lg-5 mb-30">
-                        <div className="d-flex justify-content-center" style={{ height: "600px" }}>
+                        <div className="d-flex justify-content-center" style={{ height: "700px" }}>
                             <img className="w-100 h-100" src={`https://localhost:7201${avatar}`} alt="" />
                         </div>
                         <div>
@@ -202,15 +208,21 @@ const ProductsDetail = () => {
                     <div className="col-lg-7 h-auto mb-30">
                         <div className="h-100 bg-light p-30 p-5">
                             <h3>{productDetail.productName}</h3>
-                            <div className="d-flex mb-3">
+                            <div className="d-flex mb-3"> 
                                 <div className="text-warning mr-2">
                                     <small className="fa fa-star" />
-                                    <small className="fa fa-star" />
-                                    <small className="fa fa-star" />
-                                    <small className="fa fa-star-half-alt" />
-                                    <small className="fa fa-star" />
+                                     {productDetail.start}
                                 </div>
-                                <small className="pt-1">(99 Reviews)</small>
+                                <small className="pt-1">  
+                                    {Array.isArray(ViewReview) && ViewReview.length > 0 ? (
+                                        <div>
+                                            ({ViewReview.length}  đánh giá) 
+                                        </div>
+                                    ) : (
+                                        <p> 0 đánh giá </p>
+                                    )}
+
+                                   </small>
                             </div>
                             <h5 className="font-weight-semi-bold"><del>{convertToVND(productDetail.price)}</del></h5>
                             <h3 className="font-weight-semi-bold mb-4 text-danger">{convertToVND(productDetail.salePrice)}</h3>
@@ -228,8 +240,8 @@ const ProductsDetail = () => {
                                         </button>
                                     </div>
                                 </div> */}
-                                <button onClick={() => BuyNow(productDetail)} className="btn btn-outline-warning px-3 mr-3"><i className="	fa fa-credit-card" />Buy Now</button>
-                                <button onClick={() => addToCart(productDetail)} className="btn btn-warning px-3 text-white"><i className="fa fa-shopping-cart mr-1" />Add To Cart</button>
+                                <button onClick={() => BuyNow(productDetail)} className="btn btn-outline-warning px-3 mr-3"><i className="	fa fa-credit-card" /> Mua ngay</button>
+                                <button onClick={() => addToCart(productDetail)} className="btn btn-warning px-3 text-white"><i className="fa fa-shopping-cart mr-1" /> Thêm vào giỏ hàng</button>
                             </div>
                             <div className="square-trade d-flex align-items-center">
                                 <div className="square-trade d-flex align-items-center">
@@ -248,7 +260,7 @@ const ProductsDetail = () => {
                             </div>
 
                             <div className="d-flex pt-2">
-                                <strong className="text-dark mr-2">Share:</strong>
+                                <strong className="text-dark mr-2">Chia sẻ:</strong>
                                 <div className="d-inline-flex">
                                     <a className="text-dark px-2" href="">
                                         <i className="fa fa-facebook-f" />
@@ -271,20 +283,28 @@ const ProductsDetail = () => {
                     <div className="col">
                         <div className="bg-light p-30">
                             <div className="nav nav-tabs mb-4">
-                                <a className="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Specifications</a>
-                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews ({ViewReview.length})</a>
+                                <a className="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Mô tả sản phẩm</a>
+                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Thông số kỹ thuật</a>
+                                <a className="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Đánh giá ({ViewReview.length})</a>
                             </div>
                             <div className="tab-content">
                                 <div className="tab-pane fade show active p-3" id="tab-pane-1">
                                     <h4 className="mb-3">Mô tả sản phẩm</h4>
-                                    <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                                    <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                                    <p>{productDetail.description}</p>
+                                     
                                 </div>
                                 <div className="tab-pane fade" id="tab-pane-2">
-                                    <h4 className="mb-3 text-center">Specifications</h4>
+                                    <h4 className="mb-3 text-center">Thông số kỹ thuật</h4>
                                     <Table className="">
                                         <tbody className="">
+                                            <tr>
+                                                <td>Hãng</td> 
+                                                <td>{productDetail.brand.brandName}</td> 
+                                            </tr>
+                                            <tr>
+                                                <td>Mã SP</td> 
+                                                <td>{productDetail.sku}</td> 
+                                            </tr>
                                             {Attribute.map((item, index) => (
                                                 <tr key={index}>
                                                     <td>{item.nameAttribute}</td>
@@ -317,14 +337,14 @@ const ProductsDetail = () => {
                                                     }
                                                 </div>
                                             ) : (
-                                                <p>Không có đánh giá nào</p>
+                                                <p>Rất tiết chưa có đánh giá nào cho sản phẩm này</p>
                                             )}
                                         </div>
                                         <div className="col-md-6">
-                                            <h4 className="mb-4">Leave a review</h4>
-                                            <small>Your email address will not be published. Required fields are marked *</small>
+                                            <h4 className="mb-4">Để lại đánh giá</h4>
+                                            <small> Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</small>
                                             <div className="d-flex my-3">
-                                                <p className="mb-0 mr-2">Your Rating *:</p>
+                                                <p className="mb-0 mr-2">Số sao *:</p>
                                                 <div className="text-warning">
                                                     {Array.from({ length: 5 }, (_, index) => (
                                                         <button
@@ -340,19 +360,19 @@ const ProductsDetail = () => {
                                             </div>
                                             <form>
                                                 <div className="form-group">
-                                                    <label htmlFor="message">Your Review *</label>
+                                                    <label htmlFor="message">Đánh giá của bạn *</label>
                                                     <textarea id="message" name="Content" cols={30} rows={5} className="form-control" defaultValue={""} onChange={handleChangeReview} />
                                                 </div>
                                                 <div className="form-group">
-                                                    <label htmlFor="name">Your Name *</label>
+                                                    <label htmlFor="name">Tên của bạn *</label>
                                                     <input type="text" className="form-control" id="name" name="Name" onChange={handleChangeReview} />
                                                 </div>
                                                 <div className="form-group">
-                                                    <label htmlFor="email">Your Email *</label>
+                                                    <label htmlFor="email">Email *</label>
                                                     <input type="email" className="form-control" id="email" name="Email" onChange={handleChangeReview} />
                                                 </div>
                                                 <div className="form-group mb-0">
-                                                    <button type="button" defaultValue="Leave Your Review" className="btn btn-primary px-3" onClick={handleSubmitReview}>Leave Your Review</button>
+                                                    <button type="button" defaultValue="Leave Your Review" className="btn btn-primary px-3" onClick={handleSubmitReview}>Gửi đánh giá </button>
                                                 </div>
                                             </form>
                                         </div>

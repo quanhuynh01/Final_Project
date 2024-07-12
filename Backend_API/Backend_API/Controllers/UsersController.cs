@@ -44,7 +44,7 @@ namespace API_Server.Controllers
         public async Task<IActionResult> Login([Bind("Username, Password")] LoginModel account)
         {
             var user = await _userManager.FindByNameAsync(account.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, account.Password))
+            if (user != null && await _userManager.CheckPasswordAsync(user, account.Password) && user.Active == false)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 user.LastLogin = DateTime.Now;
@@ -98,7 +98,8 @@ namespace API_Server.Controllers
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = model.Username,
                     FullName = model.Fullname,
-                    PhoneNumber = model.Phone
+                    PhoneNumber = model.Phone,
+                    Active = false
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -125,12 +126,13 @@ namespace API_Server.Controllers
 
         [HttpPost]
         [Route("editUser/{id}")]
-        public async Task<IActionResult> editUser(string id, string fullName, string userName, string email)
+        public async Task<IActionResult> editUser(string id, string fullName, string userName, string email,string address)
         {
             var dataUser = _context.Users.Find(id);
             dataUser.FullName = fullName;
             dataUser.UserName = userName;
             dataUser.Email = email;
+            dataUser.Address = address;
             _context.Users.Update(dataUser);
             _context.SaveChanges();
             Log log = new Log();
@@ -181,6 +183,14 @@ namespace API_Server.Controllers
             var users = await _userManager.GetUsersInRoleAsync("admin");
             var nonAdminUsers = await _userManager.Users.Where(u => !users.Contains(u)).ToListAsync();
             return Ok(nonAdminUsers);
+        }
+        [HttpGet]
+        [Route("list-admin")]
+        public async Task<IActionResult> listAdmin()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("admin");
+            var AdminUsers = await _userManager.Users.Where(u =>users.Contains(u)).ToListAsync();
+            return Ok(AdminUsers);
         }
 
         [HttpGet]
@@ -303,7 +313,7 @@ namespace API_Server.Controllers
             if (!changePasswordResult.Succeeded)
             {
                 var errors = changePasswordResult.Errors.Select(e => e.Description).ToList();
-                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Error changing password.", errors });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Mật khẩu phải có ít nhất 6 ký tự, bao gồm ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số và một ký tự đặc biệt ", errors });
             }
             Log log = new Log()
             {
@@ -315,7 +325,7 @@ namespace API_Server.Controllers
             _context.Logs.Add(log);
             _context.SaveChanges();
 
-            return Ok(new { status = 200, message = "Password changed successfully." });
+            return Ok(new { status = 200, message = "Thay đổi mật khẩu thành công" });
         }
 
 
@@ -358,6 +368,25 @@ namespace API_Server.Controllers
         }
 
 
+        [HttpPut("Block/{id}")]
+        public async Task<IActionResult> Block(string id)
+        {
+            var user = _context.Users.Where(u=>u.Id == id).FirstOrDefault();
+            user.Active = false;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+            return Ok(user);
+        }
+        [HttpPut("Unblock/{id}")]
+        public async Task<IActionResult> Unblock(string id)
+        {
+            var user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            user.Active = true;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+            return Ok(user);
+        }
+
         [HttpPost]
         [Route("LoginGoogle")]
         public async Task<string> GoogleLoginAsync([FromBody] GoogleLoginModel account)
@@ -386,12 +415,12 @@ namespace API_Server.Controllers
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var authClaims = new List<Claim>
-     {
-         new Claim(ClaimTypes.Name, user.UserName),
-         new Claim(ClaimTypes.NameIdentifier, user.Id),
-         new Claim(ClaimTypes.GivenName, user.FullName),
-         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-     };
+             {
+                 new Claim(ClaimTypes.Name, user.UserName),
+                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                 new Claim(ClaimTypes.GivenName, user.FullName),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+             };
 
             foreach (var userRole in userRoles)
             {

@@ -8,6 +8,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
 
 const ProductsList = () => {
     const [lsProduct, setLsProduct] = useState([]);
@@ -58,6 +59,15 @@ const addToCart = (item) => {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
+    //phân trang 
+    const iteminPage =3; // số lượng phần tử mỗi trang
+    const [currentPage, setcurrentPage] = useState(0);
+    const offset = currentPage * iteminPage;
+    const currentItem = lsProduct.slice(offset, offset + iteminPage);
+    const pageCount = Math.ceil(lsProduct.length / iteminPage); 
+    const handlePageclick = (e)=>{ 
+        setcurrentPage(e.selected);
+    } 
 
     return (
         <>
@@ -67,15 +77,15 @@ const addToCart = (item) => {
                 <div className="row px-xl-5">
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
-                            <Link to={`/`} className="breadcrumb-item text-dark">Home</Link>
-                            <span className="breadcrumb-item active">Products</span>
+                            <Link to={`/`} className="breadcrumb-item text-dark">Trang chủ</Link>
+                            <span className="breadcrumb-item active">Danh sách sản phẩm</span>
                         </nav>
                     </div>
                 </div>
             </div>
             <div className=""style={{ width: "90%", margin: "auto" }}>
-                {lsProduct.length > 0 && lsProduct !== null ? (
-                    lsProduct.map((item, index) => (
+                {currentItem.length > 0 && currentItem !== null ? (
+                    currentItem.map((item, index) => (
                         <div key={index}>
                             <div id="nz-div">
                                 <Link className="danhmuc" to={`/danh-muc/${item.cateId}`}>
@@ -84,10 +94,10 @@ const addToCart = (item) => {
                                     </h5>
                                 </Link>
                             </div>
-                            <div className="d-flex">
+                            <div className="d-flex" style={{flexWrap:"wrap"}}>
                                 {item.products.map((product, idx) => (
                                     <div className=" " key={idx}>
-                                        <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
+                                        <Card className='card-item' style={{ width: '20rem', margin: '10px' }}>
                                             <Card.Img variant="top" src={`https://localhost:7201${product.avatar}`} alt='' />
                                             <Card.Body style={{ position: "relative" }}>
                                                 <Link key={product.id} to={`/chi-tiet-san-pham/${product.id}`}>
@@ -100,7 +110,7 @@ const addToCart = (item) => {
                                                     <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
                                                         {product.productName}
                                                     </Card.Title>
-                                                    <Card.Text>Price: {convertToVND(product.price)}</Card.Text>
+                                                    <Card.Text>Giá: {convertToVND(product.price)}</Card.Text>
                                                 </Link>
                                             </Card.Body>
                                             <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
@@ -115,8 +125,22 @@ const addToCart = (item) => {
                 ) : (
                     <p>No data available</p>
                 )}
-                
+                <ReactPaginate
+                    previousLabel={'Trở về'}
+                    nextLabel={'Tiếp theo'}
+                    breakLabel={'...'}
+                    breakClassName={'break-me'}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageclick}
+                    containerClassName={'pagination '}
+                    activeClassName={'active'}
+                />
             </div> 
+
+ 
+            
             <Modal show={show} onHide={handleCloseLogin} centered>
                 <div className='row justify-content-center mt-4'>
                     <h1 className='text-danger'>ShopMember</h1>

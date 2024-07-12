@@ -90,15 +90,23 @@ namespace Backend_API.Controllers
         public async Task<IActionResult> DeleteAttributevalue(int id)
         {
             var attributevalue = await _context.Attributevalues.FindAsync(id);
-            if (attributevalue == null)
+            var dataProduct = _context.ProductAttributes.Where(p => p.AttributeValueId == id).ToList();
+            if(dataProduct.Count >0)
             {
-                return NotFound();
+                return Ok(new {success=false, message ="Sản phẩm đang có thuộc tính này "});
             }
+            else
+            {
+                if (attributevalue == null)
+                {
+                    return NotFound();
+                } 
+                _context.Attributevalues.Remove(attributevalue);
+                await _context.SaveChangesAsync(); 
+                return Ok(new { success = true });
 
-            _context.Attributevalues.Remove(attributevalue);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            }
+        
         }
 
         [HttpGet("lsAttributeValue/{idAttr}")]
@@ -132,6 +140,7 @@ namespace Backend_API.Controllers
             {   
                 attribute.Id,
                 attribute.NameAttribute,
+                attribute.Active,
                 Values = attributeValues.Where(av => av.AttributeId == attribute.Id).ToList()
             });
 
@@ -144,20 +153,29 @@ namespace Backend_API.Controllers
 
         public async Task<IActionResult> saveAttributeValueForProduct(int id, int idPro)
         {
-            var AttributeId = _context.Attributevalues.Include(a => a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
-
-            ProductAttribute pro = new ProductAttribute()
+            try
             {
-                ProductId = idPro,
-                AttributeId = AttributeId.AttributeId,
-                AttributeValueId = id
-                // Gán các thuộc tính cho p từ attributeValue nếu cần
-            };
-            var nameAttribute = AttributeId.Attribute.NameAttribute;
-            var attributevalue = await _context.Attributevalues.FindAsync(id);
-            _context.ProductAttributes.Add(pro);
-            _context.SaveChanges();
-            return Ok(new { Id = pro.Id, nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
+                var AttributeId = _context.Attributevalues.Include(a => a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
+
+                ProductAttribute pro = new ProductAttribute()
+                {
+                    ProductId = idPro,
+                    AttributeId = AttributeId.AttributeId,
+                    AttributeValueId = AttributeId.Id
+                    // Gán các thuộc tính cho p từ attributeValue nếu cần
+                };
+                _context.ProductAttributes.Add(pro);
+                _context.SaveChanges();
+                var nameAttribute = AttributeId.Attribute.NameAttribute;
+                var attributevalue = await _context.Attributevalues.FindAsync(id);
+              
+                return Ok(new { Id = pro.Id, nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
+            }
+            catch (Exception ex)
+            { 
+                return BadRequest(ex.Message);
+            }
+           
         }
 
         private bool AttributevalueExists(int id)
