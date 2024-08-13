@@ -6,6 +6,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Select from 'react-select';
 import $ from 'jquery'
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Link } from "react-router-dom";
 const Attribute = () => {
     const [Attribute, setAttribute] = useState([]);
   
@@ -13,13 +16,16 @@ const Attribute = () => {
     const [AttributeCreate, setAttributeCreate] = useState({});
     const [AttributeValue, setAttributeValue] = useState({AttributeId:null});
  
-
+    const [loading, setLoading] = useState(true);
     const [Categories , setCategories] = useState([]);//view Categories
     const [CategoriesPost , setCategoriesPost] = useState([]);
 
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Attributes`)
-            .then( res=>setAttribute(res.data));
+            .then( res=>{
+                setLoading(false)
+                setAttribute(res.data);
+            });
         axios.get(`https://localhost:7201/api/Categories`).then(res=>{
         setCategories(res.data);
        })
@@ -46,7 +52,15 @@ const Attribute = () => {
             {
                 setShowAttributeValue(true);
                 axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`)
-                .then(res=>setlsAttributeValue(res.data.data));
+                .then(res=>{
+                    if(res.status ===200)
+                    {
+                        setlsAttributeValue(res.data.data);
+                    }
+                }).catch(ex=>{
+                    console.log(ex);
+                })
+                ;
             }
 
 
@@ -61,11 +75,7 @@ const Attribute = () => {
             let value = e.target.value;
             setAttributeValue(prev => ({ ...prev, [name]: value }));
         }
-
-
-    const handleDelete =(id)=>{
-
-    }; 
+ 
     const categoryOptions = Categories.map(item => ({
         value: item.id,
         label: item.nameCategory
@@ -127,8 +137,25 @@ const Attribute = () => {
          
     };
 
-    console.log(lsAttributeValue);
-
+    const handleDelete = (id)=>{
+        axios.delete(`https://localhost:7201/api/Attributes/${id}`).then(res =>{
+            if(res.status ==204)
+            {
+                alert("Xóa thuộc tính thành công");  
+                setAttribute(prev => prev.filter(attr => attr.id !== id));
+            }
+        }).catch(ex=>{
+            console.log(ex);
+        })
+    }
+   const btn = (row)=>{
+    return(<>
+        <button onClick={() => handleShowAttr(row.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
+        <button onClick={()=>handleShowAttributeValue(row.id)} className=" ml-2 btn btn btn-outline-info ">Xem danh sách giá trị </button>
+        <Link type="button"  className="btn btn-outline-warning ml-2" to= {`edit/${row.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</Link>
+        <button onClick={()=>handleDelete(row.id)} className=" ml-2 btn btn btn-outline-danger ">Xóa</button>
+    </>)
+   } 
     return ( <>
      <SidebarAdmin />
         <div id="right-panel" className="right-panel"  style={{ width: '86%' }}>
@@ -163,7 +190,7 @@ const Attribute = () => {
                                     <strong className="card-title">Danh sách thuộc tính</strong>
                                 </div>
                                 <div className="card-body">
-                                    <table className="table table-striped">
+                                    {/* <table className="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -177,7 +204,7 @@ const Attribute = () => {
                                                     <td>{index + 1}</td>
                                                     <td>{item.nameAttribute}</td> 
                                                    <td><button onClick={() => handleShowAttr(item.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
-                                                     {/* <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a> */}
+                                                      <a href={`/admin/attributes/attributevalues/${item.id}`} className=" ml-2 btn btn-outline-primary"><i className="fa fa-eye"></i> Xem giá trị thuộc tính</a>  
                                                      <Button onClick={()=>handleShowAttributeValue(item.id)} className=" ml-2 btn  ">Xem danh sách giá trị </Button>
                                                     
                                                      </td>
@@ -189,7 +216,19 @@ const Attribute = () => {
                                             ))
                                             }
                                         </tbody>
-                                    </table>
+                                    </table> */}
+                                    <DataTable
+                                        value={Attribute.filter(a=>!a.Active)}
+                                        loading={loading}
+                                        paginator
+                                        rows={10}
+                                        rowsPerPageOptions={[10, 25, 50]}
+                                        className="p-datatable-customers"
+                                    >
+                                        <Column  field="id" header="###" sortable />
+                                        <Column  field="nameAttribute" header="Tên thuộc tính" sortable />
+                                        <Column body={btn} header="Chức năng" />
+                                    </DataTable>
                                 </div>
                             </div>
                         </div>
@@ -260,41 +299,42 @@ const Attribute = () => {
                 </Button>
             </Modal.Footer>
         </Modal> 
-        {/* xem giá trị thuộc tính */}
-        <Modal show={ShowAttributeValue} onHide={handleCloseAttributeValue}>
-            <Modal.Header >
-                <Modal.Title>Modal heading</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Table hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tên thuộc tính</th> 
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            lsAttributeValue.map((item,index)=>{
-                                return(
-                                    <tr key={index}>
-                                    <td>{index +1 }</td>
-                                    <td>{item.nameValue}</td> 
-                                    <td><Button className="btn">Xóa</Button></td> 
-                                </tr>
-                                )
-                            })
-                        } 
-                    </tbody>
-                </Table>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseAttributeValue}>
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
+{/* xem giá trị thuộc tính */}
+<Modal show={ShowAttributeValue} onHide={handleCloseAttributeValue}>
+    <Modal.Header>
+        <Modal.Title>Danh sách giá trị theo thuộc tính</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+    {lsAttributeValue && lsAttributeValue.length > 0 ? (
+        <Table hover>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên thuộc tính</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {lsAttributeValue.map((item, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.nameValue}</td>
+                        <td><Button className="btn">Xóa</Button></td>
+                    </tr>
+                ))}
+            </tbody>
+        </Table>
+    ) : (
+        <p>Không có dữ liệu</p>
+    )}
+</Modal.Body>
+
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseAttributeValue}>
+            Close
+        </Button>
+    </Modal.Footer>
+</Modal>
 
     </> );
 }

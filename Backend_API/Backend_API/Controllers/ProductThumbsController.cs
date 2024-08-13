@@ -93,12 +93,48 @@ namespace Backend_API.Controllers
                 return NotFound();
             }
 
-            _context.ProductThumbs.Remove(productThumb);
-            await _context.SaveChangesAsync();
+            // Xác định đường dẫn đầy đủ của tệp hình ảnh
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", productThumb.Image.TrimStart('/'));
 
+            // Xóa tệp hình ảnh khỏi thư mục lưu trữ
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+
+            _context.ProductThumbs.Remove(productThumb);
+            await _context.SaveChangesAsync(); 
             return NoContent();
         }
 
+
+        [HttpPut("setMain/{id}")]
+        public async Task<IActionResult> setMain(int id , int proId)
+        {
+            var productThumb = _context.ProductThumbs.Where(p => p.ProductId == proId).ToList();
+            var product = _context.Products.Find(proId);
+            var p = new ProductThumb();
+            foreach(var item in productThumb)
+            {
+                if(item.Id== id)
+                {
+                    item.IsMain = true;
+                    p = item;
+                    product.Avatar = item.Image;
+                    _context.Products.Update(product);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    item.IsMain = false;
+                }
+                _context.ProductThumbs.Update(item);
+            } 
+             
+            //cho tất cả hình ảnh về lại false  
+            _context.SaveChanges(); 
+            return Ok(p);
+        }
 
 
         [HttpGet("hinhsp/{id}")]

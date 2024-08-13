@@ -8,8 +8,7 @@ namespace Backend_API.Model
         public string BrandName { get; set; }
         public string ImageBrand { get; set; }
         [NotMapped]
-        public IFormFile ImageFile { get; set; }
-        public string Description { get; set; }
+        public IFormFile ImageFile { get; set; } 
         public bool Active { get; set; }
     }
 }

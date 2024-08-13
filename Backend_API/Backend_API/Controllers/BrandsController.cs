@@ -58,8 +58,7 @@ namespace Backend_API.Controllers
                     var data = _context.Brands.Find(id);
                     if (data != null)
                     {
-                        data.BrandName = b.BrandName;
-                        data.Description = b.Description;
+                        data.BrandName = b.BrandName; 
                         data.Active = b.Active;
                         IFormFile file = b.ImageFile;
                         if (file != null && file.Length > 0)
@@ -108,8 +107,7 @@ namespace Backend_API.Controllers
         {
             Brand brand = new Brand();
             brand.BrandName = b.BrandName;
-            brand.Active =  b.Active;
-            brand.Description = b.Description;
+            brand.Active = b.Active;
             IFormFile file =  b.ImageFile; 
            
             if (file != null && file.Length > 0)
@@ -160,8 +158,8 @@ namespace Backend_API.Controllers
             {
                 return NotFound();
             }
-
-            _context.Brands.Remove(brand);
+            brand.Active = false;
+            _context.Brands.Update(brand);
             await _context.SaveChangesAsync();
 
             return NoContent();

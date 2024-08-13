@@ -152,8 +152,9 @@
   }
   
   a {
+
     color: #007bff;
-    text-decoration: none;
+    text-decoration: none !important;
     background-color: transparent;
   }
   
@@ -1907,7 +1908,7 @@
   .form-control:focus {
     color: #495057;
     background-color: #fff;
-    border-color: #ffefb3;
+    border-color: #00a2ff;
     outline: 0;
     box-shadow: none;
   }

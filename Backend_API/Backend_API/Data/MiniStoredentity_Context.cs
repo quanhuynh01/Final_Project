@@ -8,7 +8,7 @@ namespace Backend_API.Model
 	{
         public MiniStoredentity_Context(DbContextOptions<MiniStoredentity_Context> options) : base(options)
         { }
-        public DbSet<PayMethod> PayMethods { get; set; }
+        //public DbSet<PayMethod> PayMethods { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductThumb> ProductThumbs { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -22,7 +22,7 @@ namespace Backend_API.Model
   
         public DbSet<ProductAttribute> ProductAttributes { get; set; } 
         //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
-        public DbSet<Backend_API.Model.CustomerSupplier> CustomerSupplier { get; set; }
+        //public DbSet<Backend_API.Model.CustomerSupplier> CustomerSupplier { get; set; }
          public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
         public DbSet<Backend_API.Model.Cart> Cart { get; set; }
         //public DbSet<CategoriesBrand> CategoriesBrands { get; set; }
@@ -32,8 +32,10 @@ namespace Backend_API.Model
  
         public DbSet<DeliveryStatus> DeliveryStatuses { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        //public DbSet<Customer> Customer { get; set; }
         public DbSet<Backend_API.Model.Review> Review { get; set; }
-
+        //public DbSet<Backend_API.Model.Pay> Pay { get; set; } 
+        public DbSet<DiscountProducts> DiscountProducts { get; set; }
 
     }
 }

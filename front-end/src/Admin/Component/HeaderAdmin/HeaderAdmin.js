@@ -18,8 +18,7 @@ const HeaderAdmin = () => {
   }, []); // useEffect chỉ chạy một lần sau khi component được mount
   
   useEffect(() => {
-      if (tokenUpdated) { 
-          //console.log(token);  
+      if (tokenUpdated) {  
           setTokenUpdated(false); // Đặt lại tokenUpdated để tránh việc gọi console.log trong các render sau
           if(token !=null)
           {

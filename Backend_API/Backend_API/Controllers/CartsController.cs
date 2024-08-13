@@ -87,25 +87,60 @@ namespace Backend_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCart(int id)
         {
-            var cart = await _context.Cart.FindAsync(id);
-            if (cart == null)
+            try
             {
-                return NotFound();
+                int ProductId = 0; //tạo biến ảo để lưu trữ id sản phẩm trả về
+                var cart = _context.Cart.Where(c=>c.Id ==id).FirstOrDefault();
+                ProductId = cart.ProductId;
+                if (cart == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Cart.Remove(cart);
+                _context.SaveChanges();
+                return Ok(ProductId = ProductId);
             }
-
-            _context.Cart.Remove(cart);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            } 
         }
 
         [HttpGet("getCart/{IdUser}")]
         public async Task<IActionResult> getCartByIdUser(string IdUser)
         {
-            var data= _context.Cart.Include(p=>p.Product).Where(c=>c.UserId == IdUser).ToList();
+            var cartItems = await _context.Cart
+                                    .Include(c => c.Product)
+                                    .Where(c => c.UserId == IdUser)
+                                    .ToListAsync();
 
-            return Ok(data);
+            foreach (var cartItem in cartItems)
+            {
+                var product = cartItem.Product;
+
+                // Kiểm tra xem sản phẩm có thuộc discount hay không
+                var discountPrice = _context.DiscountProducts
+                                        .Where(dp => dp.ProductId == product.Id && dp.Discount.TimeEnd > DateTime.Now)
+                                        .Select(dp => dp.Discount.Price)
+                                        .FirstOrDefault();
+
+                if (discountPrice != null)
+                { 
+                    double discountRate = discountPrice / 100.0; // Chuyển đổi thành tỷ lệ 
+                    double giagiam = product.Price * discountRate; 
+                    int salePrice = (int)Math.Ceiling(product.Price - giagiam); //làm tròn lên 
+                    // Cập nhật lại giá giảm giá (SalePrice)
+                    product.SalePrice = salePrice;
+                     
+                }
+            }
+
+            await _context.SaveChangesAsync(); // Lưu các thay đổi
+
+            return Ok(cartItems);
         }
+
 
 
         [HttpPost("addToCart/{idUser}")]
@@ -137,6 +172,45 @@ namespace Backend_API.Controllers
             
             return Ok();
         }
+
+        [HttpPut("updateCart")]
+        public async Task<IActionResult> updateCart([FromBody] List<Cart> carts)
+        {
+            foreach (var cart in carts)
+            {
+                var existingCart = _context.Cart.FirstOrDefault(c => c.Id == cart.Id);
+                if (existingCart != null)
+                {
+                    existingCart.Quantity = cart.Quantity;
+                    // Cập nhật các thuộc tính khác nếu cần
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        [HttpPost("deleteCart")]
+        public async Task<IActionResult> DeleteCart([FromBody] List<Cart> carts)
+        {
+            try
+            {
+                foreach (var cart in carts)
+                {
+                    var existingCart = _context.Cart.FirstOrDefault(c => c.Id == cart.Id);
+                    if (existingCart != null)
+                    {
+                        _context.Cart.Remove(existingCart);
+                        _context.SaveChanges();
+                    }
+                } 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         private bool CartExists(int id)
         {
             return _context.Cart.Any(e => e.Id == id);

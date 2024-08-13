@@ -110,7 +110,7 @@ namespace Backend_API.Controllers
                 var productExists = await _context.OrderDetails
                     .AnyAsync(od => od.Order.UserId == UserId && od.ProductId == ProductId);
 
-                if (productExists != null)
+                if (productExists)
                 {
                     Review review = new Review()
                     {
@@ -119,24 +119,40 @@ namespace Backend_API.Controllers
                         Content = Content,
                         Email = Email,
                         Rating = Rating,
-                        DateComment = DateTime.Now
-
-
+                        DateComment = DateTime.Now,
+                        Seen = false 
                     };
                     _context.Review.Add(review);
                     await _context.SaveChangesAsync();
-                    return Ok( new { data = review });
+                    return Ok( new { status = 200, data = review });
                 }
                 else
                 {
-                    return BadRequest(new { message = "Bạn chưa mua sản phẩm này" });
+                    return Ok(new { status = 400, message = "Bạn chưa mua sản phẩm này" });
                 }
             }
-            return Ok(new { status = 204  });
+            return Ok(new { status = 200 });
 
         }
 
-            private bool ReviewExists(int id)
+        [HttpGet("viewReviewFromProduct/{id}")]
+        public async Task<IActionResult> viewReviewFromProduct(int id)
+        {
+            var data = _context.Review.Where(p => p.ProductId == id).OrderBy(p=>p.Seen).ToList(); 
+            return Ok(data); 
+        }
+        [HttpPut("changeSeen/{id}")]
+        public async Task<IActionResult> changeSeen(int id)
+        {
+            var data = _context.Review.Where(p => p.Id == id).FirstOrDefault();
+            data.Seen = true;
+            _context.Review.Update(data);
+            _context.SaveChanges();
+            return Ok(data);
+        }
+
+
+        private bool ReviewExists(int id)
         {
             return _context.Review.Any(e => e.Id == id);
         }

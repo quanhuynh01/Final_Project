@@ -8,15 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.68.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.31" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.29" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.29" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.29" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.29" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.29">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -24,6 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\brands\" />
+    <Folder Include="wwwroot\images\categories\" />
     <Folder Include="wwwroot\images\Product\" />
   </ItemGroup>
 

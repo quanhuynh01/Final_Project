@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Footer.css'
+import { Link } from 'react-router-dom';
 const Footer =()=>{
   const [showBackToTop, setShowBackToTop] = useState(false);
 
@@ -29,39 +30,27 @@ window.addEventListener('scroll', handleScroll);
   <div className="container-fluid bg-dark text-white mt-5 pt-5"  >
     <div className="row px-xl-5 pt-5">
       <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-        <h5 className="text-white text-uppercase mb-4">Get In Touch</h5>
-        <p className="mb-4 text-white">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-        <p className="mb-2 text-white"><i className="fa fa-map-marker text-warning  mr-3" />123 Street, New York, USA</p>
+        <h5 className="text-white text-uppercase mb-4">DT Shop</h5>
+        <p className="mb-4 text-white">Nơi bạn có thể trao gửi niềm tim</p>
+        <p className="mb-2 text-white"><i className="fa fa-map-marker text-warning  mr-3" />65 Huỳnh Thúc Kháng, phường Bến Nghé, Quận 1, thành phố Hồ Chí Minh</p>
         <p className="mb-2 text-white"><i className="fa fa-envelope text-warning mr-3" />quanhuynh855@gmail.com</p>
         <p className="mb-0 text-white"><i className="fa fa-phone text-warning mr-3" />+84 984 855 261</p>
       </div>
       <div className="col-lg-8 col-md-12">
         <div className="row">
-          <div className="col-md-4 mb-5">
-            <h5 className="text-white text-uppercase mb-4">Quick Shop</h5>
+          <div className="col-md-6 mb-5">
+            <h5 className="text-white text-uppercase mb-4">Liên kết nhanh</h5>
             <div className="d-flex flex-column justify-content-start">
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Home</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Our Shop</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Shop Detail</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Shopping Cart</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Checkout</a>
-              <a className="text-white" href="#"><i className="fa fa-angle-right mr-2" />Contact Us</a>
+              <Link className="text-white mb-2" to={`/`}><i className="fa fa-angle-right mr-2" />Trang chủ</Link>
+              <Link className="text-white mb-2" to={`/shop.html`}><i className="fa fa-angle-right mr-2" />Sản phẩm</Link>
+              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Về chúng tôi</a>
+              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Liên hệ</a>
+             
             </div>
-          </div>
-          <div className="col-md-4 mb-5">
-            <h5 className="text-white text-uppercase mb-4">My Account</h5>
-            <div className="d-flex flex-column justify-content-start">
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Home</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Our Shop</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Shop Detail</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Shopping Cart</a>
-              <a className="text-white mb-2" href="#"><i className="fa fa-angle-right mr-2" />Checkout</a>
-              <a className="text-white" href="#"><i className="fa fa-angle-right mr-2" />Contact Us</a>
-            </div>
-          </div>
-          <div className="col-md-4 mb-5">
-            <h5 className="text-white text-uppercase mb-4">Newsletter</h5>
-            <p className='text-white'>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+          </div> 
+          <div className="col-md-6 mb-5">
+            <h5 className="text-white text-uppercase mb-4">Gửi phản hồi</h5>
+            <p className='text-white'>Vui lòng nhập Email của bạn</p>
             <form action=''>
               <div className="input-group">
                 <input type="text" className="form-control" placeholder="Your Email Address" />
@@ -96,7 +85,7 @@ window.addEventListener('scroll', handleScroll);
   </div>
   {/* Footer End */}
   {/* Back to Top */}
-  <button style={{position:"fixed",right:"5px",bottom:"0"}}  onClick={scrollToTop} href="#" className="btn btn-warning back-to-top"><i className="fa fa-angle-double-up" /></button>
+  <button style={{display:"block"}}  onClick={scrollToTop}className="btn btn-warning back-to-top"><i className="fa fa-angle-double-up" /></button>
 </div>
 
     </>)

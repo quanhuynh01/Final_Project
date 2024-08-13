@@ -1,83 +1,78 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar } from "react-chartjs-2";
+import { Chart } from "primereact/chart";
 import HeaderAdmin from "../Component/HeaderAdmin/HeaderAdmin";
 import SidebarAdmin from "../Component/SidebarAdmin/SidebarAdmin";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import moment from 'moment';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import { Calendar } from "primereact/calendar"; 
 
 const LayoutAdmin = () => {
   const [Account, setAccount] = useState([]);
   const [Product, setProduct] = useState([]);
   const [lsOrder, setLsOrder] = useState([]);
+  const [lsLog, setlsLog] = useState([]);  
+  const [lsOrderDate, setlsOrderDate] = useState([]); //lưu trữ sever trả về danh sách đơn hàng theo ngày
+  const [selectedDate, setselectedDate] = useState(new Date());
+  const [totalNow, settotalNow] = useState(null);
 
   useEffect(() => {
-    axios.get(`https://localhost:7201/api/Users/list-user`).then((res) => setAccount(res.data));
-    axios.get(`https://localhost:7201/api/Products`).then((res) => setProduct(res.data));
-    axios.get(`https://localhost:7201/api/Orders`).then((res) => setLsOrder(res.data));
-  }, []);
+    axios.get(`https://localhost:7201/api/Users/list-user`).then((res) => { 
+      setAccount(res.data)
+    }).catch(ex=>{console.log(ex);});
 
-  // Tính tổng số đơn hàng đã được giao
-  const deliveredOrdersCount = lsOrder.filter((order) => order.deliveryStatusId === 5).length;
+    axios.get(`https://localhost:7201/api/Products`).then((res) => setProduct(res.data)).catch(ex=>{console.log(ex);});
 
-  // Tính tổng doanh thu từ các đơn hàng
-  const totalRevenue = lsOrder.reduce((total, order) => {
-    return total + parseFloat(order.totalMoney); // Đảm bảo chuyển đổi TotalMoney sang số nếu không phải số
-  }, 0);
+    axios.get(`https://localhost:7201/api/Orders`).then((res) => setLsOrder(res.data)).catch(ex=>{console.log(ex);});
 
-  //   // Đếm tổng số đơn hàng
-  //   const totalOrders = lsOrder.length;
+    axios.get(`https://localhost:7201/api/Logs`).then((res) => setlsLog(res.data)).catch(ex=>{console.log(ex);});
 
-  // Đếm số đơn hàng theo từng trạng thái khác nhau (ví dụ: đang xử lý, đã hủy, ...)
-  const orderStatusCounts = lsOrder.reduce((statusCounts, order) => {
-    const statusId = order.deliveryStatusId;
-    if (statusCounts[statusId]) {
-      statusCounts[statusId]++;
-    } else {
-      statusCounts[statusId] = 1;
-    }
-    return statusCounts;
-  }, {});
+    axios.get(`https://localhost:7201/api/Orders/getTotalOrderDayNow`).then((res) => settotalNow(res.data)).catch(ex=>{console.log(ex);}); 
+    
+    // Lấy danh sách đơn hàng theo ngày hiện tại khi component mount
+    const today = moment(new Date()).format('YYYY-MM-DD');
+    axios.get(`https://localhost:7201/api/Orders/getDailyRevenue`, { params: { date: today } }).then(res => {
+      setlsOrderDate(res.data);
+    }).catch(ex => { console.log(ex); });
 
-  // Chuyển đổi số thành tiền VND
-  const convertToVND = (price) => {
-    const priceInVND = price * 1000;
-    return priceInVND.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+  }, []); 
+ 
+  //xử lý người dùng chọn ngày
+  const handleDateChange = (e) => { 
+    setselectedDate(e.value);
+    let selectedDateConvert = moment(e.value).format('YYYY-MM-DD');
+    axios.get(`https://localhost:7201/api/Orders/getDailyRevenue`, { params: { date: selectedDateConvert } }).then(res => {
+      setlsOrderDate(res.data);
+    }).catch(ex => { console.log(ex); });
   };
 
-  // Lọc các đơn hàng đã giao
-  const deliveredOrders = lsOrder.filter((order) => order.deliveryStatusId === 5);
-
-  // Lấy nhãn (mã đơn hàng) và dữ liệu (totalMoney) cho biểu đồ
-  const labels = deliveredOrders.map((order) => order.code || `Order ${order.id}`);
-  const data = deliveredOrders.map((order) => order.totalMoney);
-
-  // Dữ liệu biểu đồ doanh thu từng đơn hàng
-  const chartData = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Doanh thu theo đơn hàng",
-        backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(75,192,192,0.4)",
-        hoverBorderColor: "rgba(75,192,192,1)",
-        data: data,
-      },
-    ],
+  // Chuẩn bị dữ liệu cho biểu đồ
+  const prepareChartData = () => {
+    const labels = lsOrderDate.map(item => item.orders.map(order => order.orderCode).join(', ')); // Lấy danh sách orderCode
+    const data = lsOrderDate.map(item => item.orders.reduce((total, order) => total + order.totalMoney, 0)); // Tính tổng doanh thu
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: "Doanh thu hàng ngày",
+          backgroundColor: "rgba(75,192,192,0.2)",
+          borderColor: "rgba(75,192,192,1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(75,192,192,0.4)",
+          hoverBorderColor: "rgba(75,192,192,1)",
+          data: data,
+        },
+      ],
+    };
   };
 
-  // Tùy chọn biểu đồ
-  const chartOptions = {
+  // Cấu hình các tùy chọn cho biểu đồ
+  const chartOptionsDate = {
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return value.toLocaleString(); // Định dạng các giá trị trục y
+            return value.toLocaleString(); // Format lại số tiền hiển thị
           }
         }
       }
@@ -86,68 +81,18 @@ const LayoutAdmin = () => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `Revenue: ${tooltipItem.raw.toLocaleString()} VND`;
+            return `Doanh thu: ${tooltipItem.raw.toLocaleString()} VND`;
           }
         }
       }
     }
   };
-
-  // Tính doanh thu hàng ngày
-  const dailyRevenue = lsOrder.reduce((acc, order) => {
-    const date = moment(order.date).format('YYYY-MM-DD');
-    if (!acc[date]) {
-      acc[date] = 0;
-    }
-    acc[date] += parseFloat(order.totalMoney);
-    return acc;
-  }, {});
-
-  const dailyLabels = Object.keys(dailyRevenue);
-  const dailyData = Object.values(dailyRevenue);
-
-  const dailyChartData = {
-    labels: dailyLabels,
-    datasets: [
-      {
-        label: "Doanh thu theo ngày",
-        backgroundColor: "rgba(153,102,255,0.2)",
-        borderColor: "rgba(153,102,255,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(153,102,255,0.4)",
-        hoverBorderColor: "rgba(153,102,255,1)",
-        data: dailyData,
-      },
-    ],
-  };
-
-  // Tính doanh thu hàng tháng
-  const monthlyRevenue = lsOrder.reduce((acc, order) => {
-    const month = moment(order.date).format('YYYY-MM');
-    if (!acc[month]) {
-      acc[month] = 0;
-    }
-    acc[month] += parseFloat(order.totalMoney);
-    return acc;
-  }, {});
-
-  const monthlyLabels = Object.keys(monthlyRevenue);
-  const monthlyData = Object.values(monthlyRevenue);
-
-  const monthlyChartData = {
-    labels: monthlyLabels,
-    datasets: [
-      {
-        label: "Doanh thu theo tháng",
-        backgroundColor: "rgba(255,159,64,0.2)",
-        borderColor: "rgba(255,159,64,1)",
-        borderWidth: 1,
-        hoverBackgroundColor: "rgba(255,159,64,0.4)",
-        hoverBorderColor: "rgba(255,159,64,1)",
-        data: monthlyData,
-      },
-    ],
-  };
+ 
+  // Convert price to VND
+  function convertToVND(price) {
+    const priceInVND = price * 1000;
+    return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  }
 
   return (
     <>
@@ -173,141 +118,92 @@ const LayoutAdmin = () => {
           </div>
         </div>
         <div className="content mt-3">
-          <div className="col-sm-12">
-            <div className="alert alert-success alert-dismissible fade show" role="alert">
-              <span className="badge badge-pill badge-success">Success</span> Đăng nhập thành công vào hệ thống quản trị
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-sm-6 col-lg-3">
-              <div className="card text-light " style={{ backgroundColor: "#01dbfd" }}>
-                <div className="card-body pb-0">
-                  <h4 className="mb-0">
-                    <span className="count">{Account.length}</span>
-                  </h4>
-                  <p className="text-light">Tài khoản người dùng</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-lg-3">
-              <div className="card text-white  " style={{ backgroundColor: "rgb(255 72 72)" }}  >
-                <div className="card-body pb-0">
-                  <h4 className="mb-0">
-                    <span className="count">{Product.length}</span>
-                  </h4>
-                  <p className="text-light">Sản phẩm</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-lg-3">
-              <div className="card text-white bg-success">
-                <div className="card-body pb-0">
-                  <h4 className="mb-0">
-                    <span className="count">{deliveredOrdersCount}</span>
-                  </h4>
-                  <p className="text-light">Đơn hàng đã được giao</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-lg-3">
-              <div className="card text-white  bg-warning">
-                <div className="card-body pb-0">
-                  <h4 className="mb-0">
-                    <span className="count">{convertToVND(totalRevenue)}</span>
-                  </h4>
-                  <p className="text-light">Tổng doanh thu</p>
-                </div>
-              </div>
-            </div>
-          </div>
           <div className="col-sm-12 mb-4">
-            <div className="card-group"> 
+            <div className="card-group">
               <div className="card col-lg-3 col-md-6 no-padding no-shadow">
                 <div className="card-body bg-flat-color-2">
                   <div className="h1 text-muted text-right mb-4">
                     <i className="fa fa-user-plus text-light" />
                   </div>
                   <div className="h4 mb-0 text-light">
-                    <span className="count">385</span>
+                    <span className="count">{Account.length}</span>
                   </div>
-                  <small className="text-uppercase font-weight-bold text-light">New Clients</small>
+                  <small className="text-uppercase font-weight-bold text-light">Người dùng</small>
                   <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
                 </div>
               </div>
               <div className="card col-lg-3 col-md-6 no-padding no-shadow">
                 <div className="card-body bg-flat-color-3">
                   <div className="h1 text-right mb-4">
-                    <i className="fa fa-cart-plus text-light" />
+                    <i className="fa fa-laptop text-light" />
                   </div>
                   <div className="h4 mb-0 text-light">
-                    <span className="count">1238</span>
+                    <span className="count">{Product.length}</span>
                   </div>
-                  <small className="text-light text-uppercase font-weight-bold">Products sold</small>
+                  <small className="text-light text-uppercase font-weight-bold">Sản phẩm </small>
+                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
+                </div>
+              </div>
+              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
+                <div className="card-body bg-flat-color-4">
+                  <div className="h1 text-right text-light mb-4">
+                    <i className="fa fa-truck text-light" /> 
+                  </div>
+                  <div className="h4 mb-0 text-light">
+                    <span className="count">{lsOrder.filter(o => o.deliveryStatusId == 4).length}</span>
+                  </div>
+                  <small className="text-light text-uppercase font-weight-bold">Đơn hàng đã được giao</small>
                   <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
                 </div>
               </div>
               <div className="card col-lg-3 col-md-6 no-padding no-shadow">
                 <div className="card-body bg-flat-color-5">
                   <div className="h1 text-right text-light mb-4">
-                    <i className="fa fa-pie-chart" />
+                    <i className="fa fa-money text-light" /> 
                   </div>
                   <div className="h4 mb-0 text-light">
-                    <span className="count">28</span>%
+                    <span className="count"> {convertToVND(totalNow)}</span>
                   </div>
-                  <small className="text-uppercase font-weight-bold text-light">Returning Visitors</small>
-                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
-                </div>
-              </div>
-              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
-                <div className="card-body bg-flat-color-4">
-                  <div className="h1 text-light text-right mb-4">
-                    <i className="fa fa-clock-o" />
-                  </div>
-                  <div className="h4 mb-0 text-light">5:34:11</div>
-                  <small className="text-light text-uppercase font-weight-bold">Avg. Time</small>
-                  <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
-                </div>
-              </div>
-              <div className="card col-lg-3 col-md-6 no-padding no-shadow">
-                <div className="card-body bg-flat-color-1">
-                  <div className="h1 text-light text-right mb-4">
-                    <i className="fa fa-comments-o" />
-                  </div>
-                  <div className="h4 mb-0 text-light">
-                    <span className="count">972</span>
-                  </div>
-                  <small className="text-light text-uppercase font-weight-bold">COMMENTS</small>
+                  <small className="text-light text-uppercase font-weight-bold">Doanh thu ngày hôm nay</small>
                   <div className="progress progress-xs mt-3 mb-0 bg-light" style={{ width: '40%', height: 5 }} />
                 </div>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="content mt-3 col-6">
-              <h4>Biểu đồ doanh thu theo đơn hàng</h4>
-              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-                <Bar data={chartData} options={chartOptions} />
+          <div className="col-xl-8"> 
+            <div className="card">
+              <div className="card-body">
+                <h4 className="mb-3">Doanh thu hàng ngày</h4>
+                <Calendar value={selectedDate} onChange={handleDateChange} showIcon dateFormat="dd-mm-yy" />
+                <Chart type="bar" data={prepareChartData()} options={chartOptionsDate} />
               </div>
-            </div>
-            <div className="content mt-3 col-6">
-              <h4>Biểu đồ doanh thu hàng ngày</h4>
-              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-                <Bar data={dailyChartData} options={chartOptions} />
-              </div>
-            </div>
-            <div className="content mt-3 col-6">
-              <h4>Biểu đồ doanh thu hàng tháng</h4>
-              <div className="chart-container" style={{ position: "relative", height: "400px", width: "100%" }}>
-                <Bar data={monthlyChartData} options={chartOptions} />
-              </div>
-            </div>
+            </div> 
           </div>
-        </div>{" "}
-        {/* .content */}
+          <div className="col-4">
+            <div className="card">
+              <h4 className="text-center p-4">Bảng ghi lịch sử</h4> 
+              <div className="card-body" style={{ maxHeight: '470px', overflowY: 'auto' }}>
+                {lsLog.length > 0 ? (
+                  <div>
+                    {
+                      lsLog.map((item, index) => {
+                        return (
+                          <div key={index}> 
+                            <p>{item.nameAction} {item.descriptionAction} vào {item.dateAction}</p>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                ) : (
+                  <p>Không có log nào để hiển thị</p>
+                )}
+              </div> 
+            </div>
+            <hr/> 
+          </div> 
+         
+        </div>
       </div>
     </>
   );
