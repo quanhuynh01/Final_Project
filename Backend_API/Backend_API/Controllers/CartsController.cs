@@ -110,10 +110,37 @@ namespace Backend_API.Controllers
         [HttpGet("getCart/{IdUser}")]
         public async Task<IActionResult> getCartByIdUser(string IdUser)
         {
-            var data= _context.Cart.Include(p=>p.Product).Where(c=>c.UserId == IdUser).ToList();
+            var cartItems = await _context.Cart
+                                    .Include(c => c.Product)
+                                    .Where(c => c.UserId == IdUser)
+                                    .ToListAsync();
 
-            return Ok(data);
+            foreach (var cartItem in cartItems)
+            {
+                var product = cartItem.Product;
+
+                // Kiểm tra xem sản phẩm có thuộc discount hay không
+                var discountPrice = _context.DiscountProducts
+                                        .Where(dp => dp.ProductId == product.Id && dp.Discount.TimeEnd > DateTime.Now)
+                                        .Select(dp => dp.Discount.Price)
+                                        .FirstOrDefault();
+
+                if (discountPrice != null)
+                { 
+                    double discountRate = discountPrice / 100.0; // Chuyển đổi thành tỷ lệ 
+                    double giagiam = product.Price * discountRate; 
+                    int salePrice = (int)Math.Ceiling(product.Price - giagiam); //làm tròn lên 
+                    // Cập nhật lại giá giảm giá (SalePrice)
+                    product.SalePrice = salePrice;
+                     
+                }
+            }
+
+            await _context.SaveChangesAsync(); // Lưu các thay đổi
+
+            return Ok(cartItems);
         }
+
 
 
         [HttpPost("addToCart/{idUser}")]

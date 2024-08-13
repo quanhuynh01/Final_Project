@@ -1,61 +1,65 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { Breadcrumb, Button, Card, Form, Modal } from "react-bootstrap";
 import Header from "../Header/Header";
-import { Breadcrumb, Button, Card, Form, Modal, Pagination } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import {jwtDecode} from "jwt-decode";
 import Swal from "sweetalert2";
 import ReactPaginate from "react-paginate";
-import './ProductsCategories.css'
+import './ProductsCategories.css';
+import { PanelMenu } from "primereact/panelmenu";
+
 const ProductsCategories = () => {
     const { id } = useParams();
-    const [Products, setProducts] = useState([]);
+    const navigate = useNavigate();
+
+    const [products, setProducts] = useState([]);
     const [brands, setBrands] = useState([]);
-    const [NameCate, setNameCate] = useState(null);
+    const [nameCate, setNameCate] = useState(null);
     const [selectedBrands, setSelectedBrands] = useState([]);
-    const [FilteredProducts, setFilteredProducts] = useState([]);
-    const [Attribute, setAttribute] = useState([]);
-    const [User, setUser] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [attributes, setAttributes] = useState([]);
+    const [user, setUser] = useState(null);
     const [selectedValues, setSelectedValues] = useState([]);
-    const [show, setShowLogin] = useState(false);
-    const [priceRange, setPriceRange] = useState([0, 10000000]); // Khoảng giá mặc định
+    const [showLogin, setShowLogin] = useState(false);
+    const [priceRange, setPriceRange] = useState([0, 10000000]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 10;
 
     const handleCloseLogin = () => setShowLogin(false);
     const handleShowLogin = () => setShowLogin(true);
-
- 
 
     useEffect(() => {
         axios.get(`https://localhost:7201/danh-muc/${id}`)
             .then(res => {
                 setProducts(res.data.data);
                 setNameCate(res.data.nameCategories);
-                setAttribute(res.data.attributeValue);
-            });
+                setAttributes(res.data.attributeValue);
+            }).catch(ex=>{navigate("/not-found")});
         axios.get(`https://localhost:7201/api/Brands`)
             .then(res => setBrands(res.data));
-    }, [id]); 
+    }, [id]);
+
     useEffect(() => {
-        let token = localStorage.getItem('token');
-        if (token != null) {
-            const decode = jwtDecode(token);
-            const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decoded = jwtDecode(token);
+            const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
             setUser(userId);
         }
     }, []);
 
     const addToCart = (item) => {
-        if (item !== null && User !== null) {
-            axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
+        if (item && user) {
+            axios.post(`https://localhost:7201/api/Carts/addToCart/${user}?ProductId=${item.id}`)
                 .then(res => {
                     if (res.status === 200) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
-                            title: "Add to cart successfully",
+                            title: "Thêm vào giỏ hàng thành công",
                             showConfirmButton: false,
                             timer: 1000
                         });
@@ -63,13 +67,14 @@ const ProductsCategories = () => {
                 })
                 .catch(error => console.error(error));
         } else {
-            handleShowLogin(true);
+            handleShowLogin();
         }
-    }; 
-    function convertToVND(price) {
+    };
+
+    const convertToVND = (price) => {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-    }
+    };
 
     const handleBrandChange = (e) => {
         const brandId = parseInt(e.target.value);
@@ -79,10 +84,7 @@ const ProductsCategories = () => {
             const updatedBrands = selectedBrands.filter(id => id !== brandId);
             setSelectedBrands(updatedBrands);
         }
-    }; 
-    useEffect(() => {
-        filterProducts();
-    }, [selectedBrands, selectedValues, priceRange, Products]);
+    };
 
     const handleValueChange = (e) => {
         const valueId = e.target.value;
@@ -93,38 +95,59 @@ const ProductsCategories = () => {
                 return prevSelectedValues.filter(id => id !== valueId);
             }
         });
-    }; 
-
-    const handlePriceChange = (e) => { 
-        setPriceRange([0, e.target.value]);
     };
 
-    // hàm lọc dữ liệu
+    const handleMinPriceChange = (e) => {
+        setPriceRange([parseInt(e.target.value), priceRange[1]]);
+    };
+
+    const handleMaxPriceChange = (e) => {
+        setPriceRange([priceRange[0], parseInt(e.target.value)]);
+    };
+
+    useEffect(() => {
+        filterProducts();
+    }, [selectedBrands, selectedValues, priceRange, products]);
+
     const filterProducts = () => {
-        let filteredProducts = Products; 
+        let filtered = products;
+        console.log(filtered);
         if (selectedBrands.length > 0) {
-            filteredProducts = filteredProducts.filter(item => selectedBrands.includes(item.product.brandId));
-        } 
+            filtered = filtered.filter(item => item.product && selectedBrands.includes(item.product.brandId));
+        }
         if (selectedValues.length > 0) {
-            filteredProducts = filteredProducts.filter(product => {
-                return selectedValues.every(selectedId => {
-                    return product.attributes.some(attr => attr.attributeValue.idvalue === parseInt(selectedId));
-                });
-            });
-        } 
-        filteredProducts = filteredProducts.filter(item => item.product.price <= priceRange[1]); 
-        setFilteredProducts(filteredProducts);
+            filtered = filtered.filter(product => product.product && selectedValues.every(selectedId => {
+                return product.attributes.some(attr => attr.attributeValue.idvalue === parseInt(selectedId));
+            }));
+        }
+        filtered = filtered.filter(item => item.product && item.product.price >= priceRange[0] && item.product.price <= priceRange[1]);
+        setFilteredProducts(filtered);
     };
 
-    //phân trang 
-    const iteminPage =10; // số lượng phần tử mỗi trang
-    const [currentPage, setcurrentPage] = useState(0);
-    const offset = currentPage * iteminPage;
-    const currentItem = FilteredProducts.slice(offset, offset + iteminPage);
-    const pageCount = Math.ceil(FilteredProducts.length / iteminPage); 
-    const handlePageclick = (e)=>{ 
-        setcurrentPage(e.selected);
-    } 
+    const offset = currentPage * itemsPerPage;
+    const currentItems = filteredProducts.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredProducts.length / itemsPerPage);
+
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected);
+    };
+
+    //hãng
+    const items = [
+        {
+            label: 'Lọc theo hãng',
+            icon: 'pi pi-desktop',
+            items: brands.map((item) => ({
+                label: item.brandName,
+                command: () => {
+                    const updatedSelectedBrands = selectedBrands.includes(item.id)
+                        ? selectedBrands.filter((id) => id !== item.id)
+                        : [...selectedBrands, item.id];
+                    setSelectedBrands(updatedSelectedBrands);
+                },
+            })),
+        },
+    ];
     return (
         <>
             <Header />
@@ -133,14 +156,16 @@ const ProductsCategories = () => {
                 <div className="row px-xl-5">
                     <div className="col-12">
                         <nav className="breadcrumb bg-light mb-30">
-                            <Link to={'/'} className="breadcrumb-item text-dark" >Trang chủ</Link>
-                            <span className="breadcrumb-item active">{NameCate}</span>
+                            <Link to={'/'} className="breadcrumb-item text-dark">Trang chủ</Link>
+                            <span className="breadcrumb-item active">{nameCate}</span>
                         </nav>
                     </div>
                 </div>
             </div>
             <div className="d-flex" style={{ width: "90%", margin: "auto" }}>
                 <div className="left card p-4" style={{ width: "25%", marginTop: "10px" }}>
+
+                    {/* <PanelMenu model={items} className="w-full md:w-20rem" /> */}
                     <h5><b>Thương hiệu</b></h5>
                     <Form>
                         {brands.map((b, index) => (
@@ -156,19 +181,32 @@ const ProductsCategories = () => {
                     </Form>
                     <h5 className="mt-2"><b>Giá</b></h5>
                     <Form>
-                        <input
-                            type="range"
-                            min="0"
-                            max="50000000"
-                            step="100000"
-                            value={priceRange[1]}
-                            onChange={handlePriceChange}
-                        />
-                        <p>Giá tối đa: {convertToVND(priceRange[1] / 1000)}</p>
+                        <Form.Group>
+                            <Form.Label>Giá tối thiểu</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={priceRange[0]}
+                                onChange={handleMinPriceChange}
+                                min="0"
+                                step="100"
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Giá tối đa</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={priceRange[1]}
+                                onChange={handleMaxPriceChange}
+                                      min="0"
+                                max="10000000"
+                                step="100"
+                            />
+                        </Form.Group>
+                        <p>Khoảng giá: {convertToVND(priceRange[0])} - {convertToVND(priceRange[1] )}</p>
                     </Form>
                     <h5 className="mt-2"><b>Thuộc tính</b></h5>
                     <Form>
-                        {Attribute.map((attributeItem, index) => (
+                        {attributes.map((attributeItem, index) => (
                             <div key={index}>
                                 <label><b>{attributeItem.nameAttribute}</b></label>
                                 {attributeItem.attributeValues.map((value, idx) => (
@@ -184,32 +222,49 @@ const ProductsCategories = () => {
                         ))}
                     </Form>
                 </div>
-                <div className="right d-flex" style={{ width: "75%" ,flexWrap:"wrap"}}>
-                    {currentItem.map((item, index) => ( 
+                <div className="right d-flex" style={{ width: "75%", flexWrap: "wrap" }}>
+                    {currentItems.map((item, index) => (
                         <div key={index}>
                             <Card className='card-item' style={{ width: '17.5rem', margin: '10px' }}>
                                 <Card.Img variant="top" src={`https://localhost:7201${item.product.avatar}`} alt='' />
                                 <Card.Body style={{ position: "relative" }}>
                                     <Link key={item.product.id} to={`/chi-tiet-san-pham/${item.product.id}`}>
                                         <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                            <Card.Text>SKU :{item.product.sku}</Card.Text>
+                                            <Card.Text>Mã SP:{item.product.sku}</Card.Text>
                                             <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>
-                                                {item.product.stock > 0 ? <><i className='fa fa-check'></i>In stock</> : "Out stock"}
+                                                {item.product.stock > 0 ? <><i className='fa fa-check'></i>Còn hàng</> : "Hết hàng"}
                                             </Card.Text>
                                         </div>
                                         <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
                                             {item.product.productName}
                                         </Card.Title>
-                                        <Card.Text>Price: {convertToVND(item.product.price)}</Card.Text>
+                                        {
+                                        item.product.salePrice !== item.product.price && item.product.salePrice !== null ? (
+                                            <div className="d-flex text-danger"  >
+                                                  Giá: { convertToVND(Math.ceil(item.product.price * (1 - item.product.salePrice / 100)))} <del className="text-dark">{convertToVND(item.product.price)}</del>
+                                            </div>
+                                        ) : (
+                                                    item.product.price > 0 ? (
+                                                        <Card.Text className='text-dark'> Giá:{convertToVND(item.product.price)}</Card.Text>
+                                                    ) : (
+                                                      <p className="text-danger">Liên hệ</p>
+                                                    )
+
+                                        )}
                                     </Link>
+                                    <Button
+                                        onClick={() => addToCart(item.product)}
+                                        className='position-absolute'
+                                        variant="outline-warning"
+                                        style={{ bottom: '10px', right: '10px' }}
+                                    >
+                                        <i className='fa fa-shopping-cart'></i>
+                                    </Button>
                                 </Card.Body>
-                                <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}> 
-                                    <Button onClick={() => addToCart(item.product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-                                </div>
                             </Card>
                         </div>
-                    ))} 
-                </div> 
+                    ))}
+                </div>
             </div>
             <ReactPaginate
                 previousLabel={'Trở về'}
@@ -219,16 +274,16 @@ const ProductsCategories = () => {
                 pageCount={pageCount}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
-                onPageChange={handlePageclick}
-                containerClassName={'pagination '}
+                onPageChange={handlePageClick}
+                containerClassName={'pagination'}
                 activeClassName={'active'}
             />
-            <Modal show={show} onHide={handleCloseLogin} centered>
+            <Modal show={showLogin} onHide={handleCloseLogin} centered>
                 <div className='row justify-content-center mt-4'>
                     <h1 className='text-danger'>QT Member</h1>
                 </div>
                 <Modal.Body>
-                    <div className='row justify-content-center'>
+                    <div class='row justify-content-center'>
                         <img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:80/q:90/plain/https://cellphones.com.vn/media/wysiwyg/chibi2.png" height={80} alt="cps-smember-icon" />
                     </div>
                     <div className='mt-3'>

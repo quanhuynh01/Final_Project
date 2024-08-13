@@ -152,7 +152,7 @@ const Categories = () => {
                                         <strong className="card-title">Danh sách danh mục sản phẩm</strong>
                                     </div>
                                     <div className="card-body">
-                                        <DataTable value={categories} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={false}
+                                        <DataTable value={categories} paginator rows={5} dataKey="id" filters={filters} filterDisplay="row" loading={false}
                                             globalFilterFields={['nameCategory', 'description']} header={header} emptyMessage="Không tìm thấy danh mục.">
                                             <Column field="nameCategory" header="Tên danh mục" filter filterPlaceholder="Tìm theo tên" style={{ minWidth: '12rem' }} /> 
                                             <Column field="show" header="Trạng thái" body={statusBodyTemplate} filter filterPlaceholder="Tìm theo trạng thái" style={{ minWidth: '12rem' }} />

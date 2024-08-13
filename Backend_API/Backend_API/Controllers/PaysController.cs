@@ -39,9 +39,6 @@ namespace Backend_API.Controllers
             return Ok(response);
         }
 
-        private bool PayExists(int id)
-        {
-            return _context.Pay.Any(e => e.Id == id);
-        }
+     
     }
 }

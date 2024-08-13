@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,10 +125,20 @@ namespace Backend_API.Controllers
             try
             { 
 
+                foreach (var item in order.OrderDetails)
+                {
+                    var pro = _context.Products.Where(p=>p.Id == item.ProductId).Select(p=>p.Price).FirstOrDefault();
+                    if(pro <= 0)
+                    {
+                        return Ok(new { success = false, status = 1 });
+                    }
+                }
+
                 Order o = new Order
                 {
                     UserId = order.UserId,
                     DateShip = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture),
+                    Orderer = order.User.FullName,
                     PhoneShip = order.PhoneShip,
                     TotalMoney = order.TotalMoney,
                     ShippingAdress = order.ShippingAdress,
@@ -245,7 +255,7 @@ namespace Backend_API.Controllers
                 data.DeliveryStatusId = 2;//đã xác nhận
                 _context.Order.Update(data);
                 _context.SaveChanges();
-                return Ok();
+                return Ok(data);
             }
 
             return BadRequest();
@@ -260,7 +270,7 @@ namespace Backend_API.Controllers
                 data.DeliveryStatusId = 3; 
                 _context.Order.Update(data);
                 _context.SaveChanges();
-                return Ok();
+                return Ok(data);
             }
 
             return BadRequest();
@@ -272,10 +282,18 @@ namespace Backend_API.Controllers
             if(id!=null)
             {
                 var data = _context.Order.Find(id);
-                data.DeliveryStatusId = 5;//hủy đơn
+                data.DeliveryStatusId = 5;//hủy đơn 
+                var detail = _context.OrderDetails.Where(o => o.OrderId == id).ToList();
+                foreach (var item in detail)
+                {
+                    var pro = _context.Products.Where(p => p.Id == item.ProductId).FirstOrDefault();
+                    pro.Stock += item.Amount;
+                    _context.Products.Update(pro);
+                    _context.SaveChanges();
+                } 
                 _context.Order.Update(data);
                 _context.SaveChanges();
-                return Ok();
+                return Ok(data);
             }    
             
             return BadRequest();
@@ -291,7 +309,7 @@ namespace Backend_API.Controllers
                 data.Paid = true;
                 _context.Order.Update(data);
                 _context.SaveChanges();
-                return Ok();
+                return Ok(data);
             }
 
             return BadRequest();
@@ -309,7 +327,7 @@ namespace Backend_API.Controllers
                     data.DeliveryStatusId = 6;
                     _context.Order.Update(data);
                     _context.SaveChanges();
-                    return Ok();
+                    return Ok(data);
                 }
             }
             catch (Exception ex)
@@ -328,8 +346,48 @@ namespace Backend_API.Controllers
 
             return Ok(data);
         }
+        // Thống kê theo ngày
+        [HttpGet("getDailyRevenue")]
+        public async Task<IActionResult> GetDailyRevenue(DateTime date)
+        {
+            try
+            {
+                var data = await _context.Order
+                    .Where(order => order.DeliveryStatusId == 4 && order.Paid && order.DateShip.Date == date.Date)
+                    .GroupBy(order => order.Id)
+                    .Select(g => new
+                    {
+                        DateCreate = g.Select(o=>o.DateShip.Date),
+                        Orders = g.Select(o => new
+                        {
+                            OrderCode = o.Code,
+                            TotalMoney = o.TotalMoney
+                        }).ToList() // Chuyển danh sách các đơn hàng vào danh sách mới
+                    })
+                    .ToListAsync();
 
-        private bool OrderExists(int id)
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if needed
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        [HttpGet("getTotalOrderDayNow")]
+        public async Task<IActionResult> getTotalOrderDayNow()
+        {
+            var today = DateTime.Today; // Lấy ngày hôm nay mà không bao gồm giờ
+            var data = await _context.Order
+                                     .Where(o => o.DeliveryStatusId == 4 && o.DateShip.Date == today)
+                                     .SumAsync(o => o.TotalMoney);
+            return Ok(data);
+        }
+
+
+            private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.Id == id);
         }

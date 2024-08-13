@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Header from "../Header/Header";
 import Navbar from "../Navbar/Navbar";
 import { useEffect, useState } from "react";
@@ -10,7 +10,8 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 
 const ProductAttribute = () => {
-    const { id } = useParams();
+    const { id ,catid} = useParams();
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [NameValue, setNameValue] = useState(null);
     const [User, setUser] = useState(null);
@@ -34,13 +35,14 @@ const ProductAttribute = () => {
 
     useEffect(() => {
         if (id) {
-            axios.get(`https://localhost:7201/AttributeId/${id}`)
+            axios.get(`https://localhost:7201/AttributeId/${id}/${catid}`)
                 .then(res => {
                     //   console.log("API response:", res.data); // Kiểm tra dữ liệu trả về từ API
                     setProducts(res.data);
 
                 })
                 .catch(error => {
+                    navigate("/not-found");
                     console.error('Error fetching product attributes:', error);
                 });
         }
@@ -59,7 +61,10 @@ const ProductAttribute = () => {
                         });
                     }
                 })
-                .catch(error => console.error(error));
+                .catch(error => {
+                    navigate("/not-found");
+                    console.error(error);
+                });
         } else {
             handleShowLogin(true);
         }
@@ -90,7 +95,7 @@ const ProductAttribute = () => {
                                             <div className='d-flex' style={{ justifyContent: "space-between" }}>
                                                 <Card.Text>Mã SP:{item.product.sku}</Card.Text>
                                                 <Card.Text className={item.product.stock > 0 ? 'text-success' : 'text-danger'}>
-                                                    {item.product.stock > 0 ? <><i className='fa fa-check'></i>Còn hàng</> : "Out stock"}
+                                                    {item.product.stock > 0 ? <><i className='fa fa-check'></i>Còn hàng</> : "Hết hàng"}
                                                 </Card.Text>
                                             </div>
                                             <Card.Title style={{ height: '3rem', overflow: "hidden" }}>

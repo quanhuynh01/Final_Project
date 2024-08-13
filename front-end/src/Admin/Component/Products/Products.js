@@ -177,7 +177,7 @@ const Products = () => {
                     <Link to={"create"} className="btn btn-outline-success">Thêm sản phẩm</Link>
                 </div>
                 <div className="content mt-3">
-                    <DataTable value={products.filter(p => !p.softDelete)} paginator rows={10} className="datatable-responsive"
+                    <DataTable value={products.filter(p => !p.softDelete)} paginator rows={5} className="datatable-responsive"
                         globalFilter={globalFilterValue} header={renderHeader()}>
                         <Column field="id" header="STT" body={(rowData, options) => options.rowIndex + 1} />
                         <Column field="productName" header="Tên sản phẩm" filter filterElement={() => renderInputFilter('productName', 'Product Name')} />

@@ -59,8 +59,7 @@ const Cart = () => {
             ...User,
             [name]: value
         });
-    };
-
+    }; 
     const handleAddressChange = (e) => {
         setAddressShipping(e.target.value);
     };
@@ -106,8 +105,11 @@ const Cart = () => {
                     axios.post('https://localhost:7201/api/Orders/addOrder', orderData)
                         .then(response => {
                             if (response.status === 200) {
-                                if (response.data.success == false) {
+                                if (response.data.success == false && response.data.status === 0) {
                                     alert("Số lượng hiện tại không đủ cho đơn hàng này! Vui lòng liên hệ 0984855261 ");
+                                }
+                                if (response.data.success == false && response.data.status === 1) {
+                                    alert("Giá sản phẩm chưa hợp lệ vui lòng kiểm tra lại ");
                                 }
                                 if (response.data.success === true) {
                                     Swal.fire({
@@ -310,7 +312,7 @@ const Cart = () => {
         return(<>
         <button onClick={() => handleDelete(row.id)} className="btn btn-sm btn-danger"><i className="fa fa-times" /></button>
         </>)
-    } 
+    }  
     return (
         <>
             <Header />

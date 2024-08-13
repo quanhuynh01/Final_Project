@@ -9,7 +9,7 @@ using StackExchange.Redis;
 using CodeMegaVNPay.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MiniStoredentity_Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MiniStoredentity_Context") ?? throw new InvalidOperationException("Connection string 'MiniStoredentity_Context' not found.")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("MiniStoredentity_Context") ?? throw new InvalidOperationException("Connection string 'MiniStoredentity_Context' not found.")));
 
 
 // Add services to the container.

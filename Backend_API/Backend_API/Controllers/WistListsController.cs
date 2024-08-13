@@ -114,8 +114,28 @@ namespace Backend_API.Controllers
             var data = _context.WistLists.Include(p=>p.Product).Where(w => w.UserId == id).ToList();
             return Ok(data);
         }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(string id, [FromForm] List<int> ProId)
+        {
 
-            private bool WistListExists(int id)
+            var data = _context.WistLists.Where(u => u.User.Id == id).ToList();
+
+           
+            foreach(var item in ProId)
+            {
+                foreach (var item2 in data)
+                {
+                    if (item == item2.ProductId)
+                    {
+                        _context.WistLists.Remove(item2);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            return Ok();
+        }
+
+        private bool WistListExists(int id)
         {
             return _context.WistLists.Any(e => e.Id == id);
         }

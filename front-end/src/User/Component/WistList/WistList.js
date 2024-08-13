@@ -57,13 +57,23 @@ const WistList = () => {
         const priceInVND = price * 1000;
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
+
     const handleDeleteSelected = () => {
         if (selectedProducts.length === 0) {
             return;
         }
+        const formdata = new FormData();
+
+        selectedProducts.forEach(item=>{
+            console.log(item);
+            formdata.append("ProId[]",item);
+        })
         // Gọi API để xóa các sản phẩm đã chọn
-        axios.delete(`https://localhost:7201/api/WistLists/deleteProducts/${IdUser}`, {
-            data: { productIds: selectedProducts }
+        axios.delete(`https://localhost:7201/api/WistLists/delete/${IdUser}`, {
+            data: formdata,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         })
             .then(res => {
                 // Xóa thành công, cập nhật lại danh sách sản phẩm yêu thích
@@ -89,6 +99,7 @@ const WistList = () => {
             });
     };
 
+ 
     return (
         <>
             <Header />
@@ -159,7 +170,7 @@ const WistList = () => {
                                     <>
                                         <Button onClick={handleDeleteSelected} variant="danger">Xóa các sản phẩm đã chọn</Button>
                                         {/* Nút mua sản phẩm */}
-                                        <Button variant="success" className="ml-2">Mua các sản phẩm đã chọn</Button>
+                                        {/* <Button variant="success" className="ml-2">Mua các sản phẩm đã chọn</Button> */}
                                     </>
                                 )}
                             </td>

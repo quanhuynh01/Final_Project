@@ -52,7 +52,15 @@ const Attribute = () => {
             {
                 setShowAttributeValue(true);
                 axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeValue/${id}`)
-                .then(res=>setlsAttributeValue(res.data.data));
+                .then(res=>{
+                    if(res.status ===200)
+                    {
+                        setlsAttributeValue(res.data.data);
+                    }
+                }).catch(ex=>{
+                    console.log(ex);
+                })
+                ;
             }
 
 
@@ -129,18 +137,25 @@ const Attribute = () => {
          
     };
 
-    const handleDelete = ()=>{
-
+    const handleDelete = (id)=>{
+        axios.delete(`https://localhost:7201/api/Attributes/${id}`).then(res =>{
+            if(res.status ==204)
+            {
+                alert("Xóa thuộc tính thành công");  
+                setAttribute(prev => prev.filter(attr => attr.id !== id));
+            }
+        }).catch(ex=>{
+            console.log(ex);
+        })
     }
    const btn = (row)=>{
     return(<>
         <button onClick={() => handleShowAttr(row.id)} className="btn btn-outline-success"><i className="fa fa-plus"></i> Thêm giá trị</button>
         <button onClick={()=>handleShowAttributeValue(row.id)} className=" ml-2 btn btn btn-outline-info ">Xem danh sách giá trị </button>
-        <Link type="button"  className="btn btn-outline-warning ml-2" to= {`/attributes/chinh-sua-thuoc-tinh/${row.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</Link>
+        <Link type="button"  className="btn btn-outline-warning ml-2" to= {`edit/${row.id}`} ><i className="fa fa-edit"></i> Chỉnh sửa</Link>
+        <button onClick={()=>handleDelete(row.id)} className=" ml-2 btn btn btn-outline-danger ">Xóa</button>
     </>)
-   }
-
-   console.log(Attribute);
+   } 
     return ( <>
      <SidebarAdmin />
         <div id="right-panel" className="right-panel"  style={{ width: '86%' }}>
@@ -203,7 +218,7 @@ const Attribute = () => {
                                         </tbody>
                                     </table> */}
                                     <DataTable
-                                        value={Attribute}
+                                        value={Attribute.filter(a=>!a.Active)}
                                         loading={loading}
                                         paginator
                                         rows={10}
@@ -290,29 +305,30 @@ const Attribute = () => {
         <Modal.Title>Danh sách giá trị theo thuộc tính</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-        {lsAttributeValue.length > 0 ? (
-            <Table hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên thuộc tính</th>
-                        <th></th>
+    {lsAttributeValue && lsAttributeValue.length > 0 ? (
+        <Table hover>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên thuộc tính</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {lsAttributeValue.map((item, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.nameValue}</td>
+                        <td><Button className="btn">Xóa</Button></td>
                     </tr>
-                </thead>
-                <tbody>
-                    {lsAttributeValue.map((item, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.nameValue}</td>
-                            <td><Button className="btn">Xóa</Button></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-        ) : (
-            <p>Không có dữ liệu</p>
-        )}
-    </Modal.Body>
+                ))}
+            </tbody>
+        </Table>
+    ) : (
+        <p>Không có dữ liệu</p>
+    )}
+</Modal.Body>
+
     <Modal.Footer>
         <Button variant="secondary" onClick={handleCloseAttributeValue}>
             Close

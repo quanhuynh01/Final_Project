@@ -128,18 +128,48 @@ const Account = () => {
     //khách hàng hủy đơn
     const handleCancelOrder = (id) => {
         axios.get(`https://localhost:7201/cancelOrder/${id}`).then(res => {
+            console.log(res);
             if (res.status === 200) {
                 alert("Hủy đơn thành công");
+                setlsOrder(prevOrders =>
+                    prevOrders.map(order => {
+                        if (order.id === id) {
+                            return { 
+                                ...order, 
+                                deliveryStatusId: res.data.deliveryStatusId,
+                                deliveryStatus: res.data.deliveryStatus ? res.data.deliveryStatus : { id: res.data.deliveryStatusId, status: "Hủy đơn" }
+                            };
+                        }
+                        return order;
+                    })
+                );
             }
         })
     }
     const handleTrahang = (id) => {
         axios.get(`https://localhost:7201/trahang/${id}`).then(res => {
+            console.log(res.data);
             if (res.status === 200) {
-                alert("Gửi yêu cầu thành công, người bán sẽ liên hệ với bạn sao ít phút nữa ");
+                alert("Gửi yêu cầu thành công, người bán sẽ liên hệ với bạn sau ít phút nữa");
+                setlsOrder(prevOrders =>
+                    prevOrders.map(order => {
+                        if (order.id === id) {
+                            return { 
+                                ...order, 
+                                deliveryStatusId: res.data.deliveryStatusId,
+                                deliveryStatus: res.data.deliveryStatus ? res.data.deliveryStatus : { id: res.data.deliveryStatusId, status: "Xử lý trả hàng" }
+                            };
+                        }
+                        return order;
+                    })
+                );
             }
-        })
+        }).catch(error => {
+            console.error("Error handling tra hang:", error);
+            alert("Có lỗi xảy ra khi gửi yêu cầu trả hàng.");
+        });
     }
+    
 
 
     const handleChangePassword = async (e) => {
@@ -308,7 +338,7 @@ const Account = () => {
                             <div id="orders-tab" className="tab-pane">
                                 <div className="ac-ct-info">
                                     <div className="box-cus-info-2021">
-                                        <div className="title-ac-2021"> <h2 className="text-center">Đơn hàng của bạn</h2></div>
+                                        <div className="title-ac-2021"> <h2 className="text-center mt-3">Đơn hàng của bạn</h2></div>
                                         <div className="box-cus-info-2021">
                                             <div className="table-responsive" style={{ padding: 12 }}>
                                                 <div>
@@ -344,7 +374,7 @@ const Account = () => {
                                                                                         Hủy đơn
                                                                                     </Button>
                                                                                 )}
-                                                                                {item.deliveryStatus.id === 7 && (
+                                                                                {item.deliveryStatus.id === 4 && (
                                                                                     <Button className="ml-2" variant="info" onClick={() => handleTrahang(item.id)}>
                                                                                         Trả hàng
                                                                                     </Button>

@@ -112,15 +112,23 @@ namespace Backend_API.Controllers
         [HttpGet("lsAttributeValue/{idAttr}")]
         public async Task<IActionResult> GetAttributeValuesByAttributeId(int idAttr)
         {
-            var attributeValues = await _context.Attributevalues
+            try
+            {
+                var attributeValues = await _context.Attributevalues
                                             .Where(av => av.AttributeId == idAttr)
                                             .ToListAsync();
-            if (attributeValues == null || attributeValues.Count == 0)
-            {
-                return Ok(new { success = false });
-            }
+                if (attributeValues == null || attributeValues.Count == 0)
+                {
+                    return Ok(new { success = false });
+                }
 
-            return Ok(new { success = true, data = attributeValues });
+                return Ok(new { success = true, data = attributeValues });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         [HttpGet("lsAttributeAndValue/{idCategories}")]
         public async Task<IActionResult> lsAttributeAndValue(int idCategories)
@@ -155,21 +163,32 @@ namespace Backend_API.Controllers
         {
             try
             {
-                var AttributeId = _context.Attributevalues.Include(a => a.Attribute).Where(a => a.Id == id).FirstOrDefault();//lấy ra các thông tin liên quan đến giá trị thuộc tính đó
-
-                ProductAttribute pro = new ProductAttribute()
+                var data =_context.ProductAttributes.Where( p=>p.AttributeValueId == id && p.ProductId == idPro).FirstOrDefault();
+                if (data == null)
                 {
-                    ProductId = idPro,
-                    AttributeId = AttributeId.AttributeId,
-                    AttributeValueId = AttributeId.Id
-                    // Gán các thuộc tính cho p từ attributeValue nếu cần
-                };
-                _context.ProductAttributes.Add(pro);
-                _context.SaveChanges();
-                var nameAttribute = AttributeId.Attribute.NameAttribute;
-                var attributevalue = await _context.Attributevalues.FindAsync(id);
-              
-                return Ok(new { Id = pro.Id, nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
+                    var AttributeId = _context.Attributevalues.Include(a => a.Attribute).Where(a => a.Id == id).FirstOrDefault();
+
+                    ProductAttribute pro = new ProductAttribute()
+                    {
+                        ProductId = idPro,
+                        AttributeId = AttributeId.AttributeId,
+                        AttributeValueId = AttributeId.Id
+                        // Gán các thuộc tính cho p từ attributeValue nếu cần
+                    };
+                    _context.ProductAttributes.Add(pro);
+                    _context.SaveChanges();
+                    var nameAttribute = AttributeId.Attribute.NameAttribute;
+                    var attributevalue = await _context.Attributevalues.FindAsync(id);
+
+                    return Ok(new { status = 1 ,Id = pro.Id, nameAttribute = nameAttribute, nameValue = attributevalue.NameValue });
+                }
+                else
+                {
+                    return Ok(new { status = 0, message="Sản phẩm đã có thuộc tính này rồi "});
+                }
+               
+
+                
             }
             catch (Exception ex)
             { 

@@ -108,14 +108,14 @@ namespace API_Server.Controllers
                     return Ok(new { success = false, status = 1 });//status = 1 mật khẩu không đúng định dạng
                 }
                 _ = SendMail(user.Email, user.FullName);
-                Customer cus = new Customer()
-                {
-                    Name = user.Name,
-                    Email = model.Email,
-                    Phone = model.Phone
-                };
-                _context.Customer.Add(cus);
-                _context.SaveChanges();
+                //Customer cus = new Customer()
+                //{
+                //    Name = user.Name,
+                //    Email = model.Email,
+                //    Phone = model.Phone
+                //};
+                //_context.Customer.Add(cus);
+                //_context.SaveChanges();
                 return Ok(new { success = true });
             }
             catch (Exception ex)
@@ -134,28 +134,22 @@ namespace API_Server.Controllers
             dataUser.Email = email;
             dataUser.Address = address;
             _context.Users.Update(dataUser);
-            _context.SaveChanges();
-            Log log = new Log();
-            log.NameAction = "Thay đổi thông tin " + userName;
-            log.DescriptionAction = "Thay đổi thông tin tài khoản idUser" + id + " của " + fullName;
-            log.DateAction = DateTime.Now;
-            _context.Logs.Add(log);
-            _context.SaveChanges();
+            _context.SaveChanges(); 
             return Ok(dataUser);
         }
 
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin(string Username, string Password, string Email)
+        public async Task<IActionResult> RegisterAdmin(string Username, string Password)
         {
+            
             var userExists = await _userManager.FindByNameAsync(Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 
             User user = new User()
             {
-                Email = Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = Username
             };
@@ -171,8 +165,7 @@ namespace API_Server.Controllers
             if (await _roleManager.RoleExistsAsync("Admin"))
             {
                 await _userManager.AddToRoleAsync(user, "Admin");
-            }
-
+            } 
             return Ok();
         }
 
@@ -315,16 +308,7 @@ namespace API_Server.Controllers
                 var errors = changePasswordResult.Errors.Select(e => e.Description).ToList();
                 return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Mật khẩu phải có ít nhất 6 ký tự, bao gồm ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số và một ký tự đặc biệt ", errors });
             }
-            Log log = new Log()
-            {
-                NameAction = "Thay đổi mật khẩu thành " + model.NewPassword,
-                DescriptionAction = "Nguời dùng" + username + "Thay đổi mật khẩu vào " + DateTime.Now.ToString(),
-                DateAction = DateTime.Now,
-
-            };
-            _context.Logs.Add(log);
-            _context.SaveChanges();
-
+            
             return Ok(new { status = 200, message = "Thay đổi mật khẩu thành công" });
         }
 

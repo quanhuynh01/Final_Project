@@ -106,8 +106,7 @@ const Order = () => {
     const deltail = (rowData)=>{
         return (
             <div>
-                  <Button onClick={() => handleDetail(rowData.id)} className="btn btn-info" >Xem chi tiết </Button>
-                  <Link to={`edit/${rowData.id}`} className='btn btn-warning ml-2' ><i className='fa fa-edit'></i></Link>
+                  <Button onClick={() => handleDetail(rowData.id)} className="btn btn-info" >Xem chi tiết </Button> 
             </div>
         );
     }
@@ -133,6 +132,7 @@ const Order = () => {
             )} 
         </>)
     }
+    console.log(orders);
     return (<>
 
         <SidebarAdmin />
@@ -166,8 +166,10 @@ const Order = () => {
                                     </div>
                                     <div className="card-body">
                                     <DataTable value={orders} loading={loading} paginator rows={10} rowsPerPageOptions={[10, 25, 50]} className="p-datatable-customers">
+                                        <Column field="code" header="Mã đơn hàng" sortable />
                                         <Column field="dateShip" header="Ngày tạo" sortable />
-                                        <Column field="user.fullName" header="Tên khách hàng" sortable />
+                                        <Column field="orderer" header="Tên người nhận" sortable />
+                                        <Column field="phoneShip" header="Số điện thoại người nhận" sortable />
                                         <Column field="deliveryStatus" header="Trạng thái" body={statusBodyTemplate} sortable />
                                         <Column header="Trạng thái" body={paid} sortable />
                                         <Column header="Chức năng" body={actionBodyTemplate} />

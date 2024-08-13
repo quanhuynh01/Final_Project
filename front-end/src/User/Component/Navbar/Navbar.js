@@ -26,7 +26,7 @@ const Navbar = () => {
     if (event.currentTarget && event.currentTarget.querySelector) {
       event.currentTarget.querySelector('.dropdown-menu').classList.add('show');
       if (!Attributes[id]) {
-        axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeAndValue/${id}`).then(res => {
+        axios.get(`https://localhost:7201/api/Attributevalues/lsAttributeAndValue/${id}`).then(res => { 
           setAttributes(prevAttributes => ({
             ...prevAttributes, [id]: res.data
           }));
@@ -64,7 +64,10 @@ const Navbar = () => {
       const decodedJwt = jwtDecode(jwt); // sử dụng thư viện jwtDecode để giải mã JWT
       const userId = decodedJwt["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
       setIdUser(userId);
-      axios.get(`https://localhost:7201/api/Carts/getCart/${userId}`).then(res => setCartItems(res.data));
+      axios.get(`https://localhost:7201/api/Carts/getCart/${userId}`).then(res => {
+        console.log(res.data);
+        setCartItems(res.data)
+      });
     }
     setCartVisible(true);
 
@@ -76,9 +79,7 @@ const Navbar = () => {
   const convertToVND = (price) => {
     const priceInVND = price * 1000;
     return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-  };
-  console.log(Attributes);
-
+  }; 
   return (
     <div className="container-fluid bg-dark">
       <div className="row px-xl-5 mb-30">
@@ -96,15 +97,15 @@ const Navbar = () => {
                   </Link>
                   <div className={`dropdown-menu position-absolute rounded-0 border-0 m-0 dropmenu ${currentHoveredId === item.id ? 'show' : ''}`}>
                     <div className="row nav-item-cate">
-                      {(Attributes[item.id] || []).slice(0,11).filter(a=>a.active === false).map(attr => (
+                      {(Attributes[item.id] || []).slice(0, 12).filter(a=>a.active === false).map(attr => (
                         <div key={attr.id} className="col-3">
                           <div className="">
                             <div className="title text-danger">
                               {attr.nameAttribute}
                             </div>
                             <div className="">
-                              {attr.values.slice(0, 5).map(value => (
-                                <Link key={value.id} to={`/filteValue/${value.id}`} className="dropdown-item">
+                              {attr.values.slice(0, 4).map(value => (
+                                <Link key={value.id} to={`/filteValue/${value.id}/${item.id}`} className="dropdown-item">
                                   {truncateString(value.nameValue, 13)}
                                 </Link>
                               ))}
@@ -113,8 +114,8 @@ const Navbar = () => {
                                 <div className="dropdown-item dropright" onMouseEnter={(event) => handleShowMoreMouseEnter(event, attr.id)} onMouseLeave={handleShowMoreMouseLeave}>
                                   <a >Xem thêm ...</a>
                                   <div className={`dropdown-menu dropdown-menu-more position-absolute rounded-0 border-0 m-0 ${showMoreHoveredId === attr.id ? 'show' : ''}`}>
-                                    {attr.values.slice(5).map(value => (
-                                      <Link key={value.id} to={`/filteValue/${value.id}`} className="dropdown-item">
+                                    {attr.values.slice(4).map(value => (
+                                      <Link key={value.id} to={`/filteValue/${value.id}/${item.id}`} className="dropdown-item">
                                         {truncateString(value.nameValue, 13)}
                                       </Link>
                                     ))}
@@ -179,23 +180,30 @@ const Navbar = () => {
                       {cartItems.length > 0 ? (
                         cartItems.map((item, index) => (
                           <Link key={index} to={`/chi-tiet-san-pham/${item.product.id}`}>
-                            <div className="p-2 card " > 
+                            <div className="p-2 card">
                               <div className="d-flex">
                                 <img className="w-25" src={`https://localhost:7201/${item.product.avatar}`} alt="" />
                                 <p>{truncateString(item.product.productName, 50)}</p>
                               </div>
                               <p className="m-0 d-flex justify-content-between">
                                 <b>x {item.quantity}</b>
-                                <b className="red">{convertToVND(item.quantity * item.product.price)}</b>
+                                <b className="red">
+                                  {convertToVND(item.quantity * (
+                                    item.product.salePrice && item.product.salePrice !== item.product.price && item.product.salePrice !== 0
+                                      ? item.product.salePrice
+                                      : item.product.price
+                                  ))}
+                                </b>
                               </p>
                             </div>
                           </Link>
                         ))
                       ) : (
                         <div className="cart-empty">
-                          <p style={{ fontSize: 16, color: '#000' }}>No product in your shopping cart</p>
+                          <p style={{ fontSize: 16, color: '#000' }}>Chưa có sản phẩm này</p>
                         </div>
                       )}
+
                     </div>
                   </div>
                 </div>

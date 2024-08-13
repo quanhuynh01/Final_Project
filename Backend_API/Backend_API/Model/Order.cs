@@ -8,6 +8,7 @@ namespace Backend_API.Model
         public string Code { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
+        public string Orderer { get; set; }
         public string ShippingAdress { get; set; }
         public string PhoneShip { get; set; }
         public DateTime DateShip { get; set; }

@@ -12,9 +12,9 @@ namespace Backend_API.Model
         [NotMapped]
         public List<IFormFile>  AvatarFile { get; set; }
         [DefaultValue(0)]
-        public string Price { get; set; }
+        public int  Price { get; set; }
         [DefaultValue(0)]
-        public string SalePrice { get; set; }
+        public int SalePrice { get; set; }
         public string Alias { get; set; }
         public Boolean BestSeller { get; set; }
         [DefaultValue(0)]

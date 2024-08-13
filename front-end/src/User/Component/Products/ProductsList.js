@@ -12,7 +12,7 @@ import ReactPaginate from "react-paginate";
 
 const ProductsList = () => {
     const [lsProduct, setLsProduct] = useState([]);
-    const [show, setShowLogin] = useState(false); 
+    const [show, setShowLogin] = useState(false);
     const handleCloseLogin = () => setShowLogin(false);
     const handleShowLogin = () => setShowLogin(true);
     const [User, setUser] = useState(null);
@@ -22,37 +22,37 @@ const ProductsList = () => {
             setLsProduct(res.data);
         })
     }, []);
-//khởi chạy khi render để lấy id User
-useEffect(() => {
-    let token = localStorage.getItem('token');
-    if (token != null) {
-        const decode = jwtDecode(token);
-        const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-        setUser(userId);
-    }
-}, []);
-//thêm vào giỏ hàng
-const addToCart = (item) => {
-    if (item !== null && User !== null) {
-      axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
-        .then(res => { 
-          if (res.status === 200) {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Add to cart successfully",
-              showConfirmButton: false,
-              timer: 1000
-            });
-          }
-        })
-        .catch(error => console.error(error));
-    }
-    else{
-      handleShowLogin(true);
-    }
+    //khởi chạy khi render để lấy id User
+    useEffect(() => {
+        let token = localStorage.getItem('token');
+        if (token != null) {
+            const decode = jwtDecode(token);
+            const userId = decode["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+            setUser(userId);
+        }
+    }, []);
+    //thêm vào giỏ hàng
+    const addToCart = (item) => {
+        if (item !== null && User !== null) {
+            axios.post(`https://localhost:7201/api/Carts/addToCart/${User}?ProductId=${item.id}`)
+                .then(res => {
+                    if (res.status === 200) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm vào giỏ hàng thành công",
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }
+                })
+                .catch(error => console.error(error));
+        }
+        else {
+            handleShowLogin(true);
+        }
 
-  };
+    };
 
     // Convert price to VND
     function convertToVND(price) {
@@ -60,19 +60,41 @@ const addToCart = (item) => {
         return priceInVND.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     }
     //phân trang 
-    const iteminPage =3; // số lượng phần tử mỗi trang
+    const iteminPage = 3; // số lượng phần tử mỗi trang
     const [currentPage, setcurrentPage] = useState(0);
     const offset = currentPage * iteminPage;
     const currentItem = lsProduct.slice(offset, offset + iteminPage);
-    const pageCount = Math.ceil(lsProduct.length / iteminPage); 
-    const handlePageclick = (e)=>{ 
+    const pageCount = Math.ceil(lsProduct.length / iteminPage);
+    const handlePageclick = (e) => {
         setcurrentPage(e.selected);
-    } 
+    }
 
+  const responsiveOptions = [
+        {
+            breakpoint: '1400px',
+            numVisible: 2,
+            numScroll: 1
+        },
+        {
+            breakpoint: '1199px',
+            numVisible: 3,
+            numScroll: 1
+        },
+        {
+            breakpoint: '767px',
+            numVisible: 2,
+            numScroll: 1
+        },
+        {
+            breakpoint: '575px',
+            numVisible: 1,
+            numScroll: 1
+        }
+    ];
     return (
         <>
-        <Header/>
-        <Navbar/>
+            <Header />
+            <Navbar />
             <div className="container-fluid">
                 <div className="row px-xl-5">
                     <div className="col-12">
@@ -83,7 +105,7 @@ const addToCart = (item) => {
                     </div>
                 </div>
             </div>
-            <div className=""style={{ width: "90%", margin: "auto" }}>
+            <div className="" style={{ width: "90%", margin: "auto" }}>
                 {currentItem.length > 0 && currentItem !== null ? (
                     currentItem.map((item, index) => (
                         <div key={index}>
@@ -94,30 +116,39 @@ const addToCart = (item) => {
                                     </h5>
                                 </Link>
                             </div>
-                            <div className="d-flex" style={{flexWrap:"wrap"}}>
+                            <div className="d-flex" style={{ flexWrap: "wrap" }}>
                                 {item.products.map((product, idx) => (
-                                    <div className=" " key={idx}>
-                                        <Card className='card-item' style={{ width: '20rem', margin: '10px' }}>
-                                            <Card.Img variant="top" src={`https://localhost:7201${product.avatar}`} alt='' />
-                                            <Card.Body style={{ position: "relative" }}>
-                                                <Link key={product.id} to={`/chi-tiet-san-pham/${product.id}`}>
-                                                    <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                                        <Card.Text>Mã SP:{product.sku}</Card.Text>
-                                                        <Card.Text className={product.stock > 0 ? 'text-success' : 'text-danger'}>
-                                                            {product.stock > 0 ? <><i className='fa fa-check'></i>In stock</> : "Out stock"}
+                                    <Card key={idx} className='card-item' style={{ width: '20rem', margin: '10px' }}>
+                                        <Card.Img src={`https://localhost:7201${product.avatar}`} alt='' />
+                                        <Card.Body style={{ position: "relative" }}>
+                                            <Link to={`/chi-tiet-san-pham/${product.id}`}>
+                                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
+                                                    <Card.Text>Mã SP: {product.sku}</Card.Text>
+                                                    <Card.Text className={product.stock > 0 ? 'text-success' : 'text-danger'}>
+                                                        {product.stock > 0 ? <><i className='fa fa-check'></i>Còn hàng</> : "Hết hàng"}
+                                                    </Card.Text>
+                                                </div>
+                                                <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
+                                                    {product.productName}
+                                                </Card.Title>
+                                                {product.salePrice !== product.price ? (
+                                                    <div className="d-flex">
+                                                        <Card.Text style={{ marginRight: '10px', color: 'red' }}>
+                                                            Giá: {convertToVND(Math.ceil(product.salePrice))} 
                                                         </Card.Text>
+                                                        <del className="text-dark">{convertToVND(product.price)}</del>
                                                     </div>
-                                                    <Card.Title style={{ height: '3rem', overflow: "hidden" }}>
-                                                        {product.productName}
-                                                    </Card.Title>
-                                                    <Card.Text>Giá: {convertToVND(product.price)}</Card.Text>
-                                                </Link>
-                                            </Card.Body>
-                                            <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
-                                                <Button onClick={()=>addToCart(product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
-                                            </div>
-                                        </Card>
-                                    </div>
+                                                ) : (
+                                                    <Card.Text>
+                                                        Giá: {convertToVND(product.price)}
+                                                    </Card.Text>
+                                                )}
+                                            </Link>
+                                        </Card.Body>
+                                        <div style={{ display: "flex", justifyContent: "flex-end", position: "absolute", bottom: "10px", right: "20px" }}>
+                                            <Button onClick={() => addToCart(product)} variant="primary"><i className="fa fa-shopping-cart"></i></Button>
+                                        </div>
+                                    </Card>
                                 ))}
                             </div>
                         </div>
@@ -125,6 +156,7 @@ const addToCart = (item) => {
                 ) : (
                     <p>No data available</p>
                 )}
+
                 <ReactPaginate
                     previousLabel={'Trở về'}
                     nextLabel={'Tiếp theo'}
@@ -137,10 +169,10 @@ const addToCart = (item) => {
                     containerClassName={'pagination '}
                     activeClassName={'active'}
                 />
-            </div> 
+            </div>
 
- 
-            
+
+
             <Modal show={show} onHide={handleCloseLogin} centered>
                 <div className='row justify-content-center mt-4'>
                     <h1 className='text-danger'>ShopMember</h1>
@@ -161,10 +193,10 @@ const addToCart = (item) => {
                         Đăng nhập
                     </Link>
                 </div>
-    </Modal> 
-            <Footer/>
+            </Modal>
+            <Footer />
         </>
-        
+
     );
 }
 

@@ -26,9 +26,10 @@ const User = () => {
         return re.test(String(email).toLowerCase());
     };
     const validatePassword = (password) => {
-        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/; 
         return re.test(password);
-    }; 
+    };
+    
     useEffect(() => {
         axios.get(`https://localhost:7201/api/Users/list-user`)
             .then(res => {
@@ -86,6 +87,31 @@ const User = () => {
         setlsAdmin(prevUsers => prevUsers.map(user => user.id === id ? { ...user, active: newStatus } : user));
     }
  
+    const btnDelete =(row)=>{
+        return(<>
+            <button onClick={()=>handleDelete(row.id)} className="btn btn-danger">Xóa</button>
+        </>)
+    }
+
+    const handleDelete = (id) => {
+        if (window.confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
+            // Thực hiện hành động xóa
+            axios.delete(`https://localhost:7201/api/Users/${id}`)
+                .then(res => {
+                    if(res.status ===200)
+                    {
+                        alert("Tài khoản đã được xóa");
+                        window.location.reload();
+                    } 
+                    // Cập nhật state hoặc giao diện người dùng sau khi xóa thành công
+                })
+                .catch(err => {
+                    console.error("Lỗi khi xóa tài khoản:", err);
+                });
+        }
+    };
+
+ 
   
     const handleChange=(e)=>{
         let name = e.target.name;
@@ -94,15 +120,19 @@ const User = () => {
     }
     const handleAddAccoutAdmin =(e)=>{
         e.preventDefault();
-        if(accountAdmin.Username !==undefined && accountAdmin.Email!==undefined  && accountAdmin.Password !==undefined)
-        { 
-            console.log(accountAdmin.Password);
-            if (!validateEmail(accountAdmin.email) ===false || !validatePassword(accountAdmin.password) === false) {
-                alert('Thông tin tài khoản chưa chính xác');
-            } 
-            
+        if(accountAdmin.Username !==undefined && accountAdmin.Password !==undefined)
+        {   
+            if (!validatePassword(accountAdmin.Password)) {
+                seterror('Password tối thiểu gồm 6 chữ cái, gồm 1 chữ cái viết hoa, 1 ký tự đặt biệt, chữ thường');
+            }  
             else{
-                console.log("done");
+                axios.post(`https://localhost:7201/api/Users/register-admin?Username=${accountAdmin.Username}&Password=${accountAdmin.Password}`).then(res=>{
+                    if(res.status ===200)
+                    {
+                        alert("Tạo tài khoản admin thành công");
+                        window.location.reload();
+                    }
+                })
             }
         }
         else{
@@ -110,8 +140,7 @@ const User = () => {
             alert("Vui lòng nhập đầy đủ thông tin");
         }
     }
-    console.log(error);
-     
+ console.log(lsAdmin);
     return (
         <>
             <SidebarAdmin />
@@ -181,6 +210,8 @@ const User = () => {
                                                     <Column field="lastLogin" header="Lần đăng nhập cuối cùng " sortable /> 
                                                     <Column header="Trạng thái " body={Active} sortable />
                                                     <Column header="Chức năng " body={Btn} />
+                                                    <Column header="Chức năng " body={btnDelete} />
+                                                     
                                                 </DataTable>
 
                                             </Tab>
@@ -207,12 +238,9 @@ const User = () => {
                     <Form.Group>
                         <Form.Label>Nhập mật khẩu  </Form.Label>
                         <Form.Control onChange={handleChange} name="Password" type="password" placeholder="Nhập mật khẩu" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Nhập Email </Form.Label>
-                        <Form.Control onChange={handleChange} name="Email"  type="text" placeholder="Nhập Email" />
-                    </Form.Group>
+                    </Form.Group> 
                 </Form>
+                <p className="text-danger">{error}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseAdmin}>

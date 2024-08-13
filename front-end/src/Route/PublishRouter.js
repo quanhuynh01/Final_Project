@@ -13,6 +13,7 @@ import ProductAttibute from "../User/Component/Products/ProductAttribute";
 import PaySuccess from "../User/PaySuccess/PaySuccess";
 import WistList from "../User/Component/WistList/WistList";
 import Contact from "../User/Component/Contact/Contact";
+import NotFound from "../User/NotFound";
 
 const PublishRouter = () => {
     return (<>
@@ -39,7 +40,7 @@ const PublishRouter = () => {
                 <Route path="/chi-tiet-san-pham/:id" element={<ProductsDetail />} />
                 <Route path="/danh-muc/:id" element={<ProductsCategories />} />
                 
-                <Route path="/filteValue/:id" element={<ProductAttibute />} /> 
+                <Route path="/filteValue/:id/:catid" element={<ProductAttibute />} /> 
 
                 <Route path="/cart" element={<Cart />}>
                     <Route index element={<Cart />} />
@@ -55,6 +56,9 @@ const PublishRouter = () => {
                 <Route path="/paysucces.html" element={<PaySuccess />}>
                     <Route index element={<PaySuccess />} />
                 </Route>
+                <Route path="/not-found" element={<NotFound />} />
+                <Route path="*" element={<NotFound />} />
+
             </Routes>
         </BrowserRouter>
 

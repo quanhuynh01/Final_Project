@@ -41,7 +41,7 @@ const PrivateRouter = () => {
                     </Route>
                     <Route path="attributes">
                         <Route index element={<Attribute />}></Route>  
-                        <Route path="chinh-sua-thuoc-tinh/:id" element={<AttributeEdit />} />
+                        <Route path="edit/:id" element={<AttributeEdit />} />
                         <Route path="attributevalues/:id" element={<AttributeValue />} />
                     </Route>
                     <Route path="customer-supplier">
